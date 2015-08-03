@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<main>
+<var class="vocab" title="MIP Variable" id="cmip.drv.001">
+<!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
+<item id="001.001.001" label="example-01" title="dummy title string" sn="dummyAt" units="dummyAt" description="dummyAt" procnote="dummyAt" procComment="dummyAt" prov="dummyAt" uuid="4b3b863e-39b7-11e5-b65c-5404a60d96b5"/>
+</var>
+<ovar class="vocab" title="MIP Output Variable" id="cmip.drv.002">
+<!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
+<item id="001.002.001" label="example-01" title="dummy title string" uuid="4b3bc93c-39b7-11e5-b65c-5404a60d96b5" comment="dummyAt" deflate_level="dummyAt" shuffle="dummyAt" ok_max_mean_abs="dummyAt" flag_meanings="dummyAt" type="dummyAt" ok_min_mean_abs="dummyAt" sn="dummyAt" deflate="dummyAt" valid_min="dummyAt" cell_methods="dummyAt" flag_values="dummyAt" cell_measures="dummyAt" out_name="dummyAt" modeling_realm="dummyAt" units="dummyAt" cell_methods_xx="dummyAt" valid_max="dummyAt" positive="dummyAt" mipTable="dummyAt" dimensions="dummyAt" vid="dummyAt" frequency="dummyAt"/>
+</ovar>
+<groupItem class="vocab" title="Output Group Item" id="cmip.drv.003">
+<!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
+<item id="001.003.001" label="example-01" title="dummy title string" group="dummyAt" table="dummyAt" freq="dummyAt" descriptionEx="dummyAt" shape="dummyAt" levels="dummyAt" tstyle="dummyAt" mask="dummyAt" misc="dummyAt" mip="dummyAt" uuid="4b3c099c-39b7-11e5-b65c-5404a60d96b5" new="dummyAt" gpid="dummyAt" vkey="dummyAt" vid="dummyAt"/>
+</groupItem>
+<revisedTabItem class="vocab" title="Revised Table Item" id="cmip.drv.004">
+<!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
+<item id="001.004.001" label="example-01" title="dummy title string" table="dummyAt" mip="dummyAt" uuid="4b3c442a-39b7-11e5-b65c-5404a60d96b5" priority="dummyAt" vid="dummyAt" vgid="dummyAt"/>
+</revisedTabItem>
+<requestVarGroup class="vocab" title="Request link: linking a set of variables" id="cmip.drv.005">
+<!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
+<item id="001.005.001" label="example-01" title="dummy title string" uuid="4b3c7d3c-39b7-11e5-b65c-5404a60d96b5" mip="dummyAt" ref="dummyAt" refNote="dummyAt"/>
+</requestVarGroup>
+<requestLink class="vocab" title="Request link: linking a set of variables and a set of experiments." id="cmip.drv.006">
+<!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
+<item id="001.006.001" label="example-01" title="dummy title string" uuid="4b3c8b10-39b7-11e5-b65c-5404a60d96b5" mip="dummyAt" tab="dummyAt" objective="dummyAt" grid="dummyAt" gridreq="dummyAt" comment="dummyAt" ref="dummyAt" refNote="dummyAt" refid="dummyAt"/>
+</requestLink>
+<requestItem class="vocab" title="Request Item: specifying the number of years for an experiment" id="cmip.drv.007">
+<!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
+<item id="001.007.001" label="example-01" title="dummy title string" uuid="4b3c916e-39b7-11e5-b65c-5404a60d96b5" mip="dummyAt" tab="dummyAt" expt="dummyAt" rlid="dummyAt" ny="25"/>
+</requestItem>
+<remarks class="vocab" title="Remarks about other items" id="cmip.drv.008">
+<!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
+<item id="001.008.001" label="example-01" title="dummy title string" uuid="4b3c9a56-39b7-11e5-b65c-5404a60d96b5" tid="dummyAt" tattr="dummyAt" description="dummyAt" class="dummyAt" qid="dummyAt" techNote="dummyAt" prov="dummyAt"/>
+</remarks>
+</main>
