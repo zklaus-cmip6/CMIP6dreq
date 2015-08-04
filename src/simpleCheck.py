@@ -67,7 +67,7 @@ class check1(checkbase):
 
   def _ch02_importSample(self):
     import dreq
-    rq = dreq.loadDreq( dreqXML='../docs/dreqSample.xml',configdoc='../docs/dreqDefn.xml' )
+    rq = dreq.loadDreq( dreqXML='out/dreqSample.xml',configdoc='out/dreqDefn.xml' )
     print 'Dreq sample load checked'
     self.ok = True
 
@@ -94,8 +94,8 @@ class check2(checkbase):
       self.ok = False
       self._clear_ch03()
       return
-    schema = '../docs/dreqSchema.xsd'
-    xml = '../docs/dreqSample.xml'
+    schema = 'out/dreqSchema.xsd'
+    xml = 'out/dreqSample.xml'
 
     cmd = 'xmllint --noout --schema %s %s  2> .simpleCheck_check2_err.txt 1>.simpleCheck_check2.txt' % (schema,xml) 
     os.popen( cmd ).readlines()

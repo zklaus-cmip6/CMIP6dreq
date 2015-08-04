@@ -42,8 +42,8 @@ class dreqItemBase(object):
 class config(object):
   """Read in a vocabulary collection configuration document and a vocabulary document"""
 
-  def __init__(self, configdoc='out/dreqDefn.xml', thisdoc='../workbook/trial_20150724.xml',silent=True):
-    self.silent = silent
+  def __init__(self, configdoc='out/dreqDefn.xml', thisdoc='../workbook/trial_20150724.xml'):
+    self.silent = True
     self.vdef = configdoc
     self.vsamp = thisdoc
     self.nts = collections.namedtuple( 'sectdef', ['tag','label','title','id','itemLabelMode','level'] )
@@ -219,10 +219,10 @@ For any record, with identifier u, iref_by_uuid[u] gives a list of the section a
 
 class loadDreq(object):
   def __init__(self,dreqXML='../docs/dreq.xml',configdoc='../docs/dreqDefn.xml' ):
-    self.c = config( thisdoc=dreqXML, configdoc=configdoc,silent=False)
+    self.c = config( thisdoc=dreqXML, configdoc=configdoc)
     self.coll = self.c.get()
     self.inx = index(self.coll)
 
 if __name__ == '__main__':
-  dreq = loadDreq()
+  dreq = loadDreq( )
 

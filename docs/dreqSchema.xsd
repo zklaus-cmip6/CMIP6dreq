@@ -4,6 +4,7 @@
        Some specialised string types
     </xs:documentation></xs:annotation>
 <xs:simpleType name="st__attLabel_def"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9-])+"/></xs:restriction></xs:simpleType>
+<xs:simpleType name="st__attLabel_und"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9_])+"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="st__attLabel_int"><xs:restriction base="xs:integer"/></xs:simpleType>
 <xs:simpleType name="st__attLabel_an"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9])+"/></xs:restriction></xs:simpleType>
 <xs:complexType name="ct__info" mixed="true"><xs:attribute name="srcType" type="xs:string"/><xs:attribute name="srcRef" type="xs:string"/></xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
