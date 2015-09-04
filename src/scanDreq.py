@@ -1,9 +1,9 @@
-import dreq, collections, string, os, utils_wb
+import dreq, collections, string, os
 import htmlTemplates as tmpl
 import xml, re
 import xml.dom, xml.dom.minidom
 
-from utils_wb import uniCleanFunc
+from utils_dreq import uniCleanFunc
 
 empty=re.compile('^$')
 
@@ -494,7 +494,7 @@ class annotate(object):
     oo = open( 'annotated_20150731.xml', 'w' )
     lines = string.split( txt, '\n' )
     for line in lines:
-      l = utils_wb.uniCleanFunc( string.strip(line) )
+      l = uniCleanFunc( string.strip(line) )
       if empty.match(l):
         continue
       else:
