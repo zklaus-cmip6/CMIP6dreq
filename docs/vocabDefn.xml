@@ -1,12 +1,13 @@
 <?xml version="1.0" ?>
 <defDoc 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="uri:w3id.org:cmip6.dreq.framework:a"
 xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd">
 <table label="institute" title="Institute" id="cmip.drv.001" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
   <rowAttribute label="label"/>
   <rowAttribute label="title"/>
-  <rowAttribute label="url"/>
-  <rowAttribute label="isni"/>
+  <rowAttribute label="url" title="Home page"/>
+  <rowAttribute label="isni" title="International Standard Name Identifier (ISO 27729)"/>
   <rowAttribute label="description"/>
   <rowAttribute label="uuid"/>
 </table>

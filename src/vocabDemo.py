@@ -1,7 +1,7 @@
 
 import dreq
 
-vc = dreq.loadDreq( dreqXML='../docs/vocab.xml',configdoc='../docs/vocabDefn.xml' )
+vc = dreq.loadDreq( dreqXML='vocab.xml',configdoc='out/vocabDefn.xml' )
 
 
 print vc.coll.keys()

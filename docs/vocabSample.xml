@@ -1,111 +1,114 @@
 <?xml version="1.0" ?>
-<main>
+<main
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="out/dreqSchema.xsd"
+xmlns="uri:w3id.org:cmip6.dreq.dreq:a">
 <institute class="vocab" title="Institute" id="cmip.drv.001">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.001.001" label="example-01" title="dummy title string" url="dummyAt" isni="dummyAt" description="dummyAt" uuid="215e0ce0-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.001.001" label="example-01" title="dummy title string" url="dummyAt" isni="dummyAt" description="dummyAt" uuid="bc5512e4-5713-11e5-9f3f-ac72891c3257"/>
 </institute>
 <model class="vocab" title="Model" id="cmip.drv.002">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.002.001" label="example-01" title="dummy title string" description="dummyAt" url="dummyAt" altUrl="dummyAt" source="dummyAt" uuid="215e48ae-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.002.001" label="example-01" title="dummy title string" description="dummyAt" url="dummyAt" altUrl="dummyAt" source="dummyAt" uuid="bc5554fc-5713-11e5-9f3f-ac72891c3257"/>
 </model>
 <physicsvers class="vocab" title="Physics Version" id="cmip.drv.003">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.003.001" label="example-01" title="dummy title string" description="dummyAt" uuid="215e7e6e-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.003.001" label="example-01" title="dummy title string" description="dummyAt" uuid="bc55925a-5713-11e5-9f3f-ac72891c3257"/>
 </physicsvers>
 <initialisationmethod class="vocab" title="Initialisation Method" id="cmip.drv.004">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.004.001" label="example-01" title="dummy title string" description="dummyAt" uuid="215eb3c0-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.004.001" label="example-01" title="dummy title string" description="dummyAt" uuid="bc55cf72-5713-11e5-9f3f-ac72891c3257"/>
 </initialisationmethod>
 <modelComp class="vocab" title="Model Components" id="cmip.drv.005">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.005.001" label="example-01" title="dummy title string" componentType="dummyAt" sizeH="dummyAt" sizeV="dummyAt" uuid="215eec50-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.005.001" label="example-01" title="dummy title string" componentType="dummyAt" sizeH="dummyAt" sizeV="dummyAt" uuid="bc561144-5713-11e5-9f3f-ac72891c3257"/>
 </modelComp>
 <activity class="vocab" title="Coordinating activity" id="cmip.drv.006">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.006.001" label="example-01" title="dummy title string" url="dummyAt" status="dummyAt" uuid="215ef65a-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.006.001" label="example-01" title="dummy title string" url="dummyAt" status="dummyAt" uuid="bc562030-5713-11e5-9f3f-ac72891c3257"/>
 </activity>
 <product class="vocab" title="Data product" id="cmip.drv.007">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.007.001" label="example-01" title="dummy title string" uuid="215ef9ac-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.007.001" label="example-01" title="dummy title string" uuid="bc56251c-5713-11e5-9f3f-ac72891c3257"/>
 </product>
 <experiment class="vocab" title="Numerical Experiment" id="cmip.drv.008">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.008.001" label="example-01" title="dummy title string" altLabel="dummyAt" description="dummyAt" url="dummyAt" sponsor="dummyAt" uuid="215efe70-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.008.001" label="example-01" title="dummy title string" altLabel="dummyAt" description="dummyAt" url="dummyAt" sponsor="dummyAt" uuid="bc562cb0-5713-11e5-9f3f-ac72891c3257"/>
 </experiment>
 <frequency class="vocab" title="Temporal frequency of data values" id="cmip.drv.009">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.009.001" label="example-01" title="dummy title string" iso="dummyAt" uuid="215f01ea-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.009.001" label="example-01" title="dummy title string" iso="dummyAt" uuid="bc563340-5713-11e5-9f3f-ac72891c3257"/>
 </frequency>
 <realm class="vocab" title="Modeling realm" id="cmip.drv.010">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.010.001" label="example-01" title="dummy title string" uuid="215f04e2-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.010.001" label="example-01" title="dummy title string" uuid="bc5637f0-5713-11e5-9f3f-ac72891c3257"/>
 </realm>
 <grid class="vocab" title="Native grid" id="cmip.drv.011">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.011.001" label="example-01" title="dummy title string" uuid="215f07c6-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.011.001" label="example-01" title="dummy title string" uuid="bc563ca0-5713-11e5-9f3f-ac72891c3257"/>
 </grid>
 <dimensions class="vocab" title="MIP table variable dimensions" id="cmip.drv.012">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.012.001" label="example01" title="dummy title string" altLabel="dummyAt" sn="dummyAt" size="25" uuid="215f0bea-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.012.001" label="example01" title="dummy title string" altLabel="dummyAt" sn="dummyAt" size="25" uuid="bc564394-5713-11e5-9f3f-ac72891c3257"/>
 </dimensions>
 <forcings class="vocab" title="Forcing" id="cmip.drv.013">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.013.001" label="example-01" title="dummy title string" uuid="215f0ed8-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.013.001" label="example-01" title="dummy title string" uuid="bc564844-5713-11e5-9f3f-ac72891c3257"/>
 </forcings>
 <table class="vocab" title="Data specification table" id="cmip.drv.014">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.014.001" label="example-01" title="dummy title string" description="dummyAt" comment="dummyAt" frequency="dummyAt" uuid="215f12c0-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.014.001" label="example-01" title="dummy title string" description="dummyAt" comment="dummyAt" frequency="dummyAt" uuid="bc564f06-5713-11e5-9f3f-ac72891c3257"/>
 </table>
 <cref class="vocab" title="Coordinate Reference" id="cmip.drv.015">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.015.001" label="example-01" title="dummy title string" uuid="215f170c-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.015.001" label="example-01" title="dummy title string" uuid="bc5655a0-5713-11e5-9f3f-ac72891c3257"/>
 </cref>
 <areaType class="vocab" title="CMIP Area Type" id="cmip.drv.016">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.016.001" label="example-01" title="dummy title string" inCF="dummyAt" uuid="215f1a54-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.016.001" label="example-01" title="dummy title string" inCF="dummyAt" uuid="bc565b04-5713-11e5-9f3f-ac72891c3257"/>
 </areaType>
 <timeSlice class="vocab" title="Time slices used in data request" id="cmip.drv.017">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.017.001" label="example-01" title="dummy title string" type="dummyAt" specification="dummyAt" uuid="215f1de2-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.017.001" label="example-01" title="dummy title string" type="dummyAt" specification="dummyAt" uuid="bc566112-5713-11e5-9f3f-ac72891c3257"/>
 </timeSlice>
 <modelFamily class="vocab" title="Family of model" id="cmip.drv.018">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.018.001" label="example-01" title="dummy title string" uuid="215f20b2-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.018.001" label="example-01" title="dummy title string" uuid="bc566702-5713-11e5-9f3f-ac72891c3257"/>
 </modelFamily>
 <priority class="vocab" title="Variable priority" id="cmip.drv.019">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.019.001" label="1" title="dummy title string" description="dummyAt" uuid="215f23e6-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.019.001" label="1" title="dummy title string" description="dummyAt" uuid="bc566c7a-5713-11e5-9f3f-ac72891c3257"/>
 </priority>
 <qcLevel class="vocab" title="Quality control level" id="cmip.drv.020">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.020.001" label="1" title="dummy title string" uuid="215f26a2-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.020.001" label="1" title="dummy title string" uuid="bc56712a-5713-11e5-9f3f-ac72891c3257"/>
 </qcLevel>
 <complianceCode class="vocab" title="Data specification compliance codes" id="cmip.drv.021">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.021.001" label="example-01" title="dummy title string" uuid="215f295e-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.021.001" label="example-01" title="dummy title string" uuid="bc5675c6-5713-11e5-9f3f-ac72891c3257"/>
 </complianceCode>
 <glossary class="vocab" title="Glossary" id="cmip.drv.022">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.022.001" label="example-01" title="dummy title string" fullName="dummyAt" description="dummyAt" url="dummyAt" uuid="215f2d28-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.022.001" label="example-01" title="dummy title string" fullName="dummyAt" description="dummyAt" url="dummyAt" uuid="bc567c7e-5713-11e5-9f3f-ac72891c3257"/>
 </glossary>
 <modelCompType class="vocab" title="Model Component Types/Categories [redundant with *Native Grid*]" id="cmip.drv.023">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.023.001" label="example-01" title="dummy title string" uuid="215f3002-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.023.001" label="example-01" title="dummy title string" uuid="bc568138-5713-11e5-9f3f-ac72891c3257"/>
 </modelCompType>
 <modelType class="vocab" title="Class of model" id="cmip.drv.024">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.024.001" label="example-01" title="dummy title string" uuid="215f32b4-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.024.001" label="example-01" title="dummy title string" uuid="bc5685d4-5713-11e5-9f3f-ac72891c3257"/>
 </modelType>
 <index class="vocab" title="Index of vocabularies" id="cmip.drv.025">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.025.001" label="example-01" title="dummy title string" table="dummyAt" description="dummyAt" uuid="215f367e-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.025.001" label="example-01" title="dummy title string" table="dummyAt" description="dummyAt" uuid="bc568c46-5713-11e5-9f3f-ac72891c3257"/>
 </index>
 <cmorDimAttr class="vocab" title="CMOR Dimension Attributes" id="cmip.drv.026">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.026.001" label="example_03" title="dummy title string" description="dummyAt" uuid="215f3a48-3a81-11e5-882e-ac72891c3257" CMORattr="dummyAt"/>
+<item id="001.026.001" label="example_03" title="dummy title string" description="dummyAt" uuid="bc5692a4-5713-11e5-9f3f-ac72891c3257" CMORattr="dummyAt"/>
 </cmorDimAttr>
 <processingOptions class="vocab" title="Processing steps required" id="cmip.drv.027">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.027.001" label="example01" title="dummy title string" description="dummyAt" uuid="215f3d90-3a81-11e5-882e-ac72891c3257"/>
+<item id="001.027.001" label="example01" title="dummy title string" description="dummyAt" uuid="bc5697fe-5713-11e5-9f3f-ac72891c3257"/>
 </processingOptions>
 </main>
