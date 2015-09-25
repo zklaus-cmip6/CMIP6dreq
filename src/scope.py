@@ -181,6 +181,7 @@ class dreqQuery(object):
 
     if type(mip) in {type( '' ),type( u'') }:
       if mip not in self.mips:
+        print self.mips
         raise baseException( 'volByMip: Name of mip not recognised: %s' % mip )
       l1 = [i for i in  self.dq.coll['requestItem'].items if i.mip == mip]
     elif type(mip) == type( set()):

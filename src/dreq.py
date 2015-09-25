@@ -6,7 +6,8 @@ After ingesting the XML documents (configuration and request) the module generat
 import xml, string, collections
 import xml.dom
 import xml.dom.minidom
-import re
+import re, shelve
+import sets
 
 class rechecks(object):
   def __init__(self):
@@ -30,7 +31,7 @@ class dreqItemBase(object):
        _urlBase = ''
        _htmlStyle = {}
 
-       def __init__(self,dict=None,xmlMiniDom=None,id='defaultId'):
+       def __init__(self,dict=None,xmlMiniDom=None,id='defaultId',etree=False):
          dictMode = dict != None
          mdMode = xmlMiniDom != None
          assert not( dictMode and mdMode), 'Mode must be either dictionary of minidom: both assigned'
@@ -41,7 +42,7 @@ class dreqItemBase(object):
          if dictMode:
            self.dictInit( dict )
          elif mdMode:
-           self.mdInit( xmlMiniDom )
+           self.mdInit( xmlMiniDom, etree=etree )
 
        def __repr__(self):
          """Provide a one line summary of identifying the object."""
@@ -136,13 +137,28 @@ class dreqItemBase(object):
              self.__dict__[a] = self._d.defaults.get( a, self._d.glob )
          self._contentInitialised = True
 
-       def mdInit( self, el ):
+       def mdInit( self, el, etree=False ):
          __doc__ = """Initialisation from a mindom XML element. The list of attributes must be set by the class factory before the class is initialised"""
          deferredHandling=False
          nw1 = 0
-         for a in self._a.keys():
-           if el.hasAttribute( a ):
-             v = str( el.getAttribute( a ) )
+         tvtl = []
+         if etree:
+           ks = sets.Set( el.keys() )
+           for a in self._a.keys():
+             if a in ks:
+               aa = '%s%s' % (self.ns,a)
+               tvtl.append( (a,True, str( el.get( a ) ) ) )
+             else:
+               tvtl.append( (a,False,None) )
+         else:
+           for a in self._a.keys():
+             if el.hasAttribute( a ):
+               tvtl.append( (a,True, str( el.getAttribute( a ) ) ) )
+             else:
+               tvtl.append( (a,False,None) )
+       
+         for a,tv,v in tvtl:
+           if tv:
              if self._a[a].type == u'xs:integer':
                if self._rc.isIntStr( v ):
                  v = int(v)
@@ -168,11 +184,15 @@ class dreqItemBase(object):
              if a in {'uid'}:
                thissect = '%s [%s]' % (self._h.title,self._h.tag)
                print 'ERROR.020.0001: missing uid: %s' % thissect
+               if etree:
+                 print ks
+                 import sys
+                 sys.exit(0)
              self.__dict__[a] = self._d.defaults.get( a, self._d.glob )
 
-           if type( self.__dict__.get( 'rowIndex', 0 ) ) != type(0):
-             print 'Bad row index ', el.hasAttribute( 'rowIndex' )
-             raise
+           ##if type( self.__dict__.get( 'rowIndex', 0 ) ) != type(0):
+             ##print 'Bad row index ', el.hasAttribute( 'rowIndex' )
+             ##raise
            if deferredHandling:
              print msg
 
@@ -182,7 +202,7 @@ class dreqItemBase(object):
 class config(object):
   """Read in a vocabulary collection configuration document and a vocabulary document"""
 
-  def __init__(self, configdoc='out/dreqDefn.xml', thisdoc='../workbook/trial_20150724.xml'):
+  def __init__(self, configdoc='out/dreqDefn.xml', thisdoc='../workbook/trial_20150724.xml', useShelve=False):
     self.rc = rechecks()
     self.silent = True
     self.vdef = configdoc
@@ -195,6 +215,25 @@ class config(object):
 
     self.coll = {}
     doc = xml.dom.minidom.parse( self.vdef  )
+##
+## elementTree parsing implemented for main document
+##
+    self.etree = False
+    self.etree = True
+    if self.etree:
+      import xml.etree.cElementTree as cel
+
+      self.contentDoc = cel.parse( self.vsamp )
+      root = self.contentDoc.getroot()
+      bs = string.split( root.tag, '}' )
+      if len( bs ) > 1:
+        self.ns = bs[0] + '}'
+      else:
+        self.ns = None
+    else:
+      self.contentDoc = xml.dom.minidom.parse( self.vsamp )
+      self.ns = None
+
     vl = doc.getElementsByTagName( 'table' )
     self.tables = {}
     tables = {}
@@ -203,41 +242,58 @@ class config(object):
     for v in vl:
       t = self.parsevcfg(v)
       tables[t[0].label] = t
-      self.tableClasses[t[0].label] = self.itemClassFact( t )
+      self.tableClasses[t[0].label] = self.itemClassFact( t, ns=self.ns )
 
-    self.contentDoc = xml.dom.minidom.parse( self.vsamp )
+
     self.recordAttributeDefn = tables
     for k in tables.keys():
-      vl = self.contentDoc.getElementsByTagName( k )
-      if len(vl) == 1:
-        v = vl[0]
-        t = v.getAttribute( 'title' )
-        i = v.getAttribute( 'id' )
-        il = v.getElementsByTagName( 'item' )
-        self.info( '%s, %s, %s, %s' % ( k, t, i, len(il) ) )
+      if self.etree:
+        vl = root.findall( './/%s%s' % (self.ns,k) )
+        if len(vl) == 1:
+          v = vl[0]
+          t = v.get( 'title' )
+          i = v.get( 'id' )
+          il = v.findall( '%sitem' % self.ns )
+          self.info( '%s, %s, %s, %s' % ( k, t, i, len(il) ) )
  
-        self.tables[k] = (i,t,len(il))
+          self.tables[k] = (i,t,len(il))
         
-        for i in il:
-          ii = self.tableClasses[k](xmlMiniDom=i)
-          self.tableItems[k].append( ii )
-      elif len(vl) > 1:
-        l1 = []
-        l2 = []
-        for v in vl:
+          for i in il:
+            ii = self.tableClasses[k](xmlMiniDom=i, etree=True)
+            self.tableItems[k].append( ii )
+        elif len(vl) > 1:
+          assert False, 'not able to handle repeat sections with etree yet'
+      else:
+        vl = self.contentDoc.getElementsByTagName( k )
+        if len(vl) == 1:
+          v = vl[0]
           t = v.getAttribute( 'title' )
           i = v.getAttribute( 'id' )
           il = v.getElementsByTagName( 'item' )
           self.info( '%s, %s, %s, %s' % ( k, t, i, len(il) ) )
-          l1.append( (i,t,len(il)) )
-          
-          l2i = []
+ 
+          self.tables[k] = (i,t,len(il))
+        
           for i in il:
             ii = self.tableClasses[k](xmlMiniDom=i)
-            l2i.append( ii )
-          l2.append( l2i )
-        self.tables[k] = l1
-        self.tableItems[k] = l2
+            self.tableItems[k].append( ii )
+        elif len(vl) > 1:
+          l1 = []
+          l2 = []
+          for v in vl:
+            t = v.getAttribute( 'title' )
+            i = v.getAttribute( 'id' )
+            il = v.getElementsByTagName( 'item' )
+            self.info( '%s, %s, %s, %s' % ( k, t, i, len(il) ) )
+            l1.append( (i,t,len(il)) )
+          
+            l2i = []
+            for i in il:
+              ii = self.tableClasses[k](xmlMiniDom=i)
+              l2i.append( ii )
+            l2.append( l2i )
+          self.tables[k] = l1
+          self.tableItems[k] = l2
       self.coll[k] = self.ntf( self.recordAttributeDefn[k].header, self.recordAttributeDefn[k].attributes, self.tableItems[k] )
  
   def info(self,ss):
@@ -247,7 +303,7 @@ class config(object):
   def get(self):
     return self.coll
 
-  def itemClassFact(self, sectionInfo):
+  def itemClassFact(self, sectionInfo,ns=None):
      class dreqItem(dreqItemBase):
        """Inherits all methods from dreqItemBase.
 
@@ -267,6 +323,7 @@ object._h: a python named tuple describing the section. E.g. object.parent.heade
      ##dreqItem.itemLabelMode = itemLabelMode
      ##dreqItem.attributes = attributes
      dreqItem._rc = self.rc
+     dreqItem.ns = ns
      return dreqItem
          
   def parsevcfg(self,v):
@@ -386,8 +443,8 @@ class ds(object):
 
 src1 = '../workbook/trial_20150831.xml'
 class loadDreq(object):
-  def __init__(self, dreqXML='../docs/dreq.xml',configdoc='../docs/dreq2Defn.xml' ):
-    self.c = config( thisdoc=dreqXML, configdoc=configdoc)
+  def __init__(self,dreqXML='../docs/dreq.xml',configdoc='../docs/dreq2Defn.xml', useShelve=False ):
+    self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve)
     self.coll = self.c.get()
     self.inx = index(self.coll)
 ##
