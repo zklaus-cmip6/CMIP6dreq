@@ -1,3 +1,7 @@
+"""Date Request Scoping module
+---------------------------
+The scope.py module contains the dreqQuery class and a set of ancilliary functions. The dreqQuery class contains methods for analysing the data request.
+"""
 import dreq
 import collections, string
 
@@ -21,7 +25,7 @@ npy = {'daily':365, u'Annual':1, u'fx':0.01, u'1hr':24*365, u'3hr':8*365, u'monC
 
 def vol01( sz, v, npy, freq, inx ):
   n1 = npy[freq]
-  s = sz[inx.uid[v][1].stid]
+  s = sz[inx.uid[v].stid]
   assert type(s) == type(1), 'Non-integer size found for %s' % v
   assert type(n1) in (type(1),type(0.)), 'Non-number "npy" found for %s, [%s]' % (v,freq)
   return s*n1
@@ -35,6 +39,7 @@ class col_count(object):
     self.a = collections.defaultdict(int)
 
 class dreqQuery(object):
+  __doc__ = """Methods to analyse the data request, including data volume estimates"""
   def __init__(self,dq=None):
     if dq == None:
       self.dq = dreq.loadDreq()
@@ -104,7 +109,7 @@ class dreqQuery(object):
       t1 = lambda x: x == mipSel
     elif type(mipSel) == type({1,2}):
       t1 = lambda x: x in mipSel
-    self.rqs = list({self.dq.inx.uid[i.rid][1] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
+    self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
     return self.rqs
 
   def getRequestLinkByObjective( self, objSel ):
@@ -114,7 +119,7 @@ class dreqQuery(object):
     elif type(objSel) == type({1,2}):
       t1 = lambda x: x in {self.rlu[i] for i in objSel}
 
-    self.rqs = list({self.dq.inx.uid[i.rid][1] for i in self.dq.coll['objectiveLink'].items if t1(i.oid) })
+    self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.oid) })
     return self.rqs
 
   def varGroupXexpt(self, rqList ):
@@ -137,22 +142,23 @@ class dreqQuery(object):
     rql = {i.rlid for i in l1 if i.expt == ex}
 
 ## The complete set of variables associated with these requests:
-    rqvg = list({inx.uid[i][1].refid for i in rql})
+    rqvg = list({inx.uid[i].refid for i in rql})
 
 ###To obtain a set of variables associated with this collection of variable groups:
     col1 = set()
     x = {tuple( {col1.add(i) for i in inx.iref_by_sect[vg].a['requestVar']} ) for vg in rqvg}
 ###The collector col1 here accumulates all the record uids, resulting in a single collection. These are request variables, to get a set of CMOR variables at priority <= pmax:
-    vars = {inx.uid[l][1].vid for l in list(col1) if inx.uid[l][1].priority <= pmax}
+    vars = {inx.uid[l].vid for l in list(col1) if inx.uid[l].priority <= pmax}
 
 ### filter out cases where the request does not point to a CMOR variable.
-    vars = {vid for vid in vars if inx.uid[vid][0] == u'CMORvar'}
+    ##vars = {vid for vid in vars if inx.uid[vid][0] == u'CMORvar'}
+    vars = {vid for vid in vars if inx.uid[vid]._h.label == u'CMORvar'}
 
     e = {}
     for u in rql:
 ### for request variables which reference the variable group attached to the link, add the associate CMOR variables, subject to priority
-      i = inx.uid[u][1]
-      e[i.uid] = { inx.uid[x][1].vid for x in inx.iref_by_sect[i.refid].a['requestVar'] if inx.uid[x][1].priority <= pmax}
+      i = inx.uid[u]
+      e[i.uid] = { inx.uid[x].vid for x in inx.iref_by_sect[i.refid].a['requestVar'] if inx.uid[x].priority <= pmax}
 
 #
 # for each variable, calculate the maximum number of years across all the request links which reference that variable.
@@ -165,10 +171,10 @@ class dreqQuery(object):
     szv = {}
     ov = []
     for v in vars:
-      szv[v] = self.sz[inx.uid[v][1].stid]*npy[inx.uid[v][1].frequency]
-      ov.append( self.dq.inx.uid[v][1] )
-    ee = self.listIndexDual( ov, 'frequency', 'mipTable', acount=None, alist=None, cdict=szv, cc=cc )
-    self.ngptot = sum( [  self.sz[inx.uid[v][1].stid]* npy[inx.uid[v][1].frequency] *nym[v]  for v in vars] )
+      szv[v] = self.sz[inx.uid[v].stid]*npy[inx.uid[v].frequency]
+      ov.append( self.dq.inx.uid[v] )
+    ee = self.listIndexDual( ov, 'frequency', 'label', acount=None, alist=None, cdict=szv, cc=cc )
+    self.ngptot = sum( [  self.sz[inx.uid[v].stid]* npy[inx.uid[v].frequency] *nym[v]  for v in vars] )
     return (self.ngptot, ee )
 
   def summaryByMip( self, pmax=1 ):

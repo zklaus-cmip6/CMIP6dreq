@@ -58,7 +58,7 @@ class dreqItemBase(object):
            for a in self.__dict__.keys():
              if a[0] != '_' or full:
                if self._a[a].rClass == 'internalLink' and self._base._indexInitialised:
-                 targ = self._base._inx.uid[ self.__dict__[a] ][1]
+                 targ = self._base._inx.uid[ self.__dict__[a] ]
                  print '   %s: [%s]%s [%s]' % ( a, targ._h.label, targ.label, self.__dict__[a] )
                else:
                  print '    %s: %s' % ( a, self.__dict__[a] )
@@ -89,7 +89,7 @@ class dreqItemBase(object):
                  if self.__dict__[a] == '__unset__':
                    m = '<li>%s: %s [missing link]</li>' % ( a, self.__dict__[a] )
                  else:
-                   targ = self._base._inx.uid[ self.__dict__[a] ][1]
+                   targ = self._base._inx.uid[ self.__dict__[a] ]
                    m = '<li>%s: [%s] %s [%s]</li>' % ( a, targ._h.label, targ.label, targ.__href__() )
                else:
                  m = '<li>%s: %s</li>' % ( a, self.__dict__[a] )
@@ -112,7 +112,7 @@ class dreqItemBase(object):
                  if self._inx.iref_by_sect[self.uid].a.has_key(t):
                    am.append( '<h3>%s</h3>' % t )
                    am.append( '<ul>' )
-                   items = [self._inx.uid[u][1] for  u in self._inx.iref_by_sect[self.uid].a[t] ]
+                   items = [self._inx.uid[u] for  u in self._inx.iref_by_sect[self.uid].a[t] ]
                    items.sort( ds('label').cmp )
                    for targ in items:
                      m = '<li>%s:%s [%s]</li>' % ( targ._h.label, targ.label, targ.__href__() )
@@ -244,7 +244,6 @@ class config(object):
       tables[t[0].label] = t
       self.tableClasses[t[0].label] = self.itemClassFact( t, ns=self.ns )
 
-
     self.recordAttributeDefn = tables
     for k in tables.keys():
       if self.etree:
@@ -313,10 +312,11 @@ The instanstiated object contains a single data record. The "_h" attribute links
 
 object._a: a python dictionary defining the attributes in each record. The keys in the dictionary correspond to the attribute names and the values are python "named tuples" (from the "collections" module). E.g. object._a['priority'].type contains the type of the 'priority' attribute. Type is expressed using XSD schema language, so "xs:integer" implies integer.  The "rClass" attribute carries information about usage. If object._a['xxx'].rClass = u'internalLink' then the record attribute provides a link to another element and object.xxx is the unique identifier of that element.
 
-object._h: a python named tuple describing the section. E.g. object.parent.header.title is the section title (E.g. "CMOR Variables")
+object._h: a python named tuple describing the section. E.g. object._h.title is the section title (E.g. "CMOR Variables")
 """
        _base=dreqItemBase
        
+     dreqItem.__name__ = 'dreqItem_%s' % str( sectionInfo.header.label )
      dreqItem._h = sectionInfo.header
      dreqItem._a = sectionInfo.attributes
      dreqItem._d = sectionInfo.defaults
@@ -403,7 +403,8 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
             print 'ERROR.100.0001: Duplicate uid: %s [%s]' % (i.uid,i._h.title)
             self.uid2[i.uid].append( (k,i) )
           else:
-            self.uid[i.uid] = (k,i)
+### create index bx uid.
+            self.uid[i.uid] = i
 
     self.missingIds = collections.defaultdict( list )
     self.iref_by_sect = collections.defaultdict( c1 )
@@ -415,7 +416,8 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
             id2 = i.__dict__.get( k2 )
             if id2 != '__unset__':
               sect = i._h.label
-              self.iref_by_uid[ id2 ].append( (sect,i.uid) )
+## append attribute name and target  -- item i.uid, attribute k2 reference item id2
+              self.iref_by_uid[ id2 ].append( (k2,i.uid) )
               self.iref_by_sect[ id2 ].a[sect].append( i.uid )
               if self.uid.has_key( id2 ):
                 n1 += 1
@@ -442,8 +444,14 @@ class ds(object):
     return cmp( x.__dict__[self.k], y.__dict__[self.k] )
 
 src1 = '../workbook/trial_20150831.xml'
+
+#DEFAULT LOCATION -- changed automatically when building distribution
+defaultDreq = '../docs/dreq.xml'
+#DEFAULT CONFIG
+defaultConfig = '../docs/dreq2Defn.xml'
+
 class loadDreq(object):
-  def __init__(self,dreqXML='../docs/dreq.xml',configdoc='../docs/dreq2Defn.xml', useShelve=False ):
+  def __init__(self,dreqXML=defaultDreq, configdoc=defaultConfig, useShelve=False ):
     self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve)
     self.coll = self.c.get()
     self.inx = index(self.coll)
@@ -461,15 +469,19 @@ class loadDreq(object):
     dreqItemBase._htmlStyle['remarks'] = {'getIrefs':['__all__']}
 ##    dreqItemBase._htmlStyle['__general__'] = {'addRemarks':True}
 
-    self.pageTmpl = """<html><head><title>%s</title></head><body>%s</body></html>"""
+    self.pageTmpl = """<html><head><title>%s</title>
+<link rel="stylesheet" type="text/css" href="%scss/dreq.css">
+</head><body>
+<div id="top">CMIP6 Data Request</div>
+%s</body></html>"""
 
   def makeHtml(self,odir='./html'):
     for k in self.inx.uid.keys():
-      i = self.inx.uid[k][1]
+      i = self.inx.uid[k]
       ttl = 'Data Request Record: [%s]%s' % (i._h.label,i.label)
       bdy = string.join( i.__html__( ), '\n' )
       oo = open( '%s/u/%s.html' % (odir,i.uid), 'w' )
-      oo.write( self.pageTmpl % (ttl, bdy ) )
+      oo.write( self.pageTmpl % (ttl, '../', bdy ) )
       oo.close()
 
     ttl0 = 'Data Request Index'
@@ -490,12 +502,12 @@ class loadDreq(object):
       msg.append( '</ul>' )
       bdy = string.join( msg, '\n' )
       oo = open( '%s/index/%s.html' % (odir,k), 'w' )
-      oo.write( self.pageTmpl % (ttl, bdy ) )
+      oo.write( self.pageTmpl % (ttl, '../', bdy ) )
       oo.close()
     msg0.append( '</ul>' )
     bdy = string.join( msg0, '\n' )
     oo = open( '%s/index.html' % odir, 'w' )
-    oo.write( self.pageTmpl % (ttl, bdy ) )
+    oo.write( self.pageTmpl % (ttl0, '', bdy ) )
     oo.close()
     
 if __name__ == '__main__':

@@ -28,7 +28,8 @@ def makeVarRefs(uid, var, iref_by_uid):
       if iref_by_uid.has_key(thisuid):
         ee1 = collections.defaultdict( list )
         for k,i in iref_by_uid[thisuid]:
-          sect,thisi = uid[i]
+          thisi = uid[i]
+          sect = thisi._h.label
           if sect == 'groupItem':
             ee1[sect].append( '%s.%s' % (thisi.mip, thisi.group) )
           elif sect == 'ovar':
@@ -77,6 +78,8 @@ class updates(object):
         ths = 3
         self.ddel[ l1[8] ] = (l1[10],l1[11])
         self.ddel[ l2[8] ] = (l2[10],l2[11])
+      elif xx[1] == '' and yy[1] == "":
+        print 'WARN.087.00001: uncorrected duplication ..... %s ' %  str( l1[:5] )
       else:
         ths = -1
         print 'ERROR.xxx.0001: Match failed'
@@ -110,12 +113,12 @@ class updates(object):
 ### 2nd pass through then generates the replace and remove options -- taking into account cross references
 ### the results of the 2nd pass go back to ../workbook to generate a new set of inputs.
 ###
-up = updates('varDup_20150724.csv', 'varMult_20150725.csv')
-##up.scandup()
+up = updates('varDup_20150928.csv', 'varMult_20150725.csv')
+up.scandup()
 up.scanmult()
 
-urep = True
 urep = False
+urep = True
 if urep:
   oo = open( 'uuidreplace.csv', 'w' )
   oo2 = open( 'uuidremove.csv', 'w' )
@@ -123,11 +126,11 @@ if urep:
     if inx.iref_by_uid.has_key(k):
       kn = up.repl[k]
       for tag,ki  in inx.iref_by_uid[k]:
-         try:
-           oo.write( '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' % (k,kn,tag,ki, inx.uid[k][1].label,  inx.uid[kn][1].label, inx.uid[ki][1].label) )
-         except:
-           print k,kn,ki
-           raise
+         vu = [ inx.uid.has_key(kk) for kk in [k,kn,ki] ]
+         if all( vu ):
+           oo.write( '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' % (k,kn,tag,ki, inx.uid[k].label,  inx.uid[kn].label, inx.uid[ki].label) )
+         else:
+           print 'ERROR.088.0001: Bad index in replace info: %s .. %s .. %s' % ( str([k,kn,ki]), str(vu), tag )
     else:
       oo2.write( k + '\n' )
   oo.close()
@@ -171,7 +174,7 @@ for i in dq.coll[thisk].items:
   if i.uid == '__new__':
     if inx.var.label.has_key( i.label ):
       if len( inx.var.label[i.label] ) == 1:
-        v = inx.uid[ inx.var.label[i.label][0] ][1]
+        v = inx.uid[ inx.var.label[i.label][0] ]
         oo.write( string.join( ['unique',i.label,v.label,v.uid,v.prov,i.mip], '\t' ) + '\n' )
       else:
         oo.write( string.join( ['ambiguous',i.label,i.mip,str(len(inx.var.label[i.label] ) ) ], '\t' ) + '\n' )
@@ -198,8 +201,18 @@ for k in ks:
     cc = map( lambda x: entryEq( v1.__dict__[x], v2.__dict__[x]), ['title','sn','units','description']  )
     if all(cc):
 ### where duplicates are identical , collect and output at end of file.
-      deferredRecs.append( string.join(map( lambda x: v1.__dict__[x], hs) + [v2.uid,'identical'], '\t' ) + '\n' )
-      deferredRecs.append( string.join(map( lambda x: v2.__dict__[x], hs) + ['',''], '\t' ) + '\n' )
+      pv1 = string.find( v1.__dict__['prov'], 'OMIP.' ) != -1
+      pv2 = string.find( v2.__dict__['prov'], 'OMIP.' ) != -1
+      if pv2:
+        vp = v2
+        vo = v1
+      else:
+        if not pv1:
+          print 'WARN.088.00002: no preference: %s, %s, %s' % (v1.__dict__['label'],v1.__dict__['prov'],v2.__dict__['prov'])
+        vp = v1
+        vo = v2
+      deferredRecs.append( string.join(map( lambda x: vo.__dict__[x], hs) + [vp.uid,'identical'], '\t' ) + '\n' )
+      deferredRecs.append( string.join(map( lambda x: vp.__dict__[x], hs) + ['',''], '\t' ) + '\n' )
     else:
       oo2.write( string.join(map( lambda x: v1.__dict__[x], hs) + ['',''], '\t' ) + '\n' )
       oo2.write( string.join(map( lambda x: v2.__dict__[x], hs) + ['',''], '\t' ) + '\n' )
@@ -513,7 +526,7 @@ class annotate(object):
         ee = collections.defaultdict(int)
         tn = str( len( mrefs[k] ) )
         for t in mrefs[k]:
-          s = self.dreq.inx.uid[t[2]][0]
+          s = self.dreq.inx.uid[t[2]]._h.label
           ee['%s.%s' % (s,t[1])] += 1
         if len( ee.keys() ) == 1:
           tattr = ee.keys()[0]

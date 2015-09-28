@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xs:schema xmlns:aa="uri:w3id.org:cmip6.dreq.dreq:a" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:a="uri:w3id.org:cmip6.dreq.framework:a" xmlns:xd="http://www.pnp-software.com/XSLTdoc" targetNamespace="uri:w3id.org:cmip6.dreq.dreq:a" elementFormDefault="qualified">
+<xs:schema xmlns:aa="urn:w3id.org:cmip6.dreq.dreq:a" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:a="urn:w3id.org:cmip6.dreq.framework:a" xmlns:xd="http://www.pnp-software.com/XSLTdoc" targetNamespace="urn:w3id.org:cmip6.dreq.dreq:a" elementFormDefault="qualified">
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
        Some specialised string types
     </xs:documentation></xs:annotation>
@@ -19,11 +19,12 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   sn;
+   Record Labeltitle;
+   Record Titlesn;
    CF Standard Nameunits;
    Unitsdescription;
-   procnote;
+   title;
+   Long nameprocnote;
    Processing notesprocComment;
    Processing commentsprov;
    Provenanceuid;
@@ -51,8 +52,8 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    title;
    Long namecomment;
    Descriptionstid;
@@ -116,8 +117,8 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    spid;
    tmid;
    odims;
@@ -154,8 +155,8 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    dimensions;
    shape;
    levels;
@@ -182,8 +183,8 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    dimensions;
    label;
    description;
@@ -207,8 +208,8 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    priority;
    xs:integervid;
    Identifier for MIP Output Variablevgid;
@@ -237,8 +238,8 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    gpid;
    Identifier for CMOR Tablesmip;
    Projectref;
@@ -259,14 +260,14 @@
 <xs:complexType name="ct__requestVarGroup">
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__requestVarGroup_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="requestVarGroup"/>
-<xs:attribute name="title" type="xs:string" fixed="Request link: linking a set of variables"/>
+<xs:attribute name="title" type="xs:string" fixed="Request variable group: a collection of request variables"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.008"/>
 <xs:attribute name="class" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    mip;
    Endorsed MIP requesting the dataref;
    refNote;
@@ -291,8 +292,8 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    mip;
    tab;
    objective;
@@ -333,8 +334,8 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    mip;
    tab;
    expt;
@@ -363,8 +364,8 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    tid;
    Target identifier: the record ID of the item this refers to.tattr;
    Target attribute: an attribute of the target item, or 'ALL'description;
@@ -397,8 +398,8 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    Record identifierdescription;
    Descriptionegid;
    Identifier for experiment groupmip;
@@ -441,8 +442,8 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    Record identifiertierMin;
    xs:integerMinimum tier of experiments in groupntot;
    xs:integerTotal number of years</xs:documentation></xs:annotation>
@@ -465,8 +466,8 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    Record identifierdescription;
    Descriptiontitle;
    Long namemip;
@@ -490,8 +491,8 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    Record identifieroid;
    Identifier for a scientific objectiverid;
    Identifier for a request link</xs:documentation></xs:annotation>
@@ -514,8 +515,8 @@
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   title;
-   uid;
+   Record Labeltitle;
+   Record Titleuid;
    Record identifierclass;
    Class of choice: heirarchy|cfgtitle;
    description;
@@ -534,43 +535,43 @@
 </xs:complexType><xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
        This schema is automatically generated by xsltproc.
     </xs:documentation></xs:annotation>
-<xs:element name="main"><xs:complexType><xs:all>
-<!--[applying elem main]-->
+<xs:element name="document"><xs:complexType><xs:all><xs:element name="prologue" type="xs:string"/><xs:element name="main"><xs:complexType><xs:all>
+<!--[applying elem main] var-->
 <xs:element name="var" type="aa:ct__var"/>
-<!--[applying elem main]-->
+<!--[applying elem main] CMORvar-->
 <xs:element name="CMORvar" type="aa:ct__CMORvar"/>
-<!--[applying elem main]-->
+<!--[applying elem main] structure-->
 <xs:element name="structure" type="aa:ct__structure"/>
-<!--[applying elem main]-->
+<!--[applying elem main] spatialShape-->
 <xs:element name="spatialShape" type="aa:ct__spatialShape"/>
-<!--[applying elem main]-->
+<!--[applying elem main] temporalShape-->
 <xs:element name="temporalShape" type="aa:ct__temporalShape"/>
-<!--[applying elem main]-->
+<!--[applying elem main] requestVar-->
 <xs:element name="requestVar" type="aa:ct__requestVar"/>
-<!--[applying elem main]-->
+<!--[applying elem main] tableSection-->
 <xs:element name="tableSection" type="aa:ct__tableSection"/>
-<!--[applying elem main]-->
+<!--[applying elem main] requestVarGroup-->
 <xs:element name="requestVarGroup" type="aa:ct__requestVarGroup"/>
-<!--[applying elem main]-->
+<!--[applying elem main] requestLink-->
 <xs:element name="requestLink" type="aa:ct__requestLink"/>
-<!--[applying elem main]-->
+<!--[applying elem main] requestItem-->
 <xs:element name="requestItem" type="aa:ct__requestItem"/>
-<!--[applying elem main]-->
+<!--[applying elem main] remarks-->
 <xs:element name="remarks" type="aa:ct__remarks"/>
-<!--[applying elem main]-->
+<!--[applying elem main] experiment-->
 <xs:element name="experiment" type="aa:ct__experiment"/>
-<!--[applying elem main]-->
+<!--[applying elem main] exptgroup-->
 <xs:element name="exptgroup" type="aa:ct__exptgroup"/>
-<!--[applying elem main]-->
+<!--[applying elem main] objective-->
 <xs:element name="objective" type="aa:ct__objective"/>
-<!--[applying elem main]-->
+<!--[applying elem main] objectiveLink-->
 <xs:element name="objectiveLink" type="aa:ct__objectiveLink"/>
-<!--[applying elem main]-->
+<!--[applying elem main] varChoice-->
 <xs:element name="varChoice" type="aa:ct__varChoice"/>
 </xs:all></xs:complexType>
 <xs:unique name="uniqueIdentifierConstraint"><xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
        The uniqueIdentifierConstraint imposes the condition that the uid attribute on "item" elements should have a unique value.
-    </xs:documentation></xs:annotation>
+        </xs:documentation></xs:annotation>
 <xs:selector xpath=".//aa:item"/><xs:field xpath="@uid"/></xs:unique>
 </xs:element>
-</xs:schema>
+</xs:all></xs:complexType></xs:element></xs:schema>

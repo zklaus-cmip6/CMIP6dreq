@@ -1,22 +1,23 @@
 <?xml version="1.0" ?>
 <defDoc 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xmlns="uri:w3id.org:cmip6.dreq.framework:a"
+xmlns="urn:w3id.org:cmip6.dreq.framework:a"
 xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd">
 <table label="var" uid="SECTION:var" title="MIP Variable" id="cmip.drv.001" itemLabelMode="def" level="0" maxOccurs="1" labUnique="No">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="sn" title="CF Standard Name" class="externalTextRef"/>
   <rowAttribute label="units" title="Units"/>
   <rowAttribute label="description"/>
+  <rowAttribute label="title" title="Long name"/>
   <rowAttribute label="procnote" title="Processing notes" class="list"/>
   <rowAttribute label="procComment" title="Processing comments" class="freeText"/>
   <rowAttribute label="prov" title="Provenance" class="freeText"/>
   <rowAttribute label="uid" title="Record identifier" class="recordId"/>
 </table>
 <table label="CMORvar" uid="SECTION:CMORvar" title="CMOR Variable" id="cmip.drv.002" itemLabelMode="def" level="1" maxOccurs="1" labUnique="No">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" class="recordId"/>
   <rowAttribute label="title" title="Long name"/>
   <rowAttribute label="comment" title="Description" class="freeText"/>
@@ -43,8 +44,8 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="description"/>
 </table>
 <table label="structure" uid="SECTION:structure" title="Dimensions and related information" id="cmip.drv.003" itemLabelMode="def" level="3" maxOccurs="1" labUnique="Yes">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" class="recordId"/>
   <rowAttribute label="spid" class="internalLink" techNote="spatialShape"/>
   <rowAttribute label="tmid" class="internalLink" techNote="temporalShape"/>
@@ -57,8 +58,8 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="prov"/>
 </table>
 <table label="spatialShape" uid="SECTION:spatialShape" title="Spatial dimensions" id="cmip.drv.004" itemLabelMode="def" level="3" maxOccurs="1" labUnique="Yes">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" class="recordId"/>
   <rowAttribute label="dimensions"/>
   <rowAttribute label="shape"/>
@@ -66,16 +67,16 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="levelFlag" type="xs:boolean" title="Flag set to *false* if number of levels is optional (e.g. determined by the model)"/>
 </table>
 <table label="temporalShape" uid="SECTION:temporalShape" title="Temporal dimension" id="cmip.drv.005" itemLabelMode="def" level="3" maxOccurs="1" labUnique="Yes">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" class="recordId"/>
   <rowAttribute label="dimensions"/>
   <rowAttribute label="label"/>
   <rowAttribute label="description"/>
 </table>
 <table label="requestVar" uid="SECTION:requestVar" title="Request variable (carrying priority and link to group)" id="cmip.drv.006" itemLabelMode="def" level="3" maxOccurs="1" labUnique="No">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" class="recordId"/>
   <rowAttribute label="priority" type="xs:integer"/>
   <rowAttribute label="vid" title="Identifier for MIP Output Variable" class="internalLink" techNote="ovar"/>
@@ -84,25 +85,25 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="table"/>
 </table>
 <table label="tableSection" uid="SECTION:tableSection" title="CMOR Table Sections" id="cmip.drv.007" itemLabelMode="def" level="1" maxOccurs="1" labUnique="No">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" class="recordId"/>
   <rowAttribute label="gpid" title="Identifier for CMOR Tables" class="internalLink" techNote="requestVarGroup"/>
   <rowAttribute label="mip" title="Project"/>
   <rowAttribute label="ref"/>
   <rowAttribute label="refNote"/>
 </table>
-<table label="requestVarGroup" uid="SECTION:requestVarGroup" title="Request link: linking a set of variables" id="cmip.drv.008" itemLabelMode="def" level="3" maxOccurs="1" labUnique="Yes">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+<table label="requestVarGroup" uid="SECTION:requestVarGroup" title="Request variable group: a collection of request variables" id="cmip.drv.008" itemLabelMode="def" level="3" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" class="recordId"/>
   <rowAttribute label="mip" title="Endorsed MIP requesting the data"/>
   <rowAttribute label="ref"/>
   <rowAttribute label="refNote"/>
 </table>
 <table label="requestLink" uid="SECTION:requestLink" title="Request link: linking a set of variables and a set of experiments." id="cmip.drv.009" itemLabelMode="def" level="4" maxOccurs="1" labUnique="No">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" class="recordId"/>
   <rowAttribute label="mip"/>
   <rowAttribute label="tab"/>
@@ -117,8 +118,8 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="opar" title="parameter associated with *opt*"/>
 </table>
 <table label="requestItem" uid="SECTION:requestItem" title="Request Item: specifying the number of years for an experiment" id="cmip.drv.010" itemLabelMode="def" level="5" maxOccurs="1" labUnique="No">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" class="recordId"/>
   <rowAttribute label="mip"/>
   <rowAttribute label="tab"/>
@@ -127,8 +128,8 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="ny" type="xs:integer"/>
 </table>
 <table label="remarks" uid="SECTION:remarks" title="Remarks about other items" id="cmip.drv.011" itemLabelMode="def" level="10" maxOccurs="1" labUnique="No">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" class="recordId"/>
   <rowAttribute label="tid" title="Target identifier: the record ID of the item this refers to." class="internalLink"/>
   <rowAttribute label="tattr" title="Target attribute: an attribute of the target item, or 'ALL'"/>
@@ -139,8 +140,8 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="prov" title="Provenance"/>
 </table>
 <table label="experiment" uid="SECTION:experiment" title="Experiments" id="cmip.drv.012" itemLabelMode="def" level="0" maxOccurs="1" labUnique="No">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" title="Record identifier" class="recordId"/>
   <rowAttribute label="description" title="Description" class="freeText"/>
   <rowAttribute label="egid" title="Identifier for experiment group" class="internalLink"/>
@@ -156,30 +157,30 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="comment" title="Comment"/>
 </table>
 <table label="exptgroup" uid="SECTION:exptgroup" title="Experiment Group" id="cmip.drv.013" itemLabelMode="def" level="0" maxOccurs="1" labUnique="No">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" title="Record identifier" class="recordId"/>
   <rowAttribute label="tierMin" type="xs:integer" title="Minimum tier of experiments in group"/>
   <rowAttribute label="ntot" type="xs:integer" title="Total number of years"/>
 </table>
 <table label="objective" uid="SECTION:objective" title="Scientific objectives" id="cmip.drv.014" itemLabelMode="def" level="0" maxOccurs="1" labUnique="No">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" title="Record identifier" class="recordId"/>
   <rowAttribute label="description" title="Description" class="freeText"/>
   <rowAttribute label="title" title="Long name"/>
   <rowAttribute label="mip" title="Endorsed MIP"/>
 </table>
 <table label="objectiveLink" uid="SECTION:objectiveLink" title="Link between scientific objectives and requests" id="cmip.drv.015" itemLabelMode="def" level="0" maxOccurs="1" labUnique="No">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" title="Record identifier" class="recordId"/>
   <rowAttribute label="oid" title="Identifier for a scientific objective" class="internalLink" techNote="objective"/>
   <rowAttribute label="rid" title="Identifier for a request link" class="internalLink" techNote="requestLink"/>
 </table>
 <table label="varChoice" uid="SECTION:varChoice" title="Indicates variables for which a there is a range of potential CMOR Varibles" id="cmip.drv.016" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
-  <rowAttribute label="label"/>
-  <rowAttribute label="title"/>
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" title="Record identifier" class="recordId"/>
   <rowAttribute label="class" title="Class of choice: heirarchy|cfg"/>
   <rowAttribute label="title"/>

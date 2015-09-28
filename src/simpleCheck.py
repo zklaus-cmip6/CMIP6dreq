@@ -67,7 +67,7 @@ class check1(checkbase):
 
   def _ch02_importSample(self):
     import dreq
-    rq = dreq.loadDreq( dreqXML='out/dreqSample.xml',configdoc='out/dreqDefn.xml' )
+    rq = dreq.loadDreq( dreqXML='out/dreq2Sample.xml',configdoc='out/dreq2Defn.xml' )
     print 'Dreq sample load checked'
     self.ok = True
 
@@ -94,8 +94,11 @@ class check2(checkbase):
       self.ok = False
       self._clear_ch03()
       return
-    schema = 'out/dreqSchema.xsd'
-    xml = 'out/dreqSample.xml'
+
+#schema location
+    schema = '../docs/dreq2Schema.xsd'
+#xml location
+    xml = '../docs/dreq2Sample.xml'
 
     cmd = 'xmllint --noout --schema %s %s  2> .simpleCheck_check2_err.txt 1>.simpleCheck_check2.txt' % (schema,xml) 
     os.popen( cmd ).readlines()
@@ -109,10 +112,11 @@ class check2(checkbase):
     if string.find(ii[0],'validates') != -1:
       print 'Sample XML validated'
       self.ok = True
+      self._clear_ch03()
     else:
       print 'Sample XML failed to validate'
+      print cmd
       self.ok = False
-    self._clear_ch03()
     return
     
 all &= check1('Suite 1 (dreq module)').ok
