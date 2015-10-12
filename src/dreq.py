@@ -58,8 +58,11 @@ class dreqItemBase(object):
            for a in self.__dict__.keys():
              if a[0] != '_' or full:
                if self._a[a].rClass == 'internalLink' and self._base._indexInitialised:
-                 targ = self._base._inx.uid[ self.__dict__[a] ]
-                 print '   %s: [%s]%s [%s]' % ( a, targ._h.label, targ.label, self.__dict__[a] )
+                 if self._base._inx.uid.has_key( self.__dict__[a] ):
+                   targ = self._base._inx.uid[ self.__dict__[a] ]
+                   print '   %s: [%s]%s [%s]' % ( a, targ._h.label, targ.label, self.__dict__[a] )
+                 else:
+                   print '   %s: [ERROR: key not found] [%s]' % ( a, self.__dict__[a] )
                else:
                  print '    %s: %s' % ( a, self.__dict__[a] )
          else:
@@ -159,7 +162,13 @@ class dreqItemBase(object):
        
          for a,tv,v in tvtl:
            if tv:
-             if self._a[a].type == u'xs:integer':
+             if self._a[a].type == u'xs:float':
+               try:
+                 v = float(v)
+               except:
+                 print 'Failed to convert real number: %s' % v
+                 raise
+             elif self._a[a].type == u'xs:integer':
                if self._rc.isIntStr( v ):
                  v = int(v)
                else:

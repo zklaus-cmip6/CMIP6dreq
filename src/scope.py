@@ -19,6 +19,12 @@ class baseException(Exception):
 
 nt_mcfg = collections.namedtuple( 'mcfg', ['nho','nlo','nha','nla','nlas','nls','nh1'] )
 
+def filter1( a, b ):
+  if b < 0:
+    return a
+  else:
+    return min( [a,b] )
+
 npy = {'daily':365, u'Annual':1, u'fx':0.01, u'1hr':24*365, u'3hr':8*365, u'monClim':12, u'Timestep':100, u'6hr':4*365, u'day':365, u'1day':365, u'mon':12, u'yr':1, u'1mon':12, 'month':12, 'year':1, 'monthly':12, 'hr':24*365, 'other':24*365, 'subhr':24*365, 'Day':365, '6h':4*365,
 '3 hourly':8*365, '':1 }
 ## There are 4 cmor variables with blank frequency ....
@@ -40,7 +46,7 @@ class col_count(object):
 
 class dreqQuery(object):
   __doc__ = """Methods to analyse the data request, including data volume estimates"""
-  def __init__(self,dq=None):
+  def __init__(self,dq=None,tierMax=-1):
     if dq == None:
       self.dq = dreq.loadDreq()
     else:
@@ -51,6 +57,7 @@ class dreqQuery(object):
       assert not self.rlu.has_key(k), 'Duplicate label in objectives: %s' % k
       self.rlu[k] = i.uid
 
+    self.tierMax = tierMax
     self.mips = { i.mip for i in  self.dq.coll['requestItem'].items}
     self.mipls = sorted( list( self.mips ) )
 
@@ -59,6 +66,7 @@ class dreqQuery(object):
     for k in self.default_mcfg.__dict__.keys():
       self.mcfg[k] = self.default_mcfg.__dict__[k]
     self.szcfg()
+    self.requestItemExpAll(  )
 
   def szcfg(self):
     self.szss = {}
@@ -132,14 +140,21 @@ class dreqQuery(object):
     self.ntot = sum( [i.ny for i in self.dq.coll['requestItem'].items if i.rlid == rql.uid] )
     return self.ntot
 
-  def volByExpt( self, l1, ex, pmax=2, cc=None ):
+  def volByExpt( self, l1, ex, exptList, pmax=2, cc=None ):
     """volByExpt: calculates the total data volume associated with an experiment/experiment group and a list of request items.
           The calculation has some approximations concerning the number of years in each experiment group."""
 ##
 ## cc: an optional collector, to accumulate indexed volumes
 ##
     inx = self.dq.inx
-    rql = {i.rlid for i in l1 if i.expt == ex}
+##
+## rql is the set of all request links which are associated with a request item for this experiment set
+##
+    rql0 = {i.rlid for i in l1 if i.esid == ex}
+    rqlInv = {u for u in rql0 if inx.uid[u]._h.label == 'remarks' }
+    if len(rqlInv) != 0:
+      print 'WARNING.001.00002: %s invalid request links from request items ...' % len(rqlInv)
+    rql = {u for u in rql0 if inx.uid[u]._h.label != 'remarks' }
 
 ## The complete set of variables associated with these requests:
     rqvg = list({inx.uid[i].refid for i in rql})
@@ -159,14 +174,15 @@ class dreqQuery(object):
 ### for request variables which reference the variable group attached to the link, add the associate CMOR variables, subject to priority
       i = inx.uid[u]
       e[i.uid] = { inx.uid[x].vid for x in inx.iref_by_sect[i.refid].a['requestVar'] if inx.uid[x].priority <= pmax}
-
 #
 # for each variable, calculate the maximum number of years across all the request links which reference that variable.
-#
+##
+## for each request item we have nymax, nenmax, nexmax.
+##
     nym = {}
     for v in vars:
       ### for each request item, check if v is in the set of variables and then add the number of years.
-      nym[v] = max( {i.ny for i in l1 if i.expt == ex and v in e[i.rlid]} )
+      nym[v] = max( {self.rqiExp[i.uid][2] for i in l1 if i.esid == ex and v in e[i.rlid]} )
 
     szv = {}
     ov = []
@@ -176,6 +192,75 @@ class dreqQuery(object):
     ee = self.listIndexDual( ov, 'frequency', 'label', acount=None, alist=None, cdict=szv, cc=cc )
     self.ngptot = sum( [  self.sz[inx.uid[v].stid]* npy[inx.uid[v].frequency] *nym[v]  for v in vars] )
     return (self.ngptot, ee )
+
+  def esid_to_exptList(self,esid,deref=False):
+    if not self.dq.inx.uid.has_key(esid):
+      print 'Attempt to dereferece invalid uid: %s' % esid
+      raise
+
+    if self.dq.inx.uid[esid]._h.label == 'experiment':
+      expts = [esid,]
+    elif self.dq.inx.uid[esid]._h.label != 'remarks':
+      if self.dq.inx.iref_by_sect.has_key(esid) and self.dq.inx.iref_by_sect[esid].a.has_key( 'experiment' ):
+        expts = self.dq.inx.iref_by_sect[esid].a['experiment']
+      else:
+        expts = []
+    else:
+      print 'WARNING: request link not associated with valid experiment group'
+      raise
+
+    if self.tierMax > 0:
+      expts = [i for i in expts if self.dq.inx.uid[i].tier <= self.tierMax]
+
+    if deref:
+      return [self.dq.inx.uid[e] for e in expts]
+    else:
+      return expts
+  
+##
+## need to call this on load
+## then use instead of i.ny etc below
+##
+  def requestItemExpAll( self ):
+    self.rqiExp = {}
+    for rqi in self.dq.coll['requestItem'].items:
+      a,b,c = self.requestItemExp( rqi )
+      self.rqiExp[rqi.uid] = (a,b,c)
+
+  def requestItemExp( self, rqi ):
+    assert rqi._h.label == "requestItem", 'Argument to requestItemExp must be a requestItem'
+    u = rqi.esid
+    if self.dq.inx.uid[u]._h.label == 'experiment':
+      expts = [u,]
+    elif self.dq.inx.uid[u]._h.label != 'remarks':
+      if self.dq.inx.iref_by_sect.has_key(u) and self.dq.inx.iref_by_sect[u].a.has_key( 'experiment' ):
+        expts = self.dq.inx.iref_by_sect[u].a['experiment']
+      else:
+        expts = []
+    else:
+      print 'WARNING: request link not associated with valid experiment group' 
+      i.__info__()
+      raise
+
+    if self.tierMax > 0:
+      expts = [i for i in expts if self.dq.inx.uid[i].tier <= self.tierMax]
+
+    if len(expts) > 0:
+      e = [self.dq.inx.uid[i] for i in expts]
+      dat = [ (i.ntot, i.yps, i.ensz, i.nstart, filter1(i.yps,rqi.nymax), filter1(i.ensz,rqi.nenmax) ) for i in e]
+      nytot = sum( [x[-2]*x[-1] for x in dat ] )
+    else:
+      dat = [ (0,0,0,0,0) ]
+      nytot = 0
+    
+    return (expts, dat, nytot )
+    
+
+  def setTierMax( self, tierMax ):
+    """Set the maxium tier and recompute request sizes"""
+    if tierMax != self.tierMax:
+      self.tierMax = tierMax
+      self.requestItemExpAll(  )
 
   def summaryByMip( self, pmax=1 ):
     bytesPerFloat = 2.
@@ -199,12 +284,13 @@ class dreqQuery(object):
       raise baseException( 'volByMip: "mip" (1st explicit argument) should be type string or set: %s -- %s' % (mip, type(mip))   )
       
     #### The set of experiments/experiment groups:
-    exps = {i.expt for i in l1}
+    exps = {i.esid for i in l1}
     self.volByE = {}
     vtot = 0
     cc = collections.defaultdict( col_count )
     for e in exps:
-      self.volByE[e] = self.volByExpt( l1, e, pmax=pmax, cc=cc )
+      expts = self.esid_to_exptList(e,deref=True)
+      self.volByE[e] = self.volByExpt( l1, e, expts, pmax=pmax, cc=cc )
       vtot += self.volByE[e][0]
     self.indexedVol = cc
 
