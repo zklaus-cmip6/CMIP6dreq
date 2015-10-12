@@ -1,0 +1,506 @@
+<?xml version="1.0"?>
+<xs:schema xmlns="uri:w3id.org:cmip6.dreq.dreq:a" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:a="uri:w3id.org:cmip6.dreq.framework:a" xmlns:xd="http://www.pnp-software.com/XSLTdoc" targetNamespace="uri:w3id.org:cmip6.dreq.dreq:a" elementFormDefault="qualified">
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
+       Some specialised string types
+    </xs:documentation></xs:annotation>
+<xs:simpleType name="st__attLabel_def"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9-])+"/></xs:restriction></xs:simpleType>
+<xs:simpleType name="st__attLabel_und"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9_])+"/></xs:restriction></xs:simpleType>
+<xs:simpleType name="st__attLabel_int"><xs:restriction base="xs:integer"/></xs:simpleType>
+<xs:simpleType name="st__attLabel_an"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9])+"/></xs:restriction></xs:simpleType>
+<xs:complexType name="ct__info" mixed="true"><xs:attribute name="srcType" type="xs:string"/><xs:attribute name="srcRef" type="xs:string"/></xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">experiment: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__experiment">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="ct__experiment_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="experiment"/>
+<xs:attribute name="title" type="xs:string" fixed="Experiments"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.001"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uuid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   title;
+   uuid;
+   Record identifierdescription;
+   Descriptionegid;
+   Identifier for experiment groupmip;
+   MIP defining experimentmcfg;
+   Model categorytier;
+   Tier of experimentnstart;
+   xs:integerNumber of start datesstarty;
+   endy;
+   yps;
+   xs:integerYears per simulationensz;
+   xs:integerEnsemble sizentot;
+   xs:integerTotal number of yearscomment;
+   Comment</xs:documentation></xs:annotation>
+<xs:complexType name="ct__experiment_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uuid" type="xs:string"/>
+<xs:attribute name="description" type="xs:string"/>
+<xs:attribute name="egid" type="xs:string"/>
+<xs:attribute name="mip" type="xs:string"/>
+<xs:attribute name="mcfg" type="xs:string"/>
+<xs:attribute name="tier" type="xs:string"/>
+<xs:attribute name="nstart" type="xs:integer"/>
+<xs:attribute name="starty" type="xs:string"/>
+<xs:attribute name="endy" type="xs:string"/>
+<xs:attribute name="yps" type="xs:integer"/>
+<xs:attribute name="ensz" type="xs:integer"/>
+<xs:attribute name="ntot" type="xs:integer"/>
+<xs:attribute name="comment" type="xs:string"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">exptgroup: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__exptgroup">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="ct__exptgroup_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="exptgroup"/>
+<xs:attribute name="title" type="xs:string" fixed="Experiment Group"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.002"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uuid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   title;
+   uuid;
+   Record identifiertierMin;
+   xs:integerMinimum tier of experiments in groupntot;
+   xs:integerTotal number of years</xs:documentation></xs:annotation>
+<xs:complexType name="ct__exptgroup_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uuid" type="xs:string"/>
+<xs:attribute name="tierMin" type="xs:integer"/>
+<xs:attribute name="ntot" type="xs:integer"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">objective: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__objective">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="ct__objective_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="objective"/>
+<xs:attribute name="title" type="xs:string" fixed="Scientific objectives"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.003"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uuid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   title;
+   uuid;
+   Record identifierdescription;
+   Descriptiontitle;
+   Long namemip;
+   Endorsed MIP</xs:documentation></xs:annotation>
+<xs:complexType name="ct__objective_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uuid" type="xs:string"/>
+<xs:attribute name="description" type="xs:string"/>
+<xs:attribute name="mip" type="xs:string"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">objectiveLink: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__objectiveLink">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="ct__objectiveLink_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="objectiveLink"/>
+<xs:attribute name="title" type="xs:string" fixed="Link between scientific objectives and requests"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.004"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uuid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   title;
+   uuid;
+   Record identifieroid;
+   Identifier for a scientific objectiverid;
+   Identifier for a request link</xs:documentation></xs:annotation>
+<xs:complexType name="ct__objectiveLink_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uuid" type="xs:string"/>
+<xs:attribute name="oid" type="xs:string"/>
+<xs:attribute name="rid" type="xs:string"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">var: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__var">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="ct__var_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="var"/>
+<xs:attribute name="title" type="xs:string" fixed="MIP Variable"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.005"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uuid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   title;
+   sn;
+   CF Standard Nameunits;
+   Unitsdescription;
+   procnote;
+   Processing notesprocComment;
+   Processing commentsprov;
+   Provenanceuuid;
+   Record identifier</xs:documentation></xs:annotation>
+<xs:complexType name="ct__var_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="sn" type="xs:string"/>
+<xs:attribute name="units" type="xs:string"/>
+<xs:attribute name="description" type="xs:string"/>
+<xs:attribute name="procnote" type="xs:string"/>
+<xs:attribute name="procComment" type="xs:string"/>
+<xs:attribute name="prov" type="xs:string"/>
+<xs:attribute name="uuid" type="xs:string"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">ovar: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__ovar">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="ct__ovar_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="ovar"/>
+<xs:attribute name="title" type="xs:string" fixed="MIP Output Variable"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.006"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uuid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   title;
+   uuid;
+   title;
+   Long namecomment;
+   Descriptiondeflate_level;
+   shuffle;
+   ok_max_mean_abs;
+   flag_meanings;
+   type;
+   ok_min_mean_abs;
+   sn;
+   CF Standard Namedeflate;
+   valid_min;
+   cell_methods;
+   flag_values;
+   cell_measures;
+   out_name;
+   modeling_realm;
+   units;
+   cell_methods_xx;
+   valid_max;
+   positive;
+   mipTable;
+   dimensions;
+   vid;
+   Identifier for MIP Variablefrequency;
+   Frequencygpid;
+   Variable group/tablerowIndex;
+   xs:integerRow index of entry in source sheetpriority;
+   xs:integerPriority</xs:documentation></xs:annotation>
+<xs:complexType name="ct__ovar_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uuid" type="xs:string"/>
+<xs:attribute name="comment" type="xs:string"/>
+<xs:attribute name="deflate_level" type="xs:string"/>
+<xs:attribute name="shuffle" type="xs:string"/>
+<xs:attribute name="ok_max_mean_abs" type="xs:string"/>
+<xs:attribute name="flag_meanings" type="xs:string"/>
+<xs:attribute name="type" type="xs:string"/>
+<xs:attribute name="ok_min_mean_abs" type="xs:string"/>
+<xs:attribute name="sn" type="xs:string"/>
+<xs:attribute name="deflate" type="xs:string"/>
+<xs:attribute name="valid_min" type="xs:string"/>
+<xs:attribute name="cell_methods" type="xs:string"/>
+<xs:attribute name="flag_values" type="xs:string"/>
+<xs:attribute name="cell_measures" type="xs:string"/>
+<xs:attribute name="out_name" type="xs:string"/>
+<xs:attribute name="modeling_realm" type="xs:string"/>
+<xs:attribute name="units" type="xs:string"/>
+<xs:attribute name="cell_methods_xx" type="xs:string"/>
+<xs:attribute name="valid_max" type="xs:string"/>
+<xs:attribute name="positive" type="xs:string"/>
+<xs:attribute name="mipTable" type="xs:string"/>
+<xs:attribute name="dimensions" type="xs:string"/>
+<xs:attribute name="vid" type="xs:string"/>
+<xs:attribute name="frequency" type="xs:string"/>
+<xs:attribute name="gpid" type="xs:string"/>
+<xs:attribute name="rowIndex" type="xs:integer"/>
+<xs:attribute name="priority" type="xs:integer"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">groupItem: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__groupItem">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="ct__groupItem_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="groupItem"/>
+<xs:attribute name="title" type="xs:string" fixed="Output Group Item"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.007"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uuid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   title;
+   group;
+   table;
+   Source table or 'new' for new variablesfreq;
+   FrequencydescriptionEx;
+   shape;
+   Shape of variable (dimensions)levels;
+   Number of vertical levelststyle;
+   mask;
+   priority;
+   xs:integermip;
+   uuid;
+   new;
+   gpid;
+   Identifier for request linkvkey;
+   vid;
+   Identifier for MIP Variable</xs:documentation></xs:annotation>
+<xs:complexType name="ct__groupItem_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="group" type="xs:string"/>
+<xs:attribute name="table" type="xs:string"/>
+<xs:attribute name="freq" type="xs:string"/>
+<xs:attribute name="descriptionEx" type="xs:string"/>
+<xs:attribute name="shape" type="xs:string"/>
+<xs:attribute name="levels" type="xs:string"/>
+<xs:attribute name="tstyle" type="xs:string"/>
+<xs:attribute name="mask" type="xs:string"/>
+<xs:attribute name="priority" type="xs:integer"/>
+<xs:attribute name="mip" type="xs:string"/>
+<xs:attribute name="uuid" type="xs:string"/>
+<xs:attribute name="new" type="xs:string"/>
+<xs:attribute name="gpid" type="xs:string"/>
+<xs:attribute name="vkey" type="xs:string"/>
+<xs:attribute name="vid" type="xs:string"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">revisedTabItem: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__revisedTabItem">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="ct__revisedTabItem_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="revisedTabItem"/>
+<xs:attribute name="title" type="xs:string" fixed="Revised Table Item"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.008"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uuid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   title;
+   table;
+   mip;
+   Endorsed MIP requesting the variableuuid;
+   priority;
+   xs:integervid;
+   Identifier for MIP Output Variablevgid;
+   Identifier for Variable Group</xs:documentation></xs:annotation>
+<xs:complexType name="ct__revisedTabItem_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="table" type="xs:string"/>
+<xs:attribute name="mip" type="xs:string"/>
+<xs:attribute name="uuid" type="xs:string"/>
+<xs:attribute name="priority" type="xs:integer"/>
+<xs:attribute name="vid" type="xs:string"/>
+<xs:attribute name="vgid" type="xs:string"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">tableSection: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__tableSection">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="ct__tableSection_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="tableSection"/>
+<xs:attribute name="title" type="xs:string" fixed="CMOR Table Sections"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.009"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uuid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   title;
+   uuid;
+   gpid;
+   Identifier for CMOR Tablesmip;
+   Projectref;
+   refNote;
+   </xs:documentation></xs:annotation>
+<xs:complexType name="ct__tableSection_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uuid" type="xs:string"/>
+<xs:attribute name="gpid" type="xs:string"/>
+<xs:attribute name="mip" type="xs:string"/>
+<xs:attribute name="ref" type="xs:string"/>
+<xs:attribute name="refNote" type="xs:string"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">requestVarGroup: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__requestVarGroup">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="ct__requestVarGroup_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="requestVarGroup"/>
+<xs:attribute name="title" type="xs:string" fixed="Request link: linking a set of variables"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.010"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uuid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   title;
+   uuid;
+   mip;
+   Endorsed MIP requesting the dataref;
+   refNote;
+   </xs:documentation></xs:annotation>
+<xs:complexType name="ct__requestVarGroup_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uuid" type="xs:string"/>
+<xs:attribute name="mip" type="xs:string"/>
+<xs:attribute name="ref" type="xs:string"/>
+<xs:attribute name="refNote" type="xs:string"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">requestLink: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__requestLink">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="ct__requestLink_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="requestLink"/>
+<xs:attribute name="title" type="xs:string" fixed="Request link: linking a set of variables and a set of experiments."/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.011"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uuid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   title;
+   uuid;
+   mip;
+   tab;
+   objective;
+   grid;
+   gridreq;
+   comment;
+   ref;
+   refNote;
+   refid;
+   reference to a request Variable Groupopt;
+   option for selecting a subset of variablesopar;
+   parameter associated with *opt*</xs:documentation></xs:annotation>
+<xs:complexType name="ct__requestLink_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uuid" type="xs:string"/>
+<xs:attribute name="mip" type="xs:string"/>
+<xs:attribute name="tab" type="xs:string"/>
+<xs:attribute name="objective" type="xs:string"/>
+<xs:attribute name="grid" type="xs:string"/>
+<xs:attribute name="gridreq" type="xs:string"/>
+<xs:attribute name="comment" type="xs:string"/>
+<xs:attribute name="ref" type="xs:string"/>
+<xs:attribute name="refNote" type="xs:string"/>
+<xs:attribute name="refid" type="xs:string"/>
+<xs:attribute name="opt" type="xs:string"/>
+<xs:attribute name="opar" type="xs:string"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">requestItem: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__requestItem">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="ct__requestItem_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="requestItem"/>
+<xs:attribute name="title" type="xs:string" fixed="Request Item: specifying the number of years for an experiment"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.012"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uuid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   title;
+   uuid;
+   mip;
+   tab;
+   expt;
+   rlid;
+   Identifier of corresponding requestLinkny;
+   xs:integer</xs:documentation></xs:annotation>
+<xs:complexType name="ct__requestItem_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uuid" type="xs:string"/>
+<xs:attribute name="mip" type="xs:string"/>
+<xs:attribute name="tab" type="xs:string"/>
+<xs:attribute name="expt" type="xs:string"/>
+<xs:attribute name="rlid" type="xs:string"/>
+<xs:attribute name="ny" type="xs:integer"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">remarks: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__remarks">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="ct__remarks_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="remarks"/>
+<xs:attribute name="title" type="xs:string" fixed="Remarks about other items"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.013"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uuid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   title;
+   uuid;
+   tid;
+   Target identifier: the record ID of the item this refers to.tattr;
+   Target attribute: an attribute of the target item, or 'ALL'description;
+   Free text remarks -- unless there are specific restrictions associated with the class attribute of this remarkclass;
+   Different classes of remark support a range of specialised usages: free (a free text comment), modelTypeReq (a model type requirement), modelTypeExcl (a model type exclusion), varAlt (an alternative variable that my be used instead of this one), varSup (an alternative variable which, if selected makes this one redundant), attChange (a change in the value of an attribute -- old value provided in 'techNote').qid;
+   Identifier required for classes modelTypeReq, modelTypeExcl, varAlt, varSup. For the first two classes, the identifier points to a model type specification, for the last two it points to an output variable specification.techNote;
+   Optional additional machine readable content (though not restricted by the schema)prov;
+   Provenance</xs:documentation></xs:annotation>
+<xs:complexType name="ct__remarks_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uuid" type="xs:string"/>
+<xs:attribute name="tid" type="xs:string"/>
+<xs:attribute name="tattr" type="xs:string"/>
+<xs:attribute name="description" type="xs:string"/>
+<xs:attribute name="class" type="xs:string"/>
+<xs:attribute name="qid" type="xs:string"/>
+<xs:attribute name="techNote" type="xs:string"/>
+<xs:attribute name="prov" type="xs:string"/>
+
+</xs:complexType><xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
+       This schema is automatically generated by xsltproc.
+    </xs:documentation></xs:annotation>
+<xs:element name="main"><xs:complexType><xs:all>
+<!--[applying elem main]-->
+<xs:element name="experiment" type="ct__experiment"/>
+<!--[applying elem main]-->
+<xs:element name="exptgroup" type="ct__exptgroup"/>
+<!--[applying elem main]-->
+<xs:element name="objective" type="ct__objective"/>
+<!--[applying elem main]-->
+<xs:element name="objectiveLink" type="ct__objectiveLink"/>
+<!--[applying elem main]-->
+<xs:element name="var" type="ct__var"/>
+<!--[applying elem main]-->
+<xs:element name="ovar" type="ct__ovar"/>
+<!--[applying elem main]-->
+<xs:element name="groupItem" type="ct__groupItem"/>
+<!--[applying elem main]-->
+<xs:element name="revisedTabItem" type="ct__revisedTabItem"/>
+<!--[applying elem main]-->
+<xs:element name="tableSection" type="ct__tableSection"/>
+<!--[applying elem main]-->
+<xs:element name="requestVarGroup" type="ct__requestVarGroup"/>
+<!--[applying elem main]-->
+<xs:element name="requestLink" type="ct__requestLink"/>
+<!--[applying elem main]-->
+<xs:element name="requestItem" type="ct__requestItem"/>
+<!--[applying elem main]-->
+<xs:element name="remarks" type="ct__remarks"/>
+</xs:all></xs:complexType>
+<xs:unique name="uniqueIdentifierConstraint"><xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
+       The uniqueIdentifierConstraint imposes the condition that the uuid attribute on "item" elements should have a unique value.
+    </xs:documentation></xs:annotation>
+<xs:selector xpath=".//item"/><xs:field xpath="@uuid"/></xs:unique>
+</xs:element>
+</xs:schema>
