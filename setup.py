@@ -88,6 +88,5 @@ if __name__ == "__main__":
         packages=PACKAGES,
         zip_safe=False,
         classifiers=CLASSIFIERS,
-        install_requires=INSTALL_REQUIRES,
-        package_data={'dreqPy': ['LICENSE', 'docs/*.txt']}
+        install_requires=INSTALL_REQUIRES
     )
