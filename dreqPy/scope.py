@@ -54,7 +54,7 @@ class dreqQuery(object):
     self.rlu = {}
     for i in self.dq.coll['objective'].items:
       k = '%s.%s' % (i.mip,i.label)
-      assert not self.rlu.has_key(k), 'Duplicate label in objectives: %s' % k
+      assert not k in self.rlu, 'Duplicate label in objectives: %s' % k
       self.rlu[k] = i.uid
 
     self.tierMax = tierMax
@@ -74,7 +74,7 @@ class dreqQuery(object):
     for i in self.dq.coll['spatialShape'].items:
       type = 'a'
       if i.levelFlag == 'false':
-        ds =  string.split( i.dimensions, '|' )
+        ds =  i.dimensions.split( '|' )
         if ds[-1] in ['site', 'basin']:
           vd = ds[-2]
         else:
@@ -90,12 +90,12 @@ class dreqQuery(object):
         elif vd == 'aslevel':
           nz = self.mcfg['nlas']
         else:
-          print 'Failed to parse dimensions %s' % i.dimensions
+          print ( 'Failed to parse dimensions %s' % i.dimensions )
           raise
       else:
         nz = i.levels
 
-      dims = set( string.split( i.dimensions, '|' ) )
+      dims = set( i.dimensions.split( '|' ) )
       if 'latitude' in dims and 'longitude' in dims:
         if type == 'o':
           nh = self.mcfg['nho']
@@ -153,7 +153,7 @@ class dreqQuery(object):
     rql0 = {i.rlid for i in l1 if i.esid == ex}
     rqlInv = {u for u in rql0 if inx.uid[u]._h.label == 'remarks' }
     if len(rqlInv) != 0:
-      print 'WARNING.001.00002: %s invalid request links from request items ...' % len(rqlInv)
+      print ( 'WARNING.001.00002: %s invalid request links from request items ...' % len(rqlInv) )
     rql = {u for u in rql0 if inx.uid[u]._h.label != 'remarks' }
 
 ## The complete set of variables associated with these requests:
@@ -194,19 +194,19 @@ class dreqQuery(object):
     return (self.ngptot, ee )
 
   def esid_to_exptList(self,esid,deref=False):
-    if not self.dq.inx.uid.has_key(esid):
-      print 'Attempt to dereferece invalid uid: %s' % esid
+    if not esid in self.dq.inx.uid:
+      print ( 'Attempt to dereferece invalid uid: %s' % esid )
       raise
 
     if self.dq.inx.uid[esid]._h.label == 'experiment':
       expts = [esid,]
     elif self.dq.inx.uid[esid]._h.label != 'remarks':
-      if self.dq.inx.iref_by_sect.has_key(esid) and self.dq.inx.iref_by_sect[esid].a.has_key( 'experiment' ):
+      if esid in self.dq.inx.iref_by_sect and 'experiment' in self.dq.inx.iref_by_sect[esid].a:
         expts = self.dq.inx.iref_by_sect[esid].a['experiment']
       else:
         expts = []
     else:
-      print 'WARNING: request link not associated with valid experiment group'
+      print ( 'WARNING: request link not associated with valid experiment group' )
       raise
 
     if self.tierMax > 0:
@@ -233,12 +233,12 @@ class dreqQuery(object):
     if self.dq.inx.uid[u]._h.label == 'experiment':
       expts = [u,]
     elif self.dq.inx.uid[u]._h.label != 'remarks':
-      if self.dq.inx.iref_by_sect.has_key(u) and self.dq.inx.iref_by_sect[u].a.has_key( 'experiment' ):
+      if u in self.dq.inx.iref_by_sect and 'experiment' in self.dq.inx.iref_by_sect[u].a:
         expts = self.dq.inx.iref_by_sect[u].a['experiment']
       else:
         expts = []
     else:
-      print 'WARNING: request link not associated with valid experiment group' 
+      print ( 'WARNING: request link not associated with valid experiment group'  )
       i.__info__()
       raise
 
@@ -266,13 +266,13 @@ class dreqQuery(object):
     bytesPerFloat = 2.
     for m in self.mipls:
       v = self.volByMip( m, pmax=pmax )
-      print '%12.12s: %6.2fTb' % (m,v*bytesPerFloat*1.e-12)
+      print ( '%12.12s: %6.2fTb' % (m,v*bytesPerFloat*1.e-12) )
 
   def volByMip( self, mip, pmax=2):
 
     if type(mip) in {type( '' ),type( u'') }:
       if mip not in self.mips:
-        print self.mips
+        print ( self.mips )
         raise baseException( 'volByMip: Name of mip not recognised: %s' % mip )
       l1 = [i for i in  self.dq.coll['requestItem'].items if i.mip == mip]
     elif type(mip) == type( set()):

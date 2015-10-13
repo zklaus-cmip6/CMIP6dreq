@@ -7,7 +7,6 @@ import xml, string, collections
 import xml.dom
 import xml.dom.minidom
 import re, shelve
-import sets
 
 class rechecks(object):
   def __init__(self):
@@ -54,25 +53,25 @@ class dreqItemBase(object):
        def __info__(self,full=False):
          """Print a summary of the data held in the object as a list of key/value pairs"""
          if self._contentInitialised:
-           print 'Item <%s>: [%s] %s' % (self._h.title,self.label,self.title)
+           print ( 'Item <%s>: [%s] %s' % (self._h.title,self.label,self.title) )
            for a in self.__dict__.keys():
              if a[0] != '_' or full:
                if self._a[a].rClass == 'internalLink' and self._base._indexInitialised:
-                 if self._base._inx.uid.has_key( self.__dict__[a] ):
+                 if self.__dict__[a] in self._base._inx.uid:
                    targ = self._base._inx.uid[ self.__dict__[a] ]
-                   print '   %s: [%s]%s [%s]' % ( a, targ._h.label, targ.label, self.__dict__[a] )
+                   print ( '   %s: [%s]%s [%s]' % ( a, targ._h.label, targ.label, self.__dict__[a] ) )
                  else:
-                   print '   %s: [ERROR: key not found] [%s]' % ( a, self.__dict__[a] )
+                   print ( '   %s: [ERROR: key not found] [%s]' % ( a, self.__dict__[a] ) )
                else:
-                 print '    %s: %s' % ( a, self.__dict__[a] )
+                 print ( '    %s: %s' % ( a, self.__dict__[a] ) )
          else:
-           print 'Item <%s>: uninitialised' % self.sectionLabel
+           print ( 'Item <%s>: uninitialised' % self.sectionLabel )
 
        def __href__(self,odir=""):
          igns =  {'','__unset__'}
-         if self.__dict__.has_key( 'description' ) and string.strip( self.description ) not in igns:
+         if 'description' in self.__dict__ and string.strip( self.description ) not in igns:
            ttl = self.description
-         elif self.__dict__.has_key( 'title' ) and string.strip( self.title ) not in igns:
+         elif 'title' in self.__dict__ and string.strip( self.title ) not in igns:
            ttl = self.title
          else:
            ttl = self.label
@@ -112,7 +111,7 @@ class dreqItemBase(object):
                  tl = self._inx.iref_by_sect[self.uid].a.keys()
                am = []
                for t in tl:
-                 if self._inx.iref_by_sect[self.uid].a.has_key(t):
+                 if t in self._inx.iref_by_sect[self.uid].a:
                    am.append( '<h3>%s</h3>' % t )
                    am.append( '<ul>' )
                    items = [self._inx.uid[u] for  u in self._inx.iref_by_sect[self.uid].a[t] ]
@@ -134,7 +133,7 @@ class dreqItemBase(object):
        def dictInit( self, dict ):
          __doc__ = """Initialise from a dictionary."""
          for a in self._a.keys():
-           if dict.has_key(a):
+           if a in dict:
              self.__dict__[a] = dict[a]
            else:
              self.__dict__[a] = self._d.defaults.get( a, self._d.glob )
@@ -146,7 +145,7 @@ class dreqItemBase(object):
          nw1 = 0
          tvtl = []
          if etree:
-           ks = sets.Set( el.keys() )
+           ks = set( el.keys() )
            for a in self._a.keys():
              if a in ks:
                aa = '%s%s' % (self.ns,a)
@@ -166,7 +165,7 @@ class dreqItemBase(object):
                try:
                  v = float(v)
                except:
-                 print 'Failed to convert real number: %s' % v
+                 print ( 'Failed to convert real number: %s' % v )
                  raise
              elif self._a[a].type == u'xs:integer':
                if self._rc.isIntStr( v ):
@@ -176,13 +175,13 @@ class dreqItemBase(object):
                  thissect = '%s [%s]' % (self._h.title,self._h.tag)
                  if v in { '',u'',' ', u' '}:
                    if nw1 < 20:
-                     print 'WARN.050.0001: input integer non-compliant: %s: %s: "%s" -- set to zero' % (thissect,a,v)
+                     print ( 'WARN.050.0001: input integer non-compliant: %s: %s: "%s" -- set to zero' % (thissect,a,v) )
                      nw1 += 1
                    v = 0
                  else:
                    try:
                      v = int(float(v))
-                     print 'WARN: input integer non-compliant: %s: %s: %s' % (thissect,a,v)
+                     print ( 'WARN: input integer non-compliant: %s: %s: %s' % (thissect,a,v) )
                    except:
                      msg = 'ERROR: failed to convert integer: %s: %s: %s' % (thissect,a,v)
                      deferredHandling=True
@@ -192,9 +191,9 @@ class dreqItemBase(object):
            else:
              if a in {'uid'}:
                thissect = '%s [%s]' % (self._h.title,self._h.tag)
-               print 'ERROR.020.0001: missing uid: %s' % thissect
+               print ( 'ERROR.020.0001: missing uid: %s' % thissect )
                if etree:
-                 print ks
+                 print ( ks )
                  import sys
                  sys.exit(0)
              self.__dict__[a] = self._d.defaults.get( a, self._d.glob )
@@ -203,7 +202,7 @@ class dreqItemBase(object):
              ##print 'Bad row index ', el.hasAttribute( 'rowIndex' )
              ##raise
            if deferredHandling:
-             print msg
+             print ( msg )
 
          self._contentInitialised = True
 
@@ -234,7 +233,8 @@ class config(object):
 
       self.contentDoc = cel.parse( self.vsamp )
       root = self.contentDoc.getroot()
-      bs = string.split( root.tag, '}' )
+      ##bs = string.split( root.tag, '}' )
+      bs = root.tag.split( '}' )
       if len( bs ) > 1:
         self.ns = bs[0] + '}'
       else:
@@ -306,7 +306,7 @@ class config(object):
  
   def info(self,ss):
     if not self.silent:
-      print ss
+      print ( ss )
 
   def get(self):
     return self.coll
@@ -386,7 +386,7 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
     self.uid = {}
     self.uid2 = collections.defaultdict( list )
     nativeAtts = ['uid','iref_by_uid','iref_by_sect','missingIds']
-    naok = map( lambda x: not dreq.has_key(x), nativeAtts )
+    naok = map( lambda x: not x in dreq, nativeAtts )
     assert all(naok), 'This version cannot index collections containing sections with names: %s' % str( nativeAtts )
     self.var_uid = {}
     self.var_by_name = collections.defaultdict( list )
@@ -394,7 +394,7 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
     self.iref_by_uid = collections.defaultdict( list )
     irefdict = collections.defaultdict( list )
     for k in dreq.keys():
-      if dreq[k].attDefn.has_key('sn'):
+      if 'sn' in dreq[k].attDefn:
          self.__dict__[k] =  container( ['label','sn'] )
       else:
          self.__dict__[k] =  container( ['label'] )
@@ -407,9 +407,9 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
 
     for k in dreq.keys():
         for i in dreq[k].items:
-          assert i.__dict__.has_key('uid'), 'uid not found::\n%s\n%s' % (str(i._h),str(i.__dict__) )
-          if self.uid.has_key(i.uid):
-            print 'ERROR.100.0001: Duplicate uid: %s [%s]' % (i.uid,i._h.title)
+          assert 'uid' in i.__dict__, 'uid not found::\n%s\n%s' % (str(i._h),str(i.__dict__) )
+          if 'uid' in self.uid:
+            print ( 'ERROR.100.0001: Duplicate uid: %s [%s]' % (i.uid,i._h.title) )
             self.uid2[i.uid].append( (k,i) )
           else:
 ### create index bx uid.
@@ -428,7 +428,7 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
 ## append attribute name and target  -- item i.uid, attribute k2 reference item id2
               self.iref_by_uid[ id2 ].append( (k2,i.uid) )
               self.iref_by_sect[ id2 ].a[sect].append( i.uid )
-              if self.uid.has_key( id2 ):
+              if id2 in self.uid:
                 n1 += 1
               else:
                 n2 += 1
@@ -439,12 +439,12 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
       for i in dreq[k].items:
         self.__dict__[k].uid[i.uid] = i
         self.__dict__[k].label[i.label].append( i.uid )
-        if dreq[k].attDefn.has_key('sn'):
+        if 'sn' in dreq[k].attDefn:
           self.__dict__[k].sn[i.sn].append( i.uid )
 
   def info(self,ss):
     if not self.silent:
-      print ss
+      print ( ss )
 
 class ds(object):
   def __init__(self,k):
