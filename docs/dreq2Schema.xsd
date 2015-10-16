@@ -513,13 +513,67 @@
 <xs:attribute name="rid" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">varChoiceLinkR: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__varChoiceLinkR">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__varChoiceLinkR_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="varChoiceLinkR"/>
+<xs:attribute name="title" type="xs:string" fixed="Links a variable to a choice element"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.016"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   Record Labeltitle;
+   Record Titleuid;
+   Record identifiervid;
+   Variablecid;
+   Choicerank;
+   xs:integerFor ranked choices, the rank of this variable (higher rank makes lower ranks redundant)</xs:documentation></xs:annotation>
+<xs:complexType name="ct__varChoiceLinkR_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="aa:st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="vid" type="xs:string"/>
+<xs:attribute name="cid" type="xs:string"/>
+<xs:attribute name="rank" type="xs:integer"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">varChoiceLinkC: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__varChoiceLinkC">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__varChoiceLinkC_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="varChoiceLinkC"/>
+<xs:attribute name="title" type="xs:string" fixed="Links a variable to a choice element"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.017"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   Record Labeltitle;
+   Record Titleuid;
+   Record identifiervid;
+   Variablecfgid;
+   Configuration Optioncfg;
+   xs:booleanConfiguration Valuecid;
+   Choice -- can provide a link to related variables</xs:documentation></xs:annotation>
+<xs:complexType name="ct__varChoiceLinkC_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="aa:st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="vid" type="xs:string"/>
+<xs:attribute name="cfgid" type="xs:string"/>
+<xs:attribute name="cfg" type="xs:boolean"/>
+<xs:attribute name="cid" type="xs:string"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">varChoice: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__varChoice">
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__varChoice_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="varChoice"/>
 <xs:attribute name="title" type="xs:string" fixed="Indicates variables for which a there is a range of potential CMOR Varibles"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.016"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.018"/>
 <xs:attribute name="class" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -548,7 +602,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__mip_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="mip"/>
 <xs:attribute name="title" type="xs:string" fixed="Model Intercomparison Project"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.017"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.019"/>
 <xs:attribute name="class" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -567,6 +621,35 @@
 <xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="url" type="xs:string"/>
 <xs:attribute name="status" type="xs:string"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">modelConfig: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__modelConfig">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__modelConfig_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="modelConfig"/>
+<xs:attribute name="title" type="xs:string" fixed="Model configuration options"/>
+<xs:attribute name="id" type="xs:string" fixed="cmip.drv.020"/>
+<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="uid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   Record Labeltitle;
+   Record Titleuid;
+   Record identifiertitle;
+   MIPs;
+   usage;
+   type;
+   range;
+   Range of valid values, e.g. xs:boolean</xs:documentation></xs:annotation>
+<xs:complexType name="ct__modelConfig_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="aa:st__attLabel_an"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="MIPs" type="xs:string"/>
+<xs:attribute name="usage" type="xs:string"/>
+<xs:attribute name="type" type="xs:string"/>
+<xs:attribute name="range" type="xs:string"/>
 
 </xs:complexType><xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
        This schema is automatically generated by xsltproc.
@@ -602,10 +685,16 @@
 <xs:element name="objective" type="aa:ct__objective"/>
 <!--[applying elem main] objectiveLink-->
 <xs:element name="objectiveLink" type="aa:ct__objectiveLink"/>
+<!--[applying elem main] varChoiceLinkR-->
+<xs:element name="varChoiceLinkR" type="aa:ct__varChoiceLinkR"/>
+<!--[applying elem main] varChoiceLinkC-->
+<xs:element name="varChoiceLinkC" type="aa:ct__varChoiceLinkC"/>
 <!--[applying elem main] varChoice-->
 <xs:element name="varChoice" type="aa:ct__varChoice"/>
 <!--[applying elem main] mip-->
 <xs:element name="mip" type="aa:ct__mip"/>
+<!--[applying elem main] modelConfig-->
+<xs:element name="modelConfig" type="aa:ct__modelConfig"/>
 </xs:all></xs:complexType>
 <xs:unique name="uniqueIdentifierConstraint"><xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
        The uniqueIdentifierConstraint imposes the condition that the uid attribute on "item" elements should have a unique value.

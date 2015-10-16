@@ -88,5 +88,6 @@ if __name__ == "__main__":
         packages=PACKAGES,
         zip_safe=False,
         classifiers=CLASSIFIERS,
-        install_requires=INSTALL_REQUIRES
+        install_requires=INSTALL_REQUIRES,
+        data_files = [("", ["LICENSE"])]
     )

@@ -1,7 +1,17 @@
 
 
-The dreqPy package includes an XML document specifying the CMIP6 data request and a python API.
+python ptxt.py: to generate schema and sample from vocabDefn.txt
+ [Need to edit file to switch modes]
+Produces vocabDefn.xml  vocabSample.xml
 
-The XML document is described in dreqML.pdf in the docs directory.
+test vocabDefn.xml
 
-The python API is described in dreqPy.pdf, also in the docs directory.
+xmllint --schema ../../docs/vocabFrameworkSchema.xsd out/vocabDefn.xml
+
+use xsltproc to generate schema from vocabDefn.xml
+
+xsltproc ../../docs/xlst_xdsSchemaGen.xml out/vocabDefn.xml > out/vocab.xsd
+
+check vocabSample.xml
+
+xmllint --schema out/vocab.xsd out/vocabSample.xml
