@@ -44,6 +44,16 @@ class checkbase(object):
   def __init__(self,lab):
     self.lab = lab
     self.ok = True
+
+#document directory
+    self.docdir = '../docs'
+#schema location
+    self.schema = '%s/dreq2Schema.xsd' % self.docdir
+#sample xml location
+    self.sampleXml = '%s/dreq2Sample.xml' % self.docdir
+#definition document xml location
+    self.defnXml = '%s/dreq2Defn.xml' % self.docdir
+
     ml = inspect.getmembers( self, predicate=inspect.ismethod ) 
     ok = True
     for tag,m in ml:
@@ -67,7 +77,7 @@ class check1(checkbase):
 
   def _ch02_importSample(self):
     import dreq
-    rq = dreq.loadDreq( dreqXML='out/dreq2Sample.xml',configdoc='out/dreq2Defn.xml' )
+    rq = dreq.loadDreq( dreqXML=self.sampleXml,configdoc=self.defnXml )
     print 'Dreq sample load checked'
     self.ok = True
 
@@ -95,12 +105,7 @@ class check2(checkbase):
       self._clear_ch03()
       return
 
-#schema location
-    schema = '../docs/dreq2Schema.xsd'
-#xml location
-    xml = '../docs/dreq2Sample.xml'
-
-    cmd = 'xmllint --noout --schema %s %s  2> .simpleCheck_check2_err.txt 1>.simpleCheck_check2.txt' % (schema,xml) 
+    cmd = 'xmllint --noout --schema %s %s  2> .simpleCheck_check2_err.txt 1>.simpleCheck_check2.txt' % (self.schema,self.sampleXml) 
     os.popen( cmd ).readlines()
     ii = open( '.simpleCheck_check2_err.txt' ).readlines()
     if len(ii) == 0:

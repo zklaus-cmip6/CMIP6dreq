@@ -91,7 +91,11 @@ class dreqItemBase(object):
                  if self.__dict__[a] == '__unset__':
                    m = '<li>%s: %s [missing link]</li>' % ( a, self.__dict__[a] )
                  else:
-                   targ = self._base._inx.uid[ self.__dict__[a] ]
+                   try:
+                     targ = self._base._inx.uid[ self.__dict__[a] ]
+                   except:
+                     print a, self.__dict__[a], sect
+                     raise
                    m = '<li>%s: [%s] %s [%s]</li>' % ( a, targ._h.label, targ.label, targ.__href__() )
                else:
                  m = '<li>%s: %s</li>' % ( a, self.__dict__[a] )

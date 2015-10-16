@@ -3,6 +3,7 @@
 The scope.py module contains the dreqQuery class and a set of ancilliary functions. The dreqQuery class contains methods for analysing the data request.
 """
 import dreq
+from utilities import cmvFilter
 import collections, string
 
 class baseException(Exception):
@@ -57,6 +58,7 @@ class dreqQuery(object):
       assert not k in self.rlu, 'Duplicate label in objectives: %s' % k
       self.rlu[k] = i.uid
 
+    self.cmvFilter = cmvFilter( self )
     self.tierMax = tierMax
     self.mips = { i.mip for i in  self.dq.coll['requestItem'].items}
     self.mipls = sorted( list( self.mips ) )
@@ -140,7 +142,7 @@ class dreqQuery(object):
     self.ntot = sum( [i.ny for i in self.dq.coll['requestItem'].items if i.rlid == rql.uid] )
     return self.ntot
 
-  def volByExpt( self, l1, ex, exptList, pmax=2, cc=None ):
+  def volByExpt( self, l1, ex, exptList, pmax=2, cc=None, retainRedundantRank=False ):
     """volByExpt: calculates the total data volume associated with an experiment/experiment group and a list of request items.
           The calculation has some approximations concerning the number of years in each experiment group."""
 ##
@@ -168,6 +170,17 @@ class dreqQuery(object):
 ### filter out cases where the request does not point to a CMOR variable.
     ##vars = {vid for vid in vars if inx.uid[vid][0] == u'CMORvar'}
     vars = {vid for vid in vars if inx.uid[vid]._h.label == u'CMORvar'}
+##
+## filter by configuration option and rank
+##
+    if not retainRedundantRank:
+      len1 = len(vars)
+      cmv = self.cmvFilter.filterByChoiceRank(cmv=vars)
+      ## print 'After filter: %s [%s]' % (len(cmv),len1)
+
+      vars = cmv
+    
+    self.vars = vars
 
     e = {}
     for u in rql:
@@ -268,7 +281,7 @@ class dreqQuery(object):
       v = self.volByMip( m, pmax=pmax )
       print ( '%12.12s: %6.2fTb' % (m,v*bytesPerFloat*1.e-12) )
 
-  def volByMip( self, mip, pmax=2):
+  def volByMip( self, mip, pmax=2, retainRedundantRank=False):
 
     if type(mip) in {type( '' ),type( u'') }:
       if mip not in self.mips:
@@ -288,10 +301,12 @@ class dreqQuery(object):
     self.volByE = {}
     vtot = 0
     cc = collections.defaultdict( col_count )
+    self.allVars = set()
     for e in exps:
       expts = self.esid_to_exptList(e,deref=True)
-      self.volByE[e] = self.volByExpt( l1, e, expts, pmax=pmax, cc=cc )
+      self.volByE[e] = self.volByExpt( l1, e, expts, pmax=pmax, cc=cc, retainRedundantRank=retainRedundantRank )
       vtot += self.volByE[e][0]
+      self.allVars = self.allVars.union( self.vars )
     self.indexedVol = cc
 
     return vtot
