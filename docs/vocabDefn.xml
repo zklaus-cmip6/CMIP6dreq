@@ -66,6 +66,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="iso"/>
   <rowAttribute label="uid"/>
+  <rowAttribute label="isClimatology" type="xs:boolean" title="True if term is a climatology label"/>
 </table>
 <table label="realm" uid="SECTION:realm" title="Modeling realm" id="cmip.drv.010" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
   <rowAttribute label="label" title="Record Label"/>
@@ -184,5 +185,14 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="ogc_wkt"/>
   <rowAttribute label="url"/>
   <rowAttribute label="uid"/>
+</table>
+<table label="modelConfig" uid="SECTION:modelConfig" title="Model configuration options" id="cmip.drv.029" itemLabelMode="an" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
+  <rowAttribute label="title"/>
+  <rowAttribute label="MIPs"/>
+  <rowAttribute label="usage"/>
+  <rowAttribute label="type"/>
+  <rowAttribute label="range" title="Range of valid values, e.g. xs:boolean"/>
 </table>
 </defDoc>

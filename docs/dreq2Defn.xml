@@ -182,7 +182,24 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="oid" title="Identifier for a scientific objective" class="internalLink" techNote="objective"/>
   <rowAttribute label="rid" title="Identifier for a request link" class="internalLink" techNote="requestLink"/>
 </table>
-<table label="varChoice" uid="SECTION:varChoice" title="Indicates variables for which a there is a range of potential CMOR Varibles" id="cmip.drv.016" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+<table label="varChoiceLinkR" uid="SECTION:varChoiceLinkR" title="Links a variable to a choice element" id="cmip.drv.016" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
+  <rowAttribute label="uid" title="Record identifier" class="recordId"/>
+  <rowAttribute label="vid" title="Variable" class="internalLink"/>
+  <rowAttribute label="cid" title="Choice" class="internalLink"/>
+  <rowAttribute label="rank" type="xs:integer" title="For ranked choices, the rank of this variable (higher rank makes lower ranks redundant)"/>
+</table>
+<table label="varChoiceLinkC" uid="SECTION:varChoiceLinkC" title="Links a variable to a choice element" id="cmip.drv.017" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
+  <rowAttribute label="uid" title="Record identifier" class="recordId"/>
+  <rowAttribute label="vid" title="Variable" class="internalLink"/>
+  <rowAttribute label="cfgid" title="Configuration Option" class="internalLink"/>
+  <rowAttribute label="cfg" type="xs:boolean" title="Configuration Value"/>
+  <rowAttribute label="cid" title="Choice -- can provide a link to related variables" class="internalLink"/>
+</table>
+<table label="varChoice" uid="SECTION:varChoice" title="Indicates variables for which a there is a range of potential CMOR Varibles" id="cmip.drv.018" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
   <rowAttribute label="label" title="Record Label"/>
   <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" title="Record identifier" class="recordId"/>
@@ -192,7 +209,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="varList" title="A colon separated list of variable names"/>
   <rowAttribute label="optionList" title="A list of options, one for each variable"/>
 </table>
-<table label="mip" uid="SECTION:mip" title="Model Intercomparison Project" id="cmip.drv.017" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+<table label="mip" uid="SECTION:mip" title="Model Intercomparison Project" id="cmip.drv.019" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
   <rowAttribute label="label" title="Record Label"/>
   <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" title="Record identifier" class="recordId"/>
@@ -200,5 +217,15 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="description"/>
   <rowAttribute label="url"/>
   <rowAttribute label="status"/>
+</table>
+<table label="modelConfig" uid="SECTION:modelConfig" title="Model configuration options" id="cmip.drv.020" itemLabelMode="an" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" title="Record Label"/>
+  <rowAttribute label="title" title="Record Title"/>
+  <rowAttribute label="uid" title="Record identifier" class="recordId"/>
+  <rowAttribute label="title"/>
+  <rowAttribute label="MIPs"/>
+  <rowAttribute label="usage"/>
+  <rowAttribute label="type"/>
+  <rowAttribute label="range" title="Range of valid values, e.g. xs:boolean"/>
 </table>
 </defDoc>
