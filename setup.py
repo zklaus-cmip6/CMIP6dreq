@@ -90,4 +90,7 @@ if __name__ == "__main__":
         classifiers=CLASSIFIERS,
         install_requires=INSTALL_REQUIRES,
         data_files = [("", ["LICENSE"])]
+        entry_points= {
+        'console_scripts': ['drq = dreqPy.dreqCmdl:main_entry'],
+        },
     )
