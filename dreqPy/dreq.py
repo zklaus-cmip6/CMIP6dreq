@@ -95,7 +95,7 @@ class dreqItemBase(object):
                    try:
                      targ = self._base._inx.uid[ self.__dict__[a] ]
                    except:
-                     print a, self.__dict__[a], sect
+                     print ( a, self.__dict__[a], sect )
                      raise
                    m = '<li>%s: [%s] %s [%s]</li>' % ( a, targ._h.label, targ.label, targ.__href__() )
                else:

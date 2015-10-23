@@ -7,6 +7,11 @@ from utilities import cmvFilter
 import collections, string, operator
 import sys
 
+python2 = True
+if sys.version_info.major == 3:
+  python2 = False
+  from functools import reduce
+
 class baseException(Exception):
   """Basic exception for general use in code."""
 
@@ -396,6 +401,8 @@ class dreqQuery(object):
 class dreqUI(object):
   """Data Request Command line.
 -------------------------
+      -v : print version and exit;
+      --unitTest : run some simple tests;
       -m <mip>:  MIP of list of MIPs (comma separated);
       -h :       help: print help text;
       -t <tier> maxmum tier;
@@ -426,12 +433,12 @@ class dreqUI(object):
 
   def run(self, dq=None):
     if 'h' in self.adict:
-      print self.__doc__
+      print ( self.__doc__ )
       return
 
     if not 'm' in self.adict:
-      print 'Current version requires -m argument' 
-      print self.__doc__
+      print ( 'Current version requires -m argument'  )
+      print ( self.__doc__ )
       sys.exit(0)
 
     if dq == None:
@@ -445,14 +452,14 @@ class dreqUI(object):
     for i in self.adict['m']:
         if i not in sc.mips:
           ok = False
-          print 'NOT FOUND: ',i
+          print ( 'NOT FOUND: ',i )
     assert ok,'Available MIPs: %s' % str(sc.mips)
 
     tierMax = self.adict.get( 't', 2 )
     sc.setTierMax(  tierMax )
     pmax = self.adict.get( 'p', 2 )
     v0 = sc.volByMip( self.adict['m'], pmax=pmax )
-    print '%7.2fTb' % (v0*2.*1.e-12)
+    print ( '%7.2fTb' % (v0*2.*1.e-12) )
     cc = collections.defaultdict( int )
     for e in sc.volByE:
       for v in sc.volByE[e][2]:
@@ -461,7 +468,10 @@ class dreqUI(object):
     for v in cc:
       x += cc[v]
     
-    vl = sorted( cc.keys(), cmp=cmpd(cc).cmp, reverse=True )
+    if python2:
+      vl = sorted( cc.keys(), cmp=cmpd(cc).cmp, reverse=True )
+    else:
+      vl = sorted( cc.keys(), key=lambda x: cc[x], reverse=True )
     if self.adict.get( 'vars', False ):
       printLinesMax = self.adict.get( 'plm', 20 )
       if printLinesMax > 0:
@@ -470,4 +480,4 @@ class dreqUI(object):
         mx = len(vl)
 
       for v in vl[:mx]:
-        print self.dq.inx.uid[v].label, '%7.2fTb' % (cc[v]*2.*1.e-12)
+        print ( self.dq.inx.uid[v].label, '%7.2fTb' % (cc[v]*2.*1.e-12) )

@@ -82,7 +82,7 @@ class cmvFilter(object):
             l1 = len(cmv)
             cmv.remove( i.vid )
             if len(cmv) == l1:
-              print 'Failed to remove i.vid=%s' % i.vid
+              print ( 'Failed to remove i.vid=%s' % i.vid )
             self.rejected.add( i.vid )
           else:
             imr.add( i )
@@ -127,7 +127,7 @@ class cmvFilter(object):
             l1 = len(cmv)
             cmv.remove( i.vid )
             if len(cmv) == l1:
-              print 'Failed to remove i.vid=%s' % i.vid
+              print ( 'Failed to remove i.vid=%s' % i.vid )
             self.rejected.add( i.vid )
           else:
             imr.add( i )
