@@ -1,0 +1,5 @@
+
+
+recursive-include docs *
+include LICENSE
+
