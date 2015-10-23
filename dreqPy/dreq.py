@@ -7,6 +7,7 @@ import xml, string, collections
 import xml.dom
 import xml.dom.minidom
 import re, shelve
+from __init__ import DOC_DIR
 
 class rechecks(object):
   def __init__(self):
@@ -459,12 +460,15 @@ class ds(object):
 src1 = '../workbook/trial_20150831.xml'
 
 #DEFAULT LOCATION -- changed automatically when building distribution
-defaultDreq = '../docs/dreq.xml'
+defaultDreq = 'dreq.xml'
 #DEFAULT CONFIG
-defaultConfig = '../docs/dreq2Defn.xml'
+defaultConfig = 'dreq2Defn.xml'
+
+defaultDreqPath = '%s/%s' % (DOC_DIR, defaultDreq )
+defaultConfigPath = '%s/%s' % (DOC_DIR, defaultConfig )
 
 class loadDreq(object):
-  def __init__(self,dreqXML=defaultDreq, configdoc=defaultConfig, useShelve=False ):
+  def __init__(self,dreqXML=defaultDreqPath, configdoc=defaultConfigPath, useShelve=False ):
     self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve)
     self.coll = self.c.get()
     self.inx = index(self.coll)
