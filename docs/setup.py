@@ -88,8 +88,9 @@ if __name__ == "__main__":
         zip_safe=False,
         classifiers=CLASSIFIERS,
         install_requires=INSTALL_REQUIRES,
+        scripts=['drqHelp'],
         data_files = [("", ["LICENSE"])],
         entry_points= {
-        'console_scripts': ['drqDoc = dreqML.dreqML.packageConfig:main_entry'],
+        'console_scripts': ['dreqML = dreqML.packageConfig:main_entry'],
         },
     )
