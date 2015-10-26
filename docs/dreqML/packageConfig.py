@@ -14,7 +14,7 @@ DOC_DEFAULT_DIR = HERE
 DOC_DIR = os.environ.get('DRQ_CONFIG_DIR', DOC_DEFAULT_DIR)
 
 __versionComment__ = "Splitting data request content from API"
-__version__ = "01.beta.17"
+__version__ = "01.beta.20"
 __title__ = "dreqML"
 __description__ = "CMIP6 Data Request Document"
 __uri__ = "http://proj.badc.rl.ac.uk/svn/exarch/CMIP6dreq/tags/{0}".format(__version__)

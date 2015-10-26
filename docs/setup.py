@@ -85,10 +85,11 @@ if __name__ == "__main__":
         keywords=KEYWORDS,
         long_description=read("README.txt"),
         packages=PACKAGES,
+	include_package_data=True,
         zip_safe=False,
         classifiers=CLASSIFIERS,
         install_requires=INSTALL_REQUIRES,
-        scripts=['drqHelp'],
+        scripts=['dreqML/drqHelp'],
         data_files = [("", ["LICENSE"])],
         entry_points= {
         'console_scripts': ['dreqML = dreqML.packageConfig:main_entry'],
