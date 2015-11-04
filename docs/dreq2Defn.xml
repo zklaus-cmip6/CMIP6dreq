@@ -115,7 +115,6 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="refid" title="reference to a request Variable Group" useClass="internalLink"/>
   <rowAttribute label="opt" title="option for selecting a subset of variables"/>
   <rowAttribute label="opar" title="parameter associated with *opt*"/>
-  <rowAttribute label="preset" title="Option to override priority set in each variable group"/>
 </table>
 <table label="requestItem" uid="SECTION:requestItem" title="Request Item: specifying the number of years for an experiment" id="cmip.drv.010" itemLabelMode="def" level="5" maxOccurs="1" labUnique="No">
   <rowAttribute label="label" title="Record Label"/>
@@ -127,6 +126,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="rlid" title="Identifier of corresponding requestLink" useClass="internalLink"/>
   <rowAttribute label="esid" title="Identifier experiment(s): a link to an experiment, an experiment group or a MIP" useClass="internalLink"/>
   <rowAttribute label="esidComment"/>
+  <rowAttribute label="preset" type="xs:integer" title="Option to override priority set in each variable group"/>
   <rowAttribute label="ny" type="xs:integer"/>
   <rowAttribute label="nexmax" type="xs:integer"/>
   <rowAttribute label="nenmax" type="xs:integer"/>

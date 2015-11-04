@@ -85,9 +85,9 @@ class dreqItemBase(object):
          if a in self.__class__._linkAttrStyle:
            return self.__class__._linkAttrStyle[a]
          else:
-           return lambda a,targ: '<li>%s: [%s] %s [%s]</li>' % ( a, targ._h.label, targ.label, targ.__href__() )
+           return lambda a,targ, frm='': '<li>%s: [%s] %s [%s]</li>' % ( a, targ._h.label, targ.label, targ.__href__() )
 
-       def __html__(self):
+       def __html__(self,ghis=None):
          """Create html view"""
          msg = []
          if self._contentInitialised:
@@ -107,7 +107,7 @@ class dreqItemBase(object):
                      print ( a, self.__dict__[a], sect )
                      raise
                    lst = self.getHtmlLinkAttrStyle(a)
-                   m = lst( a, targ )
+                   m = lst( a, targ, frm=sect )
                    ##m = '<li>%s: [%s] %s [%s]</li>' % ( a, targ._h.label, targ.label, targ.__href__() )
                else:
                  m = '<li>%s: %s</li>' % ( a, self.__dict__[a] )
@@ -133,7 +133,11 @@ class dreqItemBase(object):
                    items = [self._inx.uid[u] for  u in self._inx.iref_by_sect[self.uid].a[t] ]
                    items.sort( ds('label').cmp )
                    for targ in items:
-                     m = '<li>%s:%s [%s]</li>' % ( targ._h.label, targ.label, targ.__href__() )
+                     if ghis == None:
+                       m = '<li>%s:%s [%s]</li>' % ( targ._h.label, targ.label, targ.__href__() )
+                     else:
+                       lst = ghis( targ._h.label )
+                       m = lst( targ, frm=sect )
                      am.append( m )
                    am.append( '</ul>' )
                if len(am) > 0:
@@ -483,7 +487,7 @@ class loadDreq(object):
     self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve)
     self.coll = self.c.get()
     self.inx = index(self.coll)
-    self.defaultItemLineStyle = lambda i: '<li>%s: %s</li>' % ( i.label, i.__href__(odir='../u/') )
+    self.defaultItemLineStyle = lambda i, frm='': '<li>%s: %s</li>' % ( i.label, i.__href__(odir='../u/') )
     self.itemStyles = {}
 ##
 ## add index to Item base class .. so that it can be accessed by item instances
@@ -516,7 +520,7 @@ class loadDreq(object):
     for k in self.inx.uid.keys():
       i = self.inx.uid[k]
       ttl = 'Data Request Record: [%s]%s' % (i._h.label,i.label)
-      bdy = string.join( i.__html__( ), '\n' )
+      bdy = string.join( i.__html__( ghis=self.getHtmlItemStyle ), '\n' )
       oo = open( '%s/u/%s.html' % (odir,i.uid), 'w' )
       oo.write( self.pageTmpl % (ttl, '../', bdy ) )
       oo.close()

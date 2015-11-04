@@ -304,8 +304,7 @@
    refid;
    reference to a request Variable Groupopt;
    option for selecting a subset of variablesopar;
-   parameter associated with *opt*preset;
-   Option to override priority set in each variable group</xs:documentation></xs:annotation>
+   parameter associated with *opt*</xs:documentation></xs:annotation>
 <xs:complexType name="ct__requestLink_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -321,7 +320,6 @@
 <xs:attribute name="refid" type="xs:string"/>
 <xs:attribute name="opt" type="xs:string"/>
 <xs:attribute name="opar" type="xs:string"/>
-<xs:attribute name="preset" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">requestItem: Complex Type declaration
@@ -343,7 +341,8 @@
    rlid;
    Identifier of corresponding requestLinkesid;
    Identifier experiment(s): a link to an experiment, an experiment group or a MIPesidComment;
-   ny;
+   preset;
+   xs:integerOption to override priority set in each variable groupny;
    xs:integernexmax;
    xs:integernenmax;
    xs:integernymax;
@@ -358,6 +357,7 @@
 <xs:attribute name="rlid" type="xs:string"/>
 <xs:attribute name="esid" type="xs:string"/>
 <xs:attribute name="esidComment" type="xs:string"/>
+<xs:attribute name="preset" type="xs:integer"/>
 <xs:attribute name="ny" type="xs:integer"/>
 <xs:attribute name="nexmax" type="xs:integer"/>
 <xs:attribute name="nenmax" type="xs:integer"/>

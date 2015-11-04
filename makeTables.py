@@ -14,7 +14,6 @@ class xlsx(object):
   def close(self):
     self.wb.close()
 
-
 #priority	long name	units 	comment 	questions & notes	output variable name 	standard name	unconfirmed or proposed standard name	unformatted units	cell_methods	valid min	valid max	mean absolute min	mean absolute max	positive	type	CMOR dimensions	CMOR variable name	realm	frequency	cell_measures	flag_values	flag_meanings
 
 strkeys = [u'procNote', u'uid', u'odims', u'flag_meanings', u'prov', u'title', u'tmid', u'label', u'cell_methods', u'coords', u'cell_measures', u'spid', u'flag_values', u'description']
@@ -97,27 +96,33 @@ class makeTab(object):
 
     cell_format = wb.wb.add_format({'text_wrap': True})
 
-
     mode = 'c'
 
+    ncga = 'NetCDF Global Attribute'
     for t in tables:
       oo = open( 'tables/test_%s.csv' % t, 'w' )
       sht = wb.newSheet( t )
       j = 0
       if mode == 'c':
-        hrec = ['','Long name', 'units', 'description', 'label', 'CF Standard Name', 'cell_methods', 'positive', 'type', 'dimensions', 'label', 'modeling_realm', 'frequency', 'cell_measures', 'prov', 'provNote','rowIndex']
+        hrec = ['Priority','Long name', 'units', 'description', 'comment', 'Variable Name', 'CF Standard Name', 'cell_methods', 'positive', 'type', 'dimensions', 'CMOR Name', 'modeling_realm', 'frequency', 'cell_measures', 'prov', 'provNote','rowIndex']
+        hcmt = ['Default priority (generally overridden by settings in "requestVar" record)',ncga,'','','Name of variable in file','','','CMOR directive','','','CMOR name, unique within table','','','','','','','','','']
         sht.set_column(1,1,40)
         sht.set_column(3,3,50)
-        sht.set_column(5,5,40)
+        sht.set_column(4,4,30)
+        sht.set_column(5,5,50)
         sht.set_column(6,6,30)
         sht.set_column(9,9,40)
       else:
-        hrec = ['','Long name', 'units', 'description', '', 'label', 'CF Standard Name', '','', 'cell_methods', 'valid_min', 'valid_max', 'ok_min_mean_abs', 'ok_max_mean_abs', 'positive', 'type', 'dimensions', 'label', 'modeling_realm', 'frequency', 'cell_measures', 'flag_values', 'flag_meanings', 'prov', 'provNote','rowIndex']
+        hrec = ['','Long name', 'units', 'description', '', 'Variable Name', 'CF Standard Name', '','', 'cell_methods', 'valid_min', 'valid_max', 'ok_min_mean_abs', 'ok_max_mean_abs', 'positive', 'type', 'dimensions', 'CMOR name', 'modeling_realm', 'frequency', 'cell_measures', 'flag_values', 'flag_meanings', 'prov', 'provNote','rowIndex']
       if addMips:
         hrec.append( 'MIPs' )
 
+      hdr_cell_format = wb.wb.add_format({'text_wrap': True, 'font_size': 14, 'font_color':'#0000ff', 'bold':1, 'fg_color':'#aaaacc'})
+      sht.set_row(0,40)
       for i in range(len(hrec)):
-          sht.write( j,i, hrec[i] )
+          sht.write( j,i, hrec[i], hdr_cell_format )
+          if hcmt[i] != '':
+            sht.write_comment( j,i,hcmt[i])
       thiscmv =  sorted( [v for v in cmv if v.mipTable == t], cmp=cmpdn(['prov','rowIndex','label']).cmp )
       
       for v in thiscmv:
@@ -138,7 +143,7 @@ class makeTab(object):
             dims += string.split( strc.coords, '|' )
             dims = string.join( dims )
             if mode == 'c':
-              orec = ['',cv.title, cv.units, v.description, cv.label, cv.sn, strc.cell_methods, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, v.prov,v.provNote,str(v.rowIndex)]
+              orec = [str(v.defaultPriority),cv.title, cv.units, cv.description, v.description, cv.label, cv.sn, strc.cell_methods, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, v.prov,v.provNote,str(v.rowIndex)]
             else:
               orec = ['',cv.title, cv.units, v.description, '', cv.label, cv.sn, '','', strc.cell_methods, v.valid_min, v.valid_max, v.ok_min_mean_abs, v.ok_max_mean_abs, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, strc.flag_values, strc.flag_meanings,v.prov,v.provNote,str(v.rowIndex)]
             if addMips:
@@ -197,11 +202,29 @@ class styles(object):
   def __init__(self):
     pass
 
-  def snLink01(self,a,targ):
+  def snLink01(self,a,targ,frm=''):
     if targ._h.label == 'remarks':
       return '<li>%s: Standard name under review [%s]</li>' % ( a, targ.__href__() )
     else:
       return '<li>%s [%s]: %s</li>' % ( targ._h.title, a, targ.__href__(label=targ.label)  )
+
+  def rqlLink02(self,targ,frm=''):
+    t2 = targ._inx.uid[targ.refid]
+    if t2._h.label == 'remarks':
+      return '<li>%s: %s</li>' % ( targ.__href__(odir='../u/', label=targ.title), "Link to variable group broken"  )
+    elif frm == "requestVarGroup":
+      return '<li>%s: %s [%s]</li>' % ( targ.__href__(odir='../u/', label=targ.mip), targ.title, targ.objective  )
+    else:
+      gpsz = len(t2._inx.iref_by_sect[t2.uid].a['requestVar'])
+      return '<li>%s: Link to group: %s [%s]</li>' % ( targ.__href__(odir='../u/', label=targ.title), t2.__href__(odir='../u/', label=t2.title), gpsz  )
+
+  def snLink(self,targ,frm=''):
+    return '<li>%s [%s]: %s</li>' % ( targ.title, targ.units, targ.__href__(odir='../u/') )
+
+  def varLink(self,targ,frm=''):
+    return '<li>%s: %s [%s]</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.title, targ.units )
+  def cmvLink(self,targ,frm=''):
+    return '<li>%s {%s}: %s [%s]</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.mipTable, targ.title, targ.frequency )
 
 styls = styles()
 
@@ -213,8 +236,11 @@ dq = dreq.loadDreq()
 ##
 ## add special styles to dq object "itemStyle" dictionary.
 ##
-dq.itemStyles['standardname'] = lambda i:  '<li>%s [%s]: %s</li>' % ( i.title, i.units, i.__href__(odir='../u/') )
-dq.itemStyles['var'] = lambda i:  '<li>%s: %s [%s]</li>' % (  i.__href__(odir='../u/', label=i.label), i.title, i.units )
+
+dq.itemStyles['standardname'] = styls.snLink
+dq.itemStyles['var'] = styls.varLink
+dq.itemStyles['CMORvar'] = styls.cmvLink
+dq.itemStyles['requestLink'] = styls.rqlLink02
 dq.coll['var'].items[0].__class__._linkAttrStyle['sn'] = styls.snLink01
 
 dq.makeHtml()

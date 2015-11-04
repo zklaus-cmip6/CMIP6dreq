@@ -166,11 +166,17 @@ class dreqQuery(object):
 ##
 ## rql is the set of all request links which are associated with a request item for this experiment set
 ##
-    rql0 = {i.rlid for i in l1 if i.esid == ex}
+    l1p = {i for i in l1 if (i.esid == ex) and (i.preset < 0 or i.preset <= pmax) }
+
+    rql0 = {i.rlid for i in l1p}
+
     rqlInv = {u for u in rql0 if inx.uid[u]._h.label == 'remarks' }
     if len(rqlInv) != 0:
       print ( 'WARNING.001.00002: %s invalid request links from request items ...' % len(rqlInv) )
     rql = {u for u in rql0 if inx.uid[u]._h.label != 'remarks' }
+    if len( rql ) == 0:
+      self.vars = set()
+      return (0,{},{} )
 
 ## The complete set of variables associated with these requests:
     tm = 1
@@ -218,7 +224,6 @@ class dreqQuery(object):
     if not retainRedundantRank:
       len1 = len(vars)
       cmv = self.cmvFilter.filterByChoiceRank(cmv=vars)
-      ## print 'After filter: %s [%s]' % (len(cmv),len1)
 
       vars = cmv
     
@@ -236,8 +241,7 @@ class dreqQuery(object):
 ##
     nym = {}
     for v in vars:
-      ### for each request item, check if v is in the set of variables and then add the number of years.
-      nym[v] = max( {self.rqiExp[i.uid][2] for i in l1 if i.esid == ex and v in e[i.rlid]} )
+      nym[v] = max( {self.rqiExp[i.uid][2] for i in l1p if i.esid == ex and v in e[i.rlid]} )
 
     szv = {}
     ov = []
@@ -264,8 +268,9 @@ class dreqQuery(object):
       else:
         expts = []
     else:
-      print ( 'WARNING: request link not associated with valid experiment group' )
-      raise
+      ##print ( 'WARNING: request link not associated with valid experiment group' )
+      ##raise
+      return None
 
     if self.tierMax > 0:
       expts = [i for i in expts if self.dq.inx.uid[i].tier <= self.tierMax]
@@ -283,7 +288,8 @@ class dreqQuery(object):
     self.rqiExp = {}
     for rqi in self.dq.coll['requestItem'].items:
       a,b,c = self.requestItemExp( rqi )
-      self.rqiExp[rqi.uid] = (a,b,c)
+      if a != None:
+        self.rqiExp[rqi.uid] = (a,b,c)
 
   def requestItemExp( self, rqi ):
     assert rqi._h.label == "requestItem", 'Argument to requestItemExp must be a requestItem'
@@ -296,9 +302,10 @@ class dreqQuery(object):
       else:
         expts = []
     else:
-      print ( 'WARNING: request link not associated with valid experiment group'  )
-      i.__info__()
-      raise
+      # print ( 'WARNING: request link not associated with valid experiment group'  )
+      ##rqi.__info__()
+      ##raise
+      return (None, None, None)
 
     if self.tierMax > 0:
       expts = [i for i in expts if self.dq.inx.uid[i].tier <= self.tierMax]
@@ -349,9 +356,10 @@ class dreqQuery(object):
     self.allVars = set()
     for e in exps:
       expts = self.esid_to_exptList(e,deref=True)
-      self.volByE[e] = self.volByExpt( l1, e, expts, pmax=pmax, cc=cc, retainRedundantRank=retainRedundantRank )
-      vtot += self.volByE[e][0]
-      self.allVars = self.allVars.union( self.vars )
+      if expts != None:
+        self.volByE[e] = self.volByExpt( l1, e, expts, pmax=pmax, cc=cc, retainRedundantRank=retainRedundantRank )
+        vtot += self.volByE[e][0]
+        self.allVars = self.allVars.union( self.vars )
     self.indexedVol = cc
 
     return vtot
