@@ -1360,7 +1360,7 @@ if (typeof Slick === "undefined") {
         return "";
       } else if ( cell == 0 ) {
         var vv = value.split(" ");
-        return '<a href="out01/cmipVar_' + vv[1] + '.html">' + (vv[0] + "").replace(/&/g,"&amp;") + '</a>';
+        return '<a href="u/' + vv[1] + '.html">' + (vv[0] + "").replace(/&/g,"&amp;") + '</a>';
       } else {
         return (value + "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
       }
