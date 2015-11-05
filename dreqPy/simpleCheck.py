@@ -1,4 +1,5 @@
 from __init__ import DOC_DIR
+import string, os
 
 try:
   import pkgutil
@@ -62,6 +63,7 @@ class checkbase(object):
           ok &= self.ok
         except:
           print ( 'Failed to complete check %s' % tag )
+          raise
     if ok:
       print ( '%s: All checks passed' % lab )
     else: 

@@ -1,0 +1,11 @@
+"Block schema definition"							
+							
+"label"	"uid"	"title"	"description"	"useClass"	"type"	"techNote"	"superclass"
+"label"	"__core__:label"	"Record Label"	"A single word, with restricted character set"	"__core__"	"xs:string"		"rdf:property"
+"uid"	"__core__:uid"	"Record Identifier"	"Unique identifier"	"__core__"	"xs:string"		"rdf:property"
+"title"	"__core__:title"	"Record Title"	"A few words describing the object"	"__core__"	"xs:string"		"rdf:property"
+"description"	"__core__:description"	"Record Description"	"An extended description of the object"	"__core__"	"xs:string"		"rdf:property"
+"class"	"__core__:class"	"Record Class"	"The class: value should be from a defined vocabulary. All records in the schema definition section must have class set to '__core__'."	"__core__"	"xs:string"		"rdf:property"
+"type"	"__core__:type"	"Record Type"	"The type specifies the XSD value type constraint, e.g. xs:string."	"__core__"	"xs:string"		"rdfs:range"
+"techNote"	"__core__:techNote"	"Technical Note"	"Additional technical information which can be used to specify additional properties."	"__core__"	"xs:string"		"rdf:property"
+"superclass"	"__core__:superclass"	"Superclass"	"States what class the property is derived from"	"__core__"	"xs:string"		"rdf:type"

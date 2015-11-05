@@ -9,11 +9,27 @@ import xml.dom.minidom
 import re, shelve
 from __init__ import DOC_DIR
 
+
+blockSchemaFile = '%s/%s' % (DOC_DIR, 'BlockSchema.csv' )
+
+def loadBS(bsfile):
+  ii = open( bsfile, 'r' ).readlines()
+  ll = []
+  for l in ii:
+    ll.append( [x[1:-1] for x in string.strip(l).split('\t') ] )
+  cc = collections.defaultdict( dict )
+  for l in ll[3:]:
+    for i in range( len(ll[2]) -1 ):
+      cc[l[0]][ll[2][i+1]] = l[i+1]
+  return cc
+
 class rechecks(object):
+  """Checks to be applied to strings"""
   def __init__(self):
     self.__isInt = re.compile( '-{0,1}[0-9]+' )
 
   def isIntStr( self, tv ):
+    """Check whether a string is a valid representation of an integer."""
     if type( tv ) not in {type(''),type(u'')}:
       self.reason = 'NOT STRING'
       return False
@@ -58,7 +74,7 @@ class dreqItemBase(object):
            print ( 'Item <%s>: [%s] %s' % (self._h.title,self.label,self.title) )
            for a in self.__dict__.keys():
              if a[0] != '_' or full:
-               if self._a[a].useClass == 'internalLink' and self._base._indexInitialised:
+               if hasattr( self._a[a], 'useClass') and self._a[a].useClass == 'internalLink' and self._base._indexInitialised:
                  if self.__dict__[a] in self._base._inx.uid:
                    targ = self._base._inx.uid[ self.__dict__[a] ]
                    print ( '   %s: [%s]%s [%s]' % ( a, targ._h.label, targ.label, self.__dict__[a] ) )
@@ -82,6 +98,7 @@ class dreqItemBase(object):
          return '<span title="%s"><a href="%s%s.html">%s</a></span>' % (ttl,odir,self.uid,label)
 
        def getHtmlLinkAttrStyle(self,a):
+         """Return a string containing a html fragment for a link to an attribute."""
          if a in self.__class__._linkAttrStyle:
            return self.__class__._linkAttrStyle[a]
          else:
@@ -97,7 +114,7 @@ class dreqItemBase(object):
            msg.append( '<ul>' )
            for a in self.__dict__.keys():
              if a[0] != '_':
-               if self._a[a].useClass == 'internalLink' and self._base._indexInitialised:
+               if hasattr( self._a[a], 'useClass') and self._a[a].useClass == 'internalLink' and self._base._indexInitialised:
                  if self.__dict__[a] == '__unset__':
                    m = '<li>%s: %s [missing link]</li>' % ( a, self.__dict__[a] )
                  else:
@@ -240,6 +257,7 @@ class config(object):
     self.ntt = collections.namedtuple( 'sectinit', ['header','attributes','defaults'] )
     self.nt__default = collections.namedtuple( 'deflt', ['defaults','glob'] )
     self.ntf = collections.namedtuple( 'sect', ['header','attDefn','items'] )
+    self.bscc = loadBS(blockSchemaFile)
 
     self.coll = {}
     doc = xml.dom.minidom.parse( self.vdef  )
@@ -268,6 +286,16 @@ class config(object):
     tables = {}
     self.tableClasses = {}
     self.tableItems = collections.defaultdict( list )
+##
+## this loads in some metadata, but not yet in a useful way.
+##
+    self._t0 = self.parsevcfg(None)
+    self.tt0 = {}
+    self._tableClass0 = self.itemClassFact( self._t0, ns=self.ns )
+    for k in self.bscc:
+      self.tt0[k] = self._tableClass0(dict=self.bscc[k])
+      setattr( self._tableClass0, '_%s' % k, self.tt0[k] )
+
     for v in vl:
       t = self.parsevcfg(v)
       tables[t[0].label] = t
@@ -349,25 +377,35 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
      dreqItem._h = sectionInfo.header
      dreqItem._a = sectionInfo.attributes
      dreqItem._d = sectionInfo.defaults
+     if sectionInfo.attributes != None:
+        self.addAttributes(dreqItem, sectionInfo.attributes )
      ##dreqItem.itemLabelMode = itemLabelMode
      ##dreqItem.attributes = attributes
      dreqItem._rc = self.rc
      dreqItem.ns = ns
      return dreqItem
+
+  def addAttributes( self, thisClass, attrDict ):
+    for k in attrDict:
+      setattr( thisClass, '_%s' % k , attrDict[k] )
          
   def parsevcfg(self,v):
       """Parse a section definition element, including all the record attributes. The results are returned as a namedtuple of attributes for the section and a dictionary of record attribute specifications."""
-      l = v.getAttribute( 'label' )
-      t = v.getAttribute( 'title' )
-      i = v.getAttribute( 'id' )
-      ilm = v.getAttribute( 'itemLabelMode' )
-      lev = v.getAttribute( 'level' )
-      il = v.getElementsByTagName( 'rowAttribute' )
-      vtt = self.nts( v.nodeName, l,t,i,ilm,lev )
-      idict = {}
-      for i in il:
-        tt = self.parseicfg(i)
-        idict[tt.label] = tt
+      if v == None:
+        vtt = self.nts( '__core__', 'CoreAttributes', 'Core Attributes', '00000000', 'def', '0' )
+        idict = {'label':None, 'title':None, 'id':None, 'itemLabelMode':None, 'level':None }
+      else:
+        l = v.getAttribute( 'label' )
+        t = v.getAttribute( 'title' )
+        i = v.getAttribute( 'id' )
+        ilm = v.getAttribute( 'itemLabelMode' )
+        lev = v.getAttribute( 'level' )
+        il = v.getElementsByTagName( 'rowAttribute' )
+        vtt = self.nts( v.nodeName, l,t,i,ilm,lev )
+        idict = {}
+        for i in il:
+          tt = self.parseicfg(i)
+          idict[tt.label] = tt
       deflt = self.nt__default( {}, '__unset__' )
       return self.ntt( vtt, idict, deflt )
 
@@ -394,6 +432,7 @@ class container(object):
 class c1(object):
   def __init__(self):
     self.a = collections.defaultdict( list )
+
 class index(object):
   """Create an index of the document. Cross-references are generated from attributes with class 'internalLink'. 
 This version assumes that each record is identified by an "uid" attribute and that there is a "var" section. 
@@ -422,7 +461,7 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
     ## collected names of attributes which carry internal links
     ##
       for ka in dreq[k].attDefn.keys():
-        if dreq[k].attDefn[ka].useClass == 'internalLink':
+        if hasattr( dreq[k].attDefn[ka], 'useClass') and dreq[k].attDefn[ka].useClass == 'internalLink':
            irefdict[k].append( ka )
 
     for k in dreq.keys():
@@ -483,7 +522,14 @@ defaultDreqPath = '%s/%s' % (DOC_DIR, defaultDreq )
 defaultConfigPath = '%s/%s' % (DOC_DIR, defaultConfig )
 
 class loadDreq(object):
-  def __init__(self,dreqXML=defaultDreqPath, configdoc=defaultConfigPath, useShelve=False ):
+  """Load in a vocabulary document.
+  dreqXML: full path to the XML document
+  configdoc: full path to associated configuration document
+  useShelve: flag to specify whether to retrieve data from cache (not implemented)
+  htmlStyles: dictionary of styling directives which influence structure of html page generates by the "makeHtml" method
+"""
+
+  def __init__(self,dreqXML=defaultDreqPath, configdoc=defaultConfigPath, useShelve=False, htmlStyles=None ):
     self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve)
     self.coll = self.c.get()
     self.inx = index(self.coll)
@@ -494,15 +540,13 @@ class loadDreq(object):
 ##
     dreqItemBase._inx = self.inx
     dreqItemBase._indexInitialised = True
-    dreqItemBase._htmlStyle['CMORvar'] = {'getIrefs':['requestVar']}
-    dreqItemBase._htmlStyle['requestVarGroup'] = {'getIrefs':['requestVar','requestLink']}
-    dreqItemBase._htmlStyle['var'] = {'getIrefs':['CMORvar']}
-    dreqItemBase._htmlStyle['objective'] = {'getIrefs':['objectiveLink']}
-    dreqItemBase._htmlStyle['requestLink'] = {'getIrefs':['objectiveLink','requestItem']}
-    dreqItemBase._htmlStyle['exptgroup'] = {'getIrefs':['__all__']}
-    dreqItemBase._htmlStyle['experiment'] = {'getIrefs':['__all__']}
-    dreqItemBase._htmlStyle['mip'] = {'getIrefs':['__all__']}
-    dreqItemBase._htmlStyle['remarks'] = {'getIrefs':['__all__']}
+##
+## load in additional styling directives
+##
+    if htmlStyles != None:
+      for k in htmlStyles:
+        dreqItemBase._htmlStyle[k] = htmlStyles[k]
+
 ##    dreqItemBase._htmlStyle['__general__'] = {'addRemarks':True}
 
     self.pageTmpl = """<html><head><title>%s</title>
@@ -516,7 +560,12 @@ class loadDreq(object):
       return self.itemStyles[sect]
     return self.defaultItemLineStyle
 
-  def makeHtml(self,odir='./html'):
+  def makeHtml(self,odir='./html', ttl0 = 'Data Request Index'):
+    """Generate a html view of the vocabularies, using the "__html__" method of the vocabulary item class to generate a
+page for each item and also generating index pages.
+    odir: directory for html files;
+    ttl0: Title for main index (in odir/index.html)"""
+
     for k in self.inx.uid.keys():
       i = self.inx.uid[k]
       ttl = 'Data Request Record: [%s]%s' % (i._h.label,i.label)
@@ -525,7 +574,6 @@ class loadDreq(object):
       oo.write( self.pageTmpl % (ttl, '../', bdy ) )
       oo.close()
 
-    ttl0 = 'Data Request Index'
     msg0 = ['<h1>%s</h1>' % ttl0, '<ul>',]
     ks = sorted( self.coll.keys() )
     for k in ks:

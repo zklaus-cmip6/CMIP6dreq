@@ -96,7 +96,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="label" title="Record Label"/>
   <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" useClass="recordId"/>
-  <rowAttribute label="mip" title="Endorsed MIP requesting the data"/>
+  <rowAttribute label="mip" title="Endorsed MIP defining the variable group"/>
   <rowAttribute label="ref"/>
   <rowAttribute label="refNote"/>
 </table>
@@ -104,7 +104,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="label" title="Record Label"/>
   <rowAttribute label="title" title="Record Title"/>
   <rowAttribute label="uid" useClass="recordId"/>
-  <rowAttribute label="mip"/>
+  <rowAttribute label="mip" title="Endorsed MIP requesting the data" useClass="internalLink"/>
   <rowAttribute label="tab"/>
   <rowAttribute label="objective"/>
   <rowAttribute label="grid"/>

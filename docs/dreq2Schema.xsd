@@ -16,7 +16,7 @@
 <xs:attribute name="label" type="xs:string" fixed="var"/>
 <xs:attribute name="title" type="xs:string" fixed="MIP Variable"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.001"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -49,7 +49,7 @@
 <xs:attribute name="label" type="xs:string" fixed="CMORvar"/>
 <xs:attribute name="title" type="xs:string" fixed="CMOR Variable"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.002"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -108,7 +108,7 @@
 <xs:attribute name="label" type="xs:string" fixed="structure"/>
 <xs:attribute name="title" type="xs:string" fixed="Dimensions and related information"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.003"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -150,7 +150,7 @@
 <xs:attribute name="label" type="xs:string" fixed="spatialShape"/>
 <xs:attribute name="title" type="xs:string" fixed="Spatial dimensions"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.004"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -178,7 +178,7 @@
 <xs:attribute name="label" type="xs:string" fixed="temporalShape"/>
 <xs:attribute name="title" type="xs:string" fixed="Temporal dimension"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.005"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -203,7 +203,7 @@
 <xs:attribute name="label" type="xs:string" fixed="requestVar"/>
 <xs:attribute name="title" type="xs:string" fixed="Request variable (carrying priority and link to group)"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.006"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -233,7 +233,7 @@
 <xs:attribute name="label" type="xs:string" fixed="tableSection"/>
 <xs:attribute name="title" type="xs:string" fixed="CMOR Table Sections"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.007"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -261,14 +261,14 @@
 <xs:attribute name="label" type="xs:string" fixed="requestVarGroup"/>
 <xs:attribute name="title" type="xs:string" fixed="Request variable group: a collection of request variables"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.008"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    Record Labeltitle;
    Record Titleuid;
    mip;
-   Endorsed MIP requesting the dataref;
+   Endorsed MIP defining the variable groupref;
    refNote;
    </xs:documentation></xs:annotation>
 <xs:complexType name="ct__requestVarGroup_vocabItem">
@@ -287,14 +287,14 @@
 <xs:attribute name="label" type="xs:string" fixed="requestLink"/>
 <xs:attribute name="title" type="xs:string" fixed="Request link: linking a set of variables and a set of experiments"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.009"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    Record Labeltitle;
    Record Titleuid;
    mip;
-   tab;
+   Endorsed MIP requesting the datatab;
    objective;
    grid;
    gridreq;
@@ -329,7 +329,7 @@
 <xs:attribute name="label" type="xs:string" fixed="requestItem"/>
 <xs:attribute name="title" type="xs:string" fixed="Request Item: specifying the number of years for an experiment"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.010"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -371,7 +371,7 @@
 <xs:attribute name="label" type="xs:string" fixed="remarks"/>
 <xs:attribute name="title" type="xs:string" fixed="Remarks about other items"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.011"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -405,7 +405,7 @@
 <xs:attribute name="label" type="xs:string" fixed="experiment"/>
 <xs:attribute name="title" type="xs:string" fixed="Experiments"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.012"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -449,7 +449,7 @@
 <xs:attribute name="label" type="xs:string" fixed="exptgroup"/>
 <xs:attribute name="title" type="xs:string" fixed="Experiment Group"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.013"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -473,7 +473,7 @@
 <xs:attribute name="label" type="xs:string" fixed="objective"/>
 <xs:attribute name="title" type="xs:string" fixed="Scientific objectives"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.014"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -498,7 +498,7 @@
 <xs:attribute name="label" type="xs:string" fixed="objectiveLink"/>
 <xs:attribute name="title" type="xs:string" fixed="Link between scientific objectives and requests"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.015"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -522,7 +522,7 @@
 <xs:attribute name="label" type="xs:string" fixed="varChoiceLinkR"/>
 <xs:attribute name="title" type="xs:string" fixed="Links a variable to a choice element"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.016"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -548,7 +548,7 @@
 <xs:attribute name="label" type="xs:string" fixed="varChoiceLinkC"/>
 <xs:attribute name="title" type="xs:string" fixed="Links a variable to a choice element"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.017"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -576,7 +576,7 @@
 <xs:attribute name="label" type="xs:string" fixed="varChoice"/>
 <xs:attribute name="title" type="xs:string" fixed="Indicates variables for which a there is a range of potential CMOR Varibles"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.018"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -605,7 +605,7 @@
 <xs:attribute name="label" type="xs:string" fixed="mip"/>
 <xs:attribute name="title" type="xs:string" fixed="Model Intercomparison Project"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.019"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -632,7 +632,7 @@
 <xs:attribute name="label" type="xs:string" fixed="modelConfig"/>
 <xs:attribute name="title" type="xs:string" fixed="Model configuration options"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.020"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
@@ -661,7 +661,7 @@
 <xs:attribute name="label" type="xs:string" fixed="standardname"/>
 <xs:attribute name="title" type="xs:string" fixed="CF Standard Names"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.021"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;

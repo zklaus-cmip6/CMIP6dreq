@@ -232,7 +232,19 @@ assert os.path.isdir( 'html' ), 'Before running this script you need to create "
 assert os.path.isdir( 'html/u' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml, and refernces to "u" in style lines below'
 assert os.path.isdir( 'html/index' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml, and refernces to "u" in style lines below'
 assert os.path.isdir( 'tables' ), 'Before running this script you need to create a "tables" sub-directory, or edit the makeTab class'
-dq = dreq.loadDreq()
+
+htmlStyle = {}
+htmlStyle['CMORvar'] = {'getIrefs':['requestVar']}
+htmlStyle['requestVarGroup'] = {'getIrefs':['requestVar','requestLink']}
+htmlStyle['var'] = {'getIrefs':['CMORvar']}
+htmlStyle['objective'] = {'getIrefs':['objectiveLink']}
+htmlStyle['requestLink'] = {'getIrefs':['objectiveLink','requestItem']}
+htmlStyle['exptgroup'] = {'getIrefs':['__all__']}
+htmlStyle['requestItem'] = {'getIrefs':['__all__']}
+htmlStyle['experiment'] = {'getIrefs':['__all__']}
+htmlStyle['mip'] = {'getIrefs':['__all__']}
+htmlStyle['remarks'] = {'getIrefs':['__all__']}
+dq = dreq.loadDreq( htmlStyles=htmlStyle)
 ##
 ## add special styles to dq object "itemStyle" dictionary.
 ##
