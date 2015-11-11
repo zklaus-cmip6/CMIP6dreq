@@ -19,8 +19,8 @@ def loadBS(bsfile):
     ll.append( [x[1:-1] for x in string.strip(l).split('\t') ] )
   cc = collections.defaultdict( dict )
   for l in ll[3:]:
-    for i in range( len(ll[2]) -1 ):
-      cc[l[0]][ll[2][i+1]] = l[i+1]
+    for i in range( len(ll[2]) ):
+      cc[l[0]][ll[2][i]] = l[i]
   return cc
 
 class rechecks(object):
@@ -56,6 +56,7 @@ class dreqItemBase(object):
          ##self._defaults = { }
          ##self._globalDefault = '__unset__'
          self._contentInitialised = False
+         self._greenIcon = '<img height="12pt" src="/images/154g.png" alt="[i]"/>'
          if dictMode:
            self.dictInit( dict )
          elif mdMode:
@@ -87,9 +88,9 @@ class dreqItemBase(object):
 
        def __href__(self,odir="",label=None):
          igns =  {'','__unset__'}
-         if 'description' in self.__dict__ and string.strip( self.description ) not in igns:
+         if 'description' in self.__dict__ and self.description != None and string.strip( self.description ) not in igns:
            ttl = self.description
-         elif 'title' in self.__dict__ and string.strip( self.title ) not in igns:
+         elif 'title' in self.__dict__ and self.title != None and string.strip( self.title ) not in igns:
            ttl = self.title
          else:
            ttl = self.label
@@ -114,9 +115,10 @@ class dreqItemBase(object):
            msg.append( '<ul>' )
            for a in self.__dict__.keys():
              if a[0] != '_':
+               app = '%s%s' % (a, self.__class__.__dict__[a].__href__(label=self._greenIcon) )
                if hasattr( self._a[a], 'useClass') and self._a[a].useClass == 'internalLink' and self._base._indexInitialised:
                  if self.__dict__[a] == '__unset__':
-                   m = '<li>%s: %s [missing link]</li>' % ( a, self.__dict__[a] )
+                   m = '<li>%s: %s [missing link]</li>' % ( app, self.__dict__[a] )
                  else:
                    try:
                      targ = self._base._inx.uid[ self.__dict__[a] ]
@@ -124,10 +126,10 @@ class dreqItemBase(object):
                      print ( a, self.__dict__[a], sect )
                      raise
                    lst = self.getHtmlLinkAttrStyle(a)
-                   m = lst( a, targ, frm=sect )
-                   ##m = '<li>%s: [%s] %s [%s]</li>' % ( a, targ._h.label, targ.label, targ.__href__() )
+                   m = lst( app, targ, frm=sect )
+                   ##m = '<li>%s, %s: [%s] %s [%s]</li>' % ( a, self.__class__.__dict__[a].__href__(label=self._greenIcon), targ._h.label, targ.label, targ.__href__() )
                else:
-                 m = '<li>%s: %s</li>' % ( a, self.__dict__[a] )
+                 m = '<li>%s: %s</li>' % ( app, self.__dict__[a] )
                msg.append( m )
            msg.append( '</ul>' )
 ##
@@ -252,7 +254,8 @@ class config(object):
     self.silent = True
     self.vdef = configdoc
     self.vsamp = thisdoc
-    self.nts = collections.namedtuple( 'sectdef', ['tag','label','title','id','itemLabelMode','level'] )
+
+    self.nts = collections.namedtuple( 'sectdef', ['tag','label','title','id','itemLabelMode','level','maxOccurs','labUnique'] )
     self.nti = collections.namedtuple( 'itemdef', ['tag','label','title','type','useClass','techNote'] )
     self.ntt = collections.namedtuple( 'sectinit', ['header','attributes','defaults'] )
     self.nt__default = collections.namedtuple( 'deflt', ['defaults','glob'] )
@@ -290,16 +293,49 @@ class config(object):
 ## this loads in some metadata, but not yet in a useful way.
 ##
     self._t0 = self.parsevcfg(None)
-    self.tt0 = {}
     self._tableClass0 = self.itemClassFact( self._t0, ns=self.ns )
+
+##
+## define a class for the section heading records.
+##
+    self._t1 = self.parsevcfg('__sect__')
+    self._t2 = self.parsevcfg('__main__')
+    self._sectClass0 = self.itemClassFact( self._t1, ns=self.ns )
+
+    self.tt0 = {}
     for k in self.bscc:
       self.tt0[k] = self._tableClass0(dict=self.bscc[k])
-      setattr( self._tableClass0, '_%s' % k, self.tt0[k] )
+      if k in self._t0.attributes:
+        setattr( self._tableClass0, '%s' % k, self.tt0[k] )
+      if k in self._t1.attributes:
+        setattr( self._sectClass0, '%s' % k, self.tt0[k] )
 
+##
+## save header information, as for recordAttributeDefn below
+##
+    self._recAtDef = {'__core__':self._t0, '__sect__':self._t1}
+##
+## experimental addition of __core__ to coll dictionary ..
+##
+    self.coll['__core__'] = self.ntf( self._t0.header, self._t0.attributes, [self.tt0[k] for k in self.tt0] )
+      ##self.coll[k] = self.ntf( self.recordAttributeDefn[k].header, self.recordAttributeDefn[k].attributes, self.tableItems[k] )
+
+    self.tt1 = {}
+    self.ttl2 = []
     for v in vl:
       t = self.parsevcfg(v)
       tables[t[0].label] = t
       self.tableClasses[t[0].label] = self.itemClassFact( t, ns=self.ns )
+      thisc = self.tableClasses[t[0].label]
+      self.tt1[t[0].label] = self._sectClass0( dict=t.header.__dict__ )
+      self.tt1[t[0].label].maxOccurs = t.header.maxOccurs
+      self.tt1[t[0].label].labUnique = t.header.labUnique
+      self.tt1[t[0].label].level = t.header.level
+      self.tt1[t[0].label].itemLabelMode = t.header.itemLabelMode
+      self.ttl2 += [thisc.__dict__[a] for a in t.attributes]
+    self.coll['__main__'] = self.ntf( self._t2.header, self._t2.attributes, self.ttl2 )
+
+    self.coll['__sect__'] = self.ntf( self._t1.header, self._t1.attributes, [self.tt1[k] for k in self.tt1] )
 
     self.recordAttributeDefn = tables
     for k in tables.keys():
@@ -309,6 +345,15 @@ class config(object):
           v = vl[0]
           t = v.get( 'title' )
           i = v.get( 'id' )
+          uid = v.get( 'uid' )
+          useclass = v.get( 'useClass' )
+
+          self.tt1[k].label = k
+          self.tt1[k].title = t
+          self.tt1[k].id = i
+          self.tt1[k].uid = uid
+          self.tt1[k].useClass = useclass
+          self.tableClasses[k]._h = self.tt1[k]
           il = v.findall( '%sitem' % self.ns )
           self.info( '%s, %s, %s, %s' % ( k, t, i, len(il) ) )
  
@@ -387,21 +432,33 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
 
   def addAttributes( self, thisClass, attrDict ):
     for k in attrDict:
-      setattr( thisClass, '_%s' % k , attrDict[k] )
+      setattr( thisClass, '%s' % k , attrDict[k] )
          
   def parsevcfg(self,v):
       """Parse a section definition element, including all the record attributes. The results are returned as a namedtuple of attributes for the section and a dictionary of record attribute specifications."""
-      if v == None:
-        vtt = self.nts( '__core__', 'CoreAttributes', 'Core Attributes', '00000000', 'def', '0' )
-        idict = {'label':None, 'title':None, 'id':None, 'itemLabelMode':None, 'level':None }
+      if v in [ None,'__main__']:
+        idict = {'description':'An extended description of the object', 'title':'Record Description', \
+         'techNote':'', 'useClass':'__core__', 'superclass':'rdf:property',\
+         'type':'xs:string', 'uid':'__core__:description', 'label':'label' }
+        if v == None:
+          vtt = self.nts( '__core__', 'CoreAttributes', 'Core Attributes', '00000000', 'def', '0', '0', 'false' )
+        else:
+          vtt = self.nts( '__main__', 'Attributes defined for the Data Request', 'Data Request Attributes', '00000001', 'def', '0', '0', 'false' )
+      elif v == '__sect__':
+        idict = {'title':'Record Description', \
+         'uid':'__core__:description', 'label':'label', 'useClass':'text', 'id':'id', 'maxOccurs':'', 'itemLabelMode':'', 'level':'', 'labUnique':'' }
+        vtt = self.nts( '__core__', 'sectionAttributes', 'Section Attributes', '00000000', 'def', '0', '0', 'false' )
+##<var label="var" uid="SECTION:var" useClass="vocab" title="MIP Variable" id="cmip.drv.001">
       else:
         l = v.getAttribute( 'label' )
         t = v.getAttribute( 'title' )
         i = v.getAttribute( 'id' )
         ilm = v.getAttribute( 'itemLabelMode' )
         lev = v.getAttribute( 'level' )
+        maxo = v.getAttribute( 'maxOccurs' )
+        labu = v.getAttribute( 'labUnique' )
         il = v.getElementsByTagName( 'rowAttribute' )
-        vtt = self.nts( v.nodeName, l,t,i,ilm,lev )
+        vtt = self.nts( v.nodeName, l,t,i,ilm,lev, maxo, labu )
         idict = {}
         for i in il:
           tt = self.parseicfg(i)
@@ -413,14 +470,21 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
       """Parse a record attribute specification"""
       defs = {'type':"xs:string"}
       ll = []
-      for k in ['label','title','type','useClass','techNote']:
+      ee = {}
+      for k in ['label','title','type','useClass','techNote','description','uid']:
         if i.hasAttribute( k ):
           ll.append( i.getAttribute( k ) )
         else:
           ll.append( defs.get( k, None ) )
-      l, t, ty, cls, tn = ll
+        ee[k] = ll[-1]
+      l, t, ty, cls, tn, desc, uid = ll
       self.lastTitle = t
-      return self.nti( i.nodeName, l,t,ty,cls,tn )
+
+      returnClass = True
+      if returnClass:
+        return self._tableClass0( dict=ee )
+      else:
+        return self.nti( i.nodeName, l,t,ty,cls,tn )
 
 class container(object):
   """Simple container class, to hold a set of dictionaries of lists."""

@@ -223,8 +223,14 @@ class styles(object):
 
   def varLink(self,targ,frm=''):
     return '<li>%s: %s [%s]</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.title, targ.units )
+
   def cmvLink(self,targ,frm=''):
     return '<li>%s {%s}: %s [%s]</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.mipTable, targ.title, targ.frequency )
+
+  def vgrpLink(self,targ,frm=''):
+    gpsz = len(targ._inx.iref_by_sect[targ.uid].a['requestVar'])
+    nlnk = len(targ._inx.iref_by_sect[targ.uid].a['requestLink'])
+    return '<li>%s {%s}: %s variables, %s request links</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.mip, gpsz, nlnk )
 
 styls = styles()
 
@@ -252,6 +258,7 @@ dq = dreq.loadDreq( htmlStyles=htmlStyle)
 dq.itemStyles['standardname'] = styls.snLink
 dq.itemStyles['var'] = styls.varLink
 dq.itemStyles['CMORvar'] = styls.cmvLink
+dq.itemStyles['requestVarGroup'] = styls.vgrpLink
 dq.itemStyles['requestLink'] = styls.rqlLink02
 dq.coll['var'].items[0].__class__._linkAttrStyle['sn'] = styls.snLink01
 
