@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 
 NAME = "dreqPy"
 PACKAGES = find_packages(exclude=["tests*"])
-META_PATH = os.path.join("dreqPy", "__init__.py")
+META_PATH = os.path.join("dreqPy", "packageConfig.py")
 KEYWORDS = ["CMIP6"]
 CLASSIFIERS = [
     "Development Status :: 4 - Beta",
@@ -44,9 +44,9 @@ def find_meta(meta):
     """
     Extract __*meta*__ from META_FILE.
     """
-    import dreqPy.__init__
-    if '__%s__' % meta in dreqPy.__dict__:
-      return dreqPy.__dict__[ '__%s__' % meta ]
+    import dreqPy.packageConfig as pcfg
+    if '__%s__' % meta in pcfg.__dict__:
+      return pcfg.__dict__[ '__%s__' % meta ]
 
     raise RuntimeError("Unable to find __{meta}__ string.".format(meta=meta))
 
@@ -90,7 +90,7 @@ if __name__ == "__main__":
         zip_safe=False,
         classifiers=CLASSIFIERS,
         install_requires=INSTALL_REQUIRES,
-        data_files = [("", ["LICENSE"])]
+        data_files = [("", ["LICENSE"])],
         entry_points= {
         'console_scripts': ['drq = dreqPy.dreqCmdl:main_entry'],
         },
