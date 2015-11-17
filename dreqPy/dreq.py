@@ -9,11 +9,6 @@ import xml.dom.minidom
 import re, shelve
 from __init__ import DOC_DIR
 
-class caughtError(Exception):
-     def __init__(self, value):
-         self.value = value
-     def __str__(self):
-         return repr(self.value)
 
 blockSchemaFile = '%s/%s' % (DOC_DIR, 'BlockSchema.csv' )
 
@@ -35,7 +30,7 @@ class rechecks(object):
 
   def isIntStr( self, tv ):
     """Check whether a string is a valid representation of an integer."""
-    if type( tv ) not in {type(''),type(u'')}:
+    if type( tv ) not in [type(''),type(u'')]:
       self.reason = 'NOT STRING'
       return False
     ok = self.__isInt.match( tv ) != None
@@ -53,8 +48,8 @@ class dreqItemBase(object):
        _htmlStyle = {}
        _linkAttrStyle = {}
 
-       def __init__(self,dict=None,xmlMiniDom=None,id='defaultId',etree=False):
-         dictMode = dict != None
+       def __init__(self,idict=None,xmlMiniDom=None,id='defaultId',etree=False):
+         dictMode = idict != None
          mdMode = xmlMiniDom != None
          assert not( dictMode and mdMode), 'Mode must be either dictionary of minidom: both assigned'
          assert dictMode or mdMode, 'Mode must be either dictionary of minidom: neither assigned'
@@ -63,7 +58,7 @@ class dreqItemBase(object):
          self._contentInitialised = False
          self._greenIcon = '<img height="12pt" src="/images/154g.png" alt="[i]"/>'
          if dictMode:
-           self.dictInit( dict )
+           self.dictInit( idict )
          elif mdMode:
            self.mdInit( xmlMiniDom, etree=etree )
 
@@ -92,7 +87,7 @@ class dreqItemBase(object):
            print ( 'Item <%s>: uninitialised' % self.sectionLabel )
 
        def __href__(self,odir="",label=None):
-         igns =  {'','__unset__'}
+         igns =  ['','__unset__']
          if 'description' in self.__dict__ and self.description != None and string.strip( self.description ) not in igns:
            ttl = self.description
          elif 'title' in self.__dict__ and self.title != None and string.strip( self.title ) not in igns:
@@ -174,13 +169,14 @@ class dreqItemBase(object):
          return msg
 
 
-       def dictInit( self, dict ):
+       def dictInit( self, idict ):
          __doc__ = """Initialise from a dictionary."""
          for a in self._a.keys():
-           if a in dict:
-             self.__dict__[a] = dict[a]
+           if a in idict:
+             val = idict[a]
            else:
-             self.__dict__[a] = self._d.defaults.get( a, self._d.glob )
+             val = self._d.defaults.get( a, self._d.glob )
+           setattr( self, a, val )
          self._contentInitialised = True
 
        def mdInit( self, el, etree=False ):
@@ -217,7 +213,7 @@ class dreqItemBase(object):
                else:
                  v = string.strip(v)
                  thissect = '%s [%s]' % (self._h.title,self._h.tag)
-                 if v in { '',u'',' ', u' '}:
+                 if v in [ '',u'',' ', u' ']:
                    if nw1 < 20:
                      print ( 'WARN.050.0001: input integer non-compliant: %s: %s: "%s" -- set to zero' % (thissect,a,v) )
                      nw1 += 1
@@ -230,10 +226,10 @@ class dreqItemBase(object):
                      msg = 'ERROR: failed to convert integer: %s: %s: %s' % (thissect,a,v)
                      deferredHandling=True
              elif self._a[a].type == u'xs:boolean':
-               v = v in {'true','1'}
+               v = v in ['true','1']
              self.__dict__[a] = v
            else:
-             if a in {'uid'}:
+             if a in ['uid',]:
                thissect = '%s [%s]' % (self._h.title,self._h.tag)
                print ( 'ERROR.020.0001: missing uid: %s' % thissect )
                if etree:
@@ -309,7 +305,7 @@ class config(object):
 
     self.tt0 = {}
     for k in self.bscc:
-      self.tt0[k] = self._tableClass0(dict=self.bscc[k])
+      self.tt0[k] = self._tableClass0(idict=self.bscc[k])
       if k in self._t0.attributes:
         setattr( self._tableClass0, '%s' % k, self.tt0[k] )
       if k in self._t1.attributes:
@@ -329,15 +325,10 @@ class config(object):
     self.ttl2 = []
     for v in vl:
       t = self.parsevcfg(v)
-      if not hasattr( t.header, '__dict__' ):
-        print ('FATAL ERROR: no __dict__ attribute in header: parsing %s [%s]' % (v, vl.index(v))  )
-        print (type(t.header).__name__ )
-        print ( string.join( dir( t.header ) ) )
-        raise caughtError( 'FATAL ERROR: no __dict__ attribute in header' )
       tables[t[0].label] = t
       self.tableClasses[t[0].label] = self.itemClassFact( t, ns=self.ns )
       thisc = self.tableClasses[t[0].label]
-      self.tt1[t[0].label] = self._sectClass0( dict=t.header.__dict__ )
+      self.tt1[t[0].label] = self._sectClass0( idict=t.header._asdict() )
       self.tt1[t[0].label].maxOccurs = t.header.maxOccurs
       self.tt1[t[0].label].labUnique = t.header.labUnique
       self.tt1[t[0].label].level = t.header.level
@@ -492,7 +483,7 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
 
       returnClass = True
       if returnClass:
-        return self._tableClass0( dict=ee )
+        return self._tableClass0( idict=ee )
       else:
         return self.nti( i.nodeName, l,t,ty,cls,tn )
 
