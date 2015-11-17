@@ -9,6 +9,11 @@ import xml.dom.minidom
 import re, shelve
 from __init__ import DOC_DIR
 
+class caughtError(Exception):
+     def __init__(self, value):
+         self.value = value
+     def __str__(self):
+         return repr(self.value)
 
 blockSchemaFile = '%s/%s' % (DOC_DIR, 'BlockSchema.csv' )
 
@@ -324,6 +329,11 @@ class config(object):
     self.ttl2 = []
     for v in vl:
       t = self.parsevcfg(v)
+      if not hasattr( t.header, '__dict__' ):
+        print ('FATAL ERROR: no __dict__ attribute in header: parsing %s [%s]' % (v, vl.index(v))  )
+        print (type(t.header).__name__ )
+        print ( string.join( dir( t.header ) ) )
+        raise caughtError( 'FATAL ERROR: no __dict__ attribute in header' )
       tables[t[0].label] = t
       self.tableClasses[t[0].label] = self.itemClassFact( t, ns=self.ns )
       thisc = self.tableClasses[t[0].label]
