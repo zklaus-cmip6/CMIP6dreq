@@ -135,7 +135,13 @@ class dreqQuery(object):
       t1 = lambda x: x == mipSel
     elif type(mipSel) == type(set()):
       t1 = lambda x: x in mipSel
-    self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
+
+    s = set()
+    for i in self.dq.coll['objectiveLink'].items:
+      if t1(i.label):
+        s.add( self.dq.inx.uid[i.rid] )
+    ##self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
+    self.rqs = list( s )
     return self.rqs
 
   def getRequestLinkByObjective( self, objSel ):
@@ -143,16 +149,13 @@ class dreqQuery(object):
     if type(objSel) == type(''):
       t1 = lambda x: x == self.rlu[objSel]
     elif type(objSel) == type(set()):
-      t1 = lambda x: x in {self.rlu[i] for i in objSel}
+      t1 = lambda x: x in [self.rlu[i] for i in objSel]
 
     s = set()
     for i in self.dq.coll['objectiveLink'].items:
       if t1(i.label):
-        s.add( self.dq.inx.uid[i.rid] )
+        s.add( self.dq.inx.uid[i.oid] )
 ##
-## not sure about the oid/label difference below ... which option works ... and why?
-##
-    ##self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
     self.rqs = list( s )
     ##self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.oid) })
     return self.rqs
@@ -160,7 +163,7 @@ class dreqQuery(object):
   def varGroupXexpt(self, rqList ):
     """For a list of request links, return a list of variable group IDs for each experiment"""
     self.cc = collections.defaultdict( list )
-    dummy = {self.cc[i.expt].append(i.rlid) for i in self.dq.coll['requestItem'].items if i.rlid in {j.uid for j in rqList} }
+    ## dummy = {self.cc[i.expt].append(i.rlid) for i in self.dq.coll['requestItem'].items if i.rlid in {j.uid for j in rqList} }
     return self.cc
 
   def yearsInRequest(self, rql ):
@@ -174,15 +177,26 @@ class dreqQuery(object):
 ## cc: an optional collector, to accumulate indexed volumes
 ##
     inx = self.dq.inx
-    imips = {i.mip for i in l1}
+    imips = set()
+    for i in l1:
+      imips.add(i.mip)
+    ##imips = {i.mip for i in l1}
 ##
 ## rql is the set of all request links which are associated with a request item for this experiment set
 ##
-    l1p = {i for i in l1 if (i.esid == ex) and (i.preset < 0 or i.preset <= pmax) }
+    l1p = set()
+    for i in l1:
+      if (i.esid == ex) and (i.preset < 0 or i.preset <= pmax):
+        l1p.add(i)
 
-    rql0 = {i.rlid for i in l1p}
+    rql0 = set()
+    for i in l1p:
+       rql0.add(i.rlid)
 
-    rqlInv = {u for u in rql0 if inx.uid[u]._h.label == 'remarks' }
+    rqlInv = set()
+    for u in rql0:
+      if inx.uid[u]._h.label == 'remarks':
+        rqlInv.add( u )
     if len(rqlInv) != 0:
       print ( 'WARNING.001.00002: %s invalid request links from request items ...' % len(rqlInv) )
     rql = {u for u in rql0 if inx.uid[u]._h.label != 'remarks' }
