@@ -73,13 +73,16 @@ class dreqQuery(object):
 
     self.cmvFilter = cmvFilter( self )
     self.tierMax = tierMax
-    self.mips = { i.mip for i in  self.dq.coll['requestItem'].items}
+
+    self.mips = set()
+    for i in  self.dq.coll['requestItem'].items:
+       self.mips.add(i.mip)
     self.mipls = sorted( list( self.mips ) )
 
     self.default_mcfg = nt_mcfg._make( [259200,60,64800,40,20,5,100] )
-    self.mcfg = {}
-    for k in self.default_mcfg.__dict__.keys():
-      self.mcfg[k] = self.default_mcfg.__dict__[k]
+    self.mcfg = self.default_mcfg._asdict()
+    ##for k in self.default_mcfg.__dict__.keys():
+      ##self.mcfg[k] = self.default_mcfg.__dict__[k]
     self.szcfg()
     self.requestItemExpAll(  )
 
@@ -130,7 +133,7 @@ class dreqQuery(object):
     """Return the set of request links which are associated with specified MIP"""
     if type(mipSel) == type(''):
       t1 = lambda x: x == mipSel
-    elif type(mipSel) == type({1,2}):
+    elif type(mipSel) == type(set()):
       t1 = lambda x: x in mipSel
     self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
     return self.rqs
@@ -139,10 +142,19 @@ class dreqQuery(object):
     """Return the set of request links which are associated with specified objectives"""
     if type(objSel) == type(''):
       t1 = lambda x: x == self.rlu[objSel]
-    elif type(objSel) == type({1,2}):
+    elif type(objSel) == type(set()):
       t1 = lambda x: x in {self.rlu[i] for i in objSel}
 
-    self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.oid) })
+    s = set()
+    for i in self.dq.coll['objectiveLink'].items:
+      if t1(i.label):
+        s.add( self.dq.inx.uid[i.rid] )
+##
+## not sure about the oid/label difference below ... which option works ... and why?
+##
+    ##self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
+    self.rqs = list( s )
+    ##self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.oid) })
     return self.rqs
 
   def varGroupXexpt(self, rqList ):
