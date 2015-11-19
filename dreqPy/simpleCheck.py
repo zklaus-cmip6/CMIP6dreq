@@ -114,7 +114,7 @@ class check2(checkbase):
       self.ok = False
       self._clear_ch03()
       return
-    if string.find(ii[0],'validates') != -1:
+    if ii[0].find('validates') != -1:
       print ( 'Sample XML validated' )
       self.ok = True
       self._clear_ch03()

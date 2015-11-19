@@ -16,7 +16,8 @@ def loadBS(bsfile):
   ii = open( bsfile, 'r' ).readlines()
   ll = []
   for l in ii:
-    ll.append( [x[1:-1] for x in string.strip(l).split('\t') ] )
+    ##ll.append( [x[1:-1] for x in string.strip(l).split('\t') ] )
+    ll.append( [x[1:-1] for x in l.strip().split('\t') ] )
   cc = collections.defaultdict( dict )
   for l in ll[3:]:
     for i in range( len(ll[2]) ):
