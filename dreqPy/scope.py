@@ -202,7 +202,7 @@ class dreqQuery(object):
     rql = set()
     for u in rql0:
        if inx.uid[u]._h.label != 'remarks':
-         rql0.add( u ) 
+         rql.add( u ) 
 
     if len( rql ) == 0:
       self.vars = set()
