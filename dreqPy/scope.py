@@ -8,7 +8,7 @@ import collections, string, operator
 import sys
 
 python2 = True
-if sys.version_info.major == 3:
+if sys.version_info[0] == 3:
   python2 = False
   from functools import reduce
 
@@ -199,7 +199,11 @@ class dreqQuery(object):
         rqlInv.add( u )
     if len(rqlInv) != 0:
       print ( 'WARNING.001.00002: %s invalid request links from request items ...' % len(rqlInv) )
-    rql = {u for u in rql0 if inx.uid[u]._h.label != 'remarks' }
+    rql = set()
+    for u in rql0:
+       if inx.uid[u]._h.label != 'remarks':
+         rql0.add( u ) 
+
     if len( rql ) == 0:
       self.vars = set()
       return (0,{},{} )
@@ -207,7 +211,10 @@ class dreqQuery(object):
 ## The complete set of variables associated with these requests:
     tm = 1
     if tm == 0:
-      rqvg = list({inx.uid[i].refid for i in rql})
+      s = set()
+      for i in rql:
+        s.add( inx.uid[i].refid )
+      rqvg = list( s )
     else:
       cc1 = collections.defaultdict( set )
       for i in rql:
@@ -220,7 +227,11 @@ class dreqQuery(object):
 ##
         for k in cc1:
           thisc = reduce( operator.or_, [set( inx.iref_by_sect[vg].a['requestVar'] ) for vg in cc1[k] ] )
-          ccv[k] = {inx.uid[l].vid for l in list(thisc) if inx.uid[l].priority <= pmax}
+          s = set()
+          for l in list(thisc):
+             if inx.uid[l].priority <= pmax:
+               s.add( inx.uid[l].vid )
+          ccv[k] = s
 
         if len( ccv.keys() ) < len( list(imips) ):
           vars = set()
@@ -234,7 +245,10 @@ class dreqQuery(object):
         col1 = reduce( operator.or_, [set( inx.iref_by_sect[vg].a['requestVar'] ) for vg in rqvg ] )
 
 ###The collector col1 here accumulates all the record uids, resulting in a single collection. These are request variables, to get a set of CMOR variables at priority <= pmax:
-        vars = {inx.uid[l].vid for l in list(col1) if inx.uid[l].priority <= pmax}
+        vars = set()
+        for l in list(col1):
+           if inx.uid[l].priority <= pmax:
+             vars.add(inx.uid[l].vid)
 ##
 ## if looking for the union, would have to do a filter here ... after looking up which vars are requested by each MIP ...
 ##
@@ -243,7 +257,11 @@ class dreqQuery(object):
 
 ### filter out cases where the request does not point to a CMOR variable.
     ##vars = {vid for vid in vars if inx.uid[vid][0] == u'CMORvar'}
-    vars = {vid for vid in vars if inx.uid[vid]._h.label == u'CMORvar'}
+    thisvars = set()
+    for vid in vars:
+       if inx.uid[vid]._h.label == u'CMORvar':
+             thisvars.add(vid)
+    vars = thisvars
 ##
 ## filter by configuration option and rank
 ##
@@ -259,7 +277,10 @@ class dreqQuery(object):
     for u in rql:
 ### for request variables which reference the variable group attached to the link, add the associate CMOR variables, subject to priority
       i = inx.uid[u]
-      e[i.uid] = { inx.uid[x].vid for x in inx.iref_by_sect[i.refid].a['requestVar'] if inx.uid[x].priority <= pmax}
+      e[i.uid] = set()
+      for x in inx.iref_by_sect[i.refid].a['requestVar']:
+           if inx.uid[x].priority <= pmax:
+              e[i.uid].add( inx.uid[x].vid )
 #
 # for each variable, calculate the maximum number of years across all the request links which reference that variable.
 ##
@@ -267,7 +288,12 @@ class dreqQuery(object):
 ##
     nym = {}
     for v in vars:
-      nym[v] = max( {self.rqiExp[i.uid][2] for i in l1p if i.esid == ex and v in e[i.rlid]} )
+      s = set()
+      for i in l1p:
+        if i.esid == ex and v in e[i.rlid]:
+          s.add( self.rqiExp[i.uid][2] )
+      ##nym[v] = max( {self.rqiExp[i.uid][2] for i in l1p if i.esid == ex and v in e[i.rlid]} )
+      nym[v] = max( s )
 
     szv = {}
     ov = []
@@ -361,7 +387,7 @@ class dreqQuery(object):
 
   def volByMip( self, mip, pmax=2, retainRedundantRank=False):
 
-    if type(mip) in {type( '' ),type( u'') }:
+    if type(mip) in [type( '' ),type( u'') ]:
       if mip not in self.mips:
         print ( self.mips )
         raise baseException( 'volByMip: Name of mip not recognised: %s' % mip )
@@ -375,7 +401,9 @@ class dreqQuery(object):
       raise baseException( 'volByMip: "mip" (1st explicit argument) should be type string or set: %s -- %s' % (mip, type(mip))   )
       
     #### The set of experiments/experiment groups:
-    exps = {i.esid for i in l1}
+    exps = set()
+    for i in l1:
+      exps.add( i.esid )
     self.volByE = {}
     vtot = 0
     cc = collections.defaultdict( col_count )
@@ -461,7 +489,7 @@ class dreqUI(object):
     if 'm' in self.adict:
       self.adict['m'] = set(self.adict['m'].split(',') )
 
-    integerArgs = {'p','t','plm'}
+    integerArgs = set( ['p','t','plm'] )
     for i in integerArgs.intersection( self.adict ):
       self.adict[i] = int( self.adict[i] )
 
