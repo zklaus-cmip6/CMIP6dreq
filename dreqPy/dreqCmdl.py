@@ -1,5 +1,5 @@
 """
-Entry point for command line usage
+Entry point for command line usage -- see ccinit for usage information.
 """
 
 import scope, sys

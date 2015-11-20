@@ -94,9 +94,24 @@ class makeTab(object):
 
     wb = xlsx( 'tables/test.xlsx' )
 
-    cell_format = wb.wb.add_format({'text_wrap': True})
+
+    hdr_cell_format = wb.wb.add_format({'text_wrap': True, 'font_size': 14, 'font_color':'#0000ff', 'bold':1, 'fg_color':'#aaaacc'})
+    hdr_cell_format.set_text_wrap()
+    cell_format = wb.wb.add_format({'text_wrap': True, 'font_size': 11})
+    cell_format.set_text_wrap()
 
     mode = 'c'
+    sht = wb.newSheet( 'Notes' )
+    tableNotes = [('MIPs (...)','The last two columns in each row list MIPs associated with each variable. The first column in this pair lists the MIPs which are requesting the variable in one or more experiments. The second column lists the MIPs proposing experiments in which this variable is requested. E.g. If a variable is requested in a DECK experiment by HighResMIP, then HighResMIP appears in the forst column and DECK in the second')]
+    sht.set_row(0,40)
+    sht.write( 0,1, 'Notes on tables', hdr_cell_format )
+    ri = 0
+    sht.set_column(0,0,40)
+    sht.set_column(0,1,200)
+    for t in tableNotes:
+      ri += 1
+      for i in range(2):
+          sht.write( ri,i, t[i], cell_format )
 
     ncga = 'NetCDF Global Attribute'
     for t in tables:
@@ -107,17 +122,19 @@ class makeTab(object):
         hrec = ['Priority','Long name', 'units', 'description', 'comment', 'Variable Name', 'CF Standard Name', 'cell_methods', 'positive', 'type', 'dimensions', 'CMOR Name', 'modeling_realm', 'frequency', 'cell_measures', 'prov', 'provNote','rowIndex']
         hcmt = ['Default priority (generally overridden by settings in "requestVar" record)',ncga,'','','Name of variable in file','','','CMOR directive','','','CMOR name, unique within table','','','','','','','','','']
         sht.set_column(1,1,40)
-        sht.set_column(3,3,50)
-        sht.set_column(4,4,30)
-        sht.set_column(5,5,50)
-        sht.set_column(6,6,30)
-        sht.set_column(9,9,40)
+        sht.set_column(1,3,50)
+        sht.set_column(1,4,30)
+        sht.set_column(1,5,50)
+        sht.set_column(1,6,30)
+        sht.set_column(1,9,40)
+        sht.set_column(1,18,40)
+        sht.set_column(1,19,40)
       else:
         hrec = ['','Long name', 'units', 'description', '', 'Variable Name', 'CF Standard Name', '','', 'cell_methods', 'valid_min', 'valid_max', 'ok_min_mean_abs', 'ok_max_mean_abs', 'positive', 'type', 'dimensions', 'CMOR name', 'modeling_realm', 'frequency', 'cell_measures', 'flag_values', 'flag_meanings', 'prov', 'provNote','rowIndex']
       if addMips:
-        hrec.append( 'MIPs' )
+        hrec.append( 'MIPs (requesting)' )
+        hrec.append( 'MIPs (by experiment)' )
 
-      hdr_cell_format = wb.wb.add_format({'text_wrap': True, 'font_size': 14, 'font_color':'#0000ff', 'bold':1, 'fg_color':'#aaaacc'})
       sht.set_row(0,40)
       for i in range(len(hrec)):
           sht.write( j,i, hrec[i], hdr_cell_format )
@@ -148,7 +165,9 @@ class makeTab(object):
               orec = ['',cv.title, cv.units, v.description, '', cv.label, cv.sn, '','', strc.cell_methods, v.valid_min, v.valid_max, v.ok_min_mean_abs, v.ok_max_mean_abs, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, strc.flag_values, strc.flag_meanings,v.prov,v.provNote,str(v.rowIndex)]
             if addMips:
               thismips = c.chkCmv( v.uid )
+              thismips2 = c.chkCmv( v.uid, byExpt=True )
               orec.append( string.join( sorted( list( thismips) ),',') )
+              orec.append( string.join( sorted( list( thismips2) ),',') )
 
             oo.write( string.join(orec, '\t' ) + '\n' )
             j+=1
@@ -176,6 +195,41 @@ ftr = """return data;
 """
 rtmpl = 'data[%(n)s] = { "id":%(n)s, 0:"%(var)s",  1:"%(sn)s", 2:"%(ln)s", 3:"%(u)s", 4:"%(uid)s" };'
 
+class htmlTrees(object):
+  def __init__(self,dq,odir='html/t/'):
+    self.dq = dq
+    self.odir = odir
+    self.c = vrev.checkVar( dq )
+    self.anno = {}
+    for v in dq.coll['var'].items:
+      self.makeTree( v )
+    
+  def makeTree( self, v ):
+    ee = self.c.chk2( v.label )
+    if len(ee.keys()) > 0:
+      title = 'Usage tree for %s' % v.label
+      bdy = ['<h1>%s</h1>' % title, ]
+      bdy.append( '<html><head></head><body>\n' )
+      bdy.append( '<ul>\n' )
+      for k in sorted( ee.keys() ):
+        l1, xx = ee[k]
+        lx = list( xx )
+        if len( lx ) == 0:
+          bdy.append( '<li>%s: Empty</li>\n' % l1 )
+        else:
+          bdy.append( '<li>%s:\n<ul>' % l1 )
+          for x in lx:
+            bdy.append( '<li>%s</li>\n' % x )
+          bdy.append( '</ul></li>\n' )
+      bdy.append( '</ul></body></html>\n' )
+      oo = open( '%s/%s.html' % (self.odir,v.label), 'w' )
+      oo.write( dq.pageTmpl % ( title, '../', string.join( bdy, '\n' ) ) )
+      oo.close()
+      self.anno[v.label] = '<a href="../t/%s.html">Usage</a>' % v.label
+    else:
+      self.anno[v.label] = 'Unused'
+        
+
 class makeJs(object):
   def __init__(self,dq):
     n = 0
@@ -202,13 +256,13 @@ class styles(object):
   def __init__(self):
     pass
 
-  def snLink01(self,a,targ,frm=''):
+  def snLink01(self,a,targ,frm='',ann=''):
     if targ._h.label == 'remarks':
       return '<li>%s: Standard name under review [%s]</li>' % ( a, targ.__href__() )
     else:
       return '<li>%s [%s]: %s</li>' % ( targ._h.title, a, targ.__href__(label=targ.label)  )
 
-  def rqlLink02(self,targ,frm=''):
+  def rqlLink02(self,targ,frm='',ann=''):
     t2 = targ._inx.uid[targ.refid]
     if t2._h.label == 'remarks':
       return '<li>%s: %s</li>' % ( targ.__href__(odir='../u/', label=targ.title), "Link to variable group broken"  )
@@ -218,16 +272,19 @@ class styles(object):
       gpsz = len(t2._inx.iref_by_sect[t2.uid].a['requestVar'])
       return '<li>%s: Link to group: %s [%s]</li>' % ( targ.__href__(odir='../u/', label=targ.title), t2.__href__(odir='../u/', label=t2.title), gpsz  )
 
-  def snLink(self,targ,frm=''):
+  def snLink(self,targ,frm='',ann=''):
     return '<li>%s [%s]: %s</li>' % ( targ.title, targ.units, targ.__href__(odir='../u/') )
 
-  def varLink(self,targ,frm=''):
-    return '<li>%s: %s [%s]</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.title, targ.units )
+  def varLink(self,targ,frm='',ann=''):
+    return '<li>%s: %s [%s]%s</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.title, targ.units, ann )
 
-  def cmvLink(self,targ,frm=''):
+  def cmvLink(self,targ,frm='',ann=''):
     return '<li>%s {%s}: %s [%s]</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.mipTable, targ.title, targ.frequency )
 
-  def vgrpLink(self,targ,frm=''):
+  def labTtl(self,targ,frm='',ann=''):
+    return '<li>%s: %s</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.title )
+
+  def vgrpLink(self,targ,frm='',ann=''):
     gpsz = len(targ._inx.iref_by_sect[targ.uid].a['requestVar'])
     nlnk = len(targ._inx.iref_by_sect[targ.uid].a['requestLink'])
     return '<li>%s {%s}: %s variables, %s request links</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.mip, gpsz, nlnk )
@@ -250,6 +307,9 @@ htmlStyle['requestItem'] = {'getIrefs':['__all__']}
 htmlStyle['experiment'] = {'getIrefs':['__all__']}
 htmlStyle['mip'] = {'getIrefs':['__all__']}
 htmlStyle['remarks'] = {'getIrefs':['__all__']}
+htmlStyle['spatialShape'] = {'getIrefs':['__all__']}
+htmlStyle['structure'] = {'getIrefs':['__all__']}
+htmlStyle['standardname'] = {'getIrefs':['__all__']}
 dq = dreq.loadDreq( htmlStyles=htmlStyle)
 ##
 ## add special styles to dq object "itemStyle" dictionary.
@@ -260,9 +320,11 @@ dq.itemStyles['var'] = styls.varLink
 dq.itemStyles['CMORvar'] = styls.cmvLink
 dq.itemStyles['requestVarGroup'] = styls.vgrpLink
 dq.itemStyles['requestLink'] = styls.rqlLink02
+dq.itemStyles['spatialShape'] = styls.labTtl
 dq.coll['var'].items[0].__class__._linkAttrStyle['sn'] = styls.snLink01
 
-dq.makeHtml()
+ht = htmlTrees(dq)
+dq.makeHtml( annotations={'var':ht.anno} )
 mt = makeTab()
 mp = makePurl()
 mj = makeJs( dq )

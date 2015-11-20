@@ -13,10 +13,10 @@ from __init__ import DOC_DIR
 blockSchemaFile = '%s/%s' % (DOC_DIR, 'BlockSchema.csv' )
 
 def loadBS(bsfile):
+  """Read in the 'BlockSchema' definitions of the attributes defining attributes"""
   ii = open( bsfile, 'r' ).readlines()
   ll = []
   for l in ii:
-    ##ll.append( [x[1:-1] for x in string.strip(l).split('\t') ] )
     ll.append( [x[1:-1] for x in l.strip().split('\t') ] )
   cc = collections.defaultdict( dict )
   for l in ll[3:]:
@@ -88,6 +88,7 @@ class dreqItemBase(object):
            print ( 'Item <%s>: uninitialised' % self.sectionLabel )
 
        def __href__(self,odir="",label=None):
+         """Generate html text for a link to this item."""
          igns =  ['','__unset__']
          if 'description' in self.__dict__ and self.description != None and string.strip( self.description ) not in igns:
            ttl = self.description
@@ -400,11 +401,12 @@ class config(object):
       self.coll[k] = self.ntf( self.recordAttributeDefn[k].header, self.recordAttributeDefn[k].attributes, self.tableItems[k] )
  
   def info(self,ss):
+    """Switchable print function ... switch off by setting self.silent=True"""
     if not self.silent:
       print ( ss )
 
-  def get(self):
-    return self.coll
+  ###def get(self):
+    ###return self.coll
 
   def itemClassFact(self, sectionInfo,ns=None):
      class dreqItem(dreqItemBase):
@@ -433,6 +435,7 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
      return dreqItem
 
   def addAttributes( self, thisClass, attrDict ):
+    """Add a set of attributes, from a dictionary, to a class"""
     for k in attrDict:
       setattr( thisClass, '%s' % k , attrDict[k] )
          
@@ -572,10 +575,19 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
       print ( ss )
 
 class ds(object):
+  """Comparison object to assist sorting of lists of dictionaries"""
   def __init__(self,k):
     self.k = k
   def cmp(self,x,y):
     return cmp( x.__dict__[self.k], y.__dict__[self.k] )
+
+class kscl(object):
+  """Comparison object to assist sorting of dictionaries of class instances"""
+  def __init__(self,idict,k):
+    self.k = k
+    self.idict = idict
+  def cmp(self,x,y):
+    return cmp( self.idict[x].__dict__[self.k], self.idict[y].__dict__[self.k] )
 
 src1 = '../workbook/trial_20150831.xml'
 
@@ -597,10 +609,10 @@ class loadDreq(object):
 
   def __init__(self,dreqXML=defaultDreqPath, configdoc=defaultConfigPath, useShelve=False, htmlStyles=None ):
     self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve)
-    self.coll = self.c.get()
+    self.coll = self.c.coll
     self.inx = index(self.coll)
-    self.defaultItemLineStyle = lambda i, frm='': '<li>%s: %s</li>' % ( i.label, i.__href__(odir='../u/') )
     self.itemStyles = {}
+    self.defaultItemLineStyle = lambda i, frm='', ann='': '<li>%s: %s</li>' % ( i.label, i.__href__(odir='../u/') )
 ##
 ## add index to Item base class .. so that it can be accessed by item instances
 ##
@@ -622,17 +634,21 @@ class loadDreq(object):
 %s</body></html>"""
 
   def getHtmlItemStyle(self, sect):
+    """Get the styling method associated with a given section."""
     if sect in self.itemStyles:
       return self.itemStyles[sect]
     return self.defaultItemLineStyle
 
-  def makeHtml(self,odir='./html', ttl0 = 'Data Request Index'):
+
+  def makeHtml(self,odir='./html', ttl0 = 'Data Request Index', annotations=None):
     """Generate a html view of the vocabularies, using the "__html__" method of the vocabulary item class to generate a
 page for each item and also generating index pages.
     odir: directory for html files;
     ttl0: Title for main index (in odir/index.html)"""
 
-    for k in self.inx.uid.keys():
+    ks = self.inx.uid.keys()
+    ks.sort( kscl( self.inx.uid, 'title' ).cmp )
+    for k in ks:
       i = self.inx.uid[k]
       ttl = 'Data Request Record: [%s]%s' % (i._h.label,i.label)
       bdy = string.join( i.__html__( ghis=self.getHtmlItemStyle ), '\n' )
@@ -642,19 +658,31 @@ page for each item and also generating index pages.
 
     msg0 = ['<h1>%s</h1>' % ttl0, '<ul>',]
     ks = sorted( self.coll.keys() )
+    ee = {}
     for k in ks:
+      ee[self.coll[k].header.title] = k
+    kks = sorted( ee.keys() )
+    for kt in kks:
+      k = ee[kt]
 ##
 ## sort on item label
 ##
+      if annotations != None and k in annotations:
+        ann = annotations[k]
+      else:
+        ann = {}
+
       self.coll[k].items.sort( ds('label').cmp )
       ttl = 'Data Request Section: %s' % k
       msg0.append( '<li><a href="index/%s.html">%s [%s]</a></li>\n' % (k,self.coll[k].header.title,k) )
       msg = ['<h1>%s</h1>\n' % ttl, '<ul>',]
       msg.append( '<a href="../index.html">Home</a><br/>\n' )
       lst = self.getHtmlItemStyle(k)
+      
       for i in self.coll[k].items:
         ##m = '<li>%s: %s</li>' % ( i.label, i.__href__(odir='../u/') )
-        m = lst( i )
+       
+        m = lst( i, ann=ann.get( i.label ) )
         msg.append( m )
       msg.append( '</ul>' )
       bdy = string.join( msg, '\n' )
