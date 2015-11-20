@@ -55,16 +55,18 @@ class cmvFilter(object):
       cmv = self.sc.allVars.copy()
 
 ## set of vids associated with choices
-    s = {i.vid for i in self.dq.coll['varChoiceLinkC'].items}
+    s = set()
+    for i in self.dq.coll['varChoiceLinkC'].items:
+      s.add( i.vid )
 
 ## set of variables in current selection associated with choices
-    v1 = { u for u in cmv if u in s }
+    v1 = set( [ u for u in cmv if u in s ] )
     if len(v1) == 0:
       ## print 'Nothing to do'
       return cmv
 
 ## set of "rank" choice groups relevant to current selection
-    s1 = {i.cid for i in self.dq.coll['varChoiceLinkC'].items if i.vid in v1}
+    s1 = set( [i.cid for i in self.dq.coll['varChoiceLinkC'].items if i.vid in v1] )
 
     self.rejected = set()
     for s in s1:
@@ -72,7 +74,10 @@ class cmvFilter(object):
 ##
 ## set of choice links in group s which relate to a variable in current selection
 ##
-      this = {i for i in self.dq.coll['varChoiceLinkC'].items if i.vid in v1 and i.cid == s}
+      this = set()
+      for i in self.dq.coll['varChoiceLinkC'].items:
+         if i.vid in v1 and i.cid == s:
+           set.add(i)
 ##
 ## value of configuration option (defaults to True here).
 ##
@@ -102,16 +107,16 @@ class cmvFilter(object):
       cmv = self.sc.allVars.copy()
 
 ## set of vids associated with choices
-    s = {i.vid for i in self.dq.coll['varChoiceLinkR'].items}
+    s = set( [i.vid for i in self.dq.coll['varChoiceLinkR'].items] )
 
 ## set of variables in current selection associated with choices
-    v1 = { u for u in cmv if u in s }
+    v1 = set( [ u for u in cmv if u in s ] )
     if len(v1) == 0:
       ## print 'Nothing to do'
       return cmv
 
 ## set of "rank" choice groups relevant to current selection
-    s1 = {i.cid for i in self.dq.coll['varChoiceLinkR'].items if i.vid in v1}
+    s1 = set( [i.cid for i in self.dq.coll['varChoiceLinkR'].items if i.vid in v1] )
 
     self.rejected = set()
     for s in s1:
@@ -119,7 +124,7 @@ class cmvFilter(object):
 ##
 ## set of choice links in group s which relate to a variable in current selection
 ##
-      this = {i for i in self.dq.coll['varChoiceLinkR'].items if i.vid in v1 and i.cid == s}
+      this = set( [i for i in self.dq.coll['varChoiceLinkR'].items if i.vid in v1 and i.cid == s] )
       if len(this) > 1:
         mr = max( [i.rank for i in this ] )
         for i in this:

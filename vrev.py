@@ -13,6 +13,20 @@ Class to analyse the usage of variables in the data request.
     for i in ['PDRMIP', 'DECK', 'VIACSAB', 'SolarMIP', 'CMIP6' ]:
       self.mips.discard(i)
 
+  def chk2(self,vn,byExpt=False, byBoth=False):
+    dq = self.dq
+    ks = [i for i in dq.coll['var'].items if i.label == vn ]
+
+    v = ks[0]
+    cc = {}
+    l = dq.inx.iref_by_sect[v.uid].a['CMORvar']
+    for i in l:
+      r = dq.inx.uid[i]
+      kk = '%s.%s' % (r.mipTable, r.label )
+      cc[i] = (kk,self.chkCmv( i, byExpt=byExpt, byBoth=byBoth ) )
+
+    return cc
+
   def chk(self,vn):
     ks = [i for i in dq.coll['var'].items if i.label == vn ]
 
@@ -25,7 +39,7 @@ Class to analyse the usage of variables in the data request.
       for j in dq.inx.iref_by_sect[i].a['requestVar']:
         s.add(j)
 
-## filter out the ones whch link to a remark
+## filter out the ones which link to a remark
     s0 = {i for i in s if dq.inx.uid[dq.inx.uid[i].vgid]._h.label != 'remarks'}
 
 ## set of request groups
@@ -43,7 +57,7 @@ Class to analyse the usage of variables in the data request.
     self.inc = mips
 
 #############
-  def chkCmv(self,cmvid):
+  def chkCmv(self,cmvid, byExpt=False, byBoth=False):
     dq = self.dq
     s = set( dq.inx.iref_by_sect[cmvid].a['requestVar'] )
 
@@ -58,10 +72,40 @@ Class to analyse the usage of variables in the data request.
     ll = [set(dq.inx.iref_by_sect[i].a['requestLink']) for i in s1 if dq.inx.iref_by_sect[i].a.has_key('requestLink')]
     if len(ll) == 0:
       return set()
+
     s2 = reduce( operator.or_, ll) 
 
-    mips = {dq.inx.uid[i].mip for i in s2}
-    return mips
+    if byBoth or not byExpt:
+      mips0 = set( [dq.inx.uid[i].mip for i in s2] )
+    if byExpt or byBoth:
+
+##  set of esid values
+      esids = set()
+      for i in s2:
+        for u in dq.inx.iref_by_sect[i].a['requestItem']:
+          esids.add( dq.inx.uid[u].esid )
+      mips = set()
+      for e in esids:
+        if e == '':
+          print 'WARNING: empty esid encountered'
+        else:
+          r = dq.inx.uid[e]
+          if r._h.label == 'mip':
+            mips.add(e)
+          else:
+            if r._h.label == 'exptgroup':
+              r = dq.inx.uid[  dq.inx.iref_by_sect[e].a['experiment'][0] ]
+            if r._h.label == 'remarks':
+              print 'WARNING: link to remarks encountered'
+            else:
+              assert r._h.label == 'experiment', 'LOGIC ERROR ... should have an experiment record here: %s' % r._h.label
+              mips.add(r.mip)
+      if byBoth:
+        return (mips0,mips)
+      else:
+        return mips
+    else:
+      return mips0
 
 if __name__ == '__main__':
   dq = dreq.loadDreq()

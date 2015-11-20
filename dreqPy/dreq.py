@@ -13,10 +13,11 @@ from __init__ import DOC_DIR
 blockSchemaFile = '%s/%s' % (DOC_DIR, 'BlockSchema.csv' )
 
 def loadBS(bsfile):
+  """Read in the 'BlockSchema' definitions of the attributes defining attributes"""
   ii = open( bsfile, 'r' ).readlines()
   ll = []
   for l in ii:
-    ll.append( [x[1:-1] for x in string.strip(l).split('\t') ] )
+    ll.append( [x[1:-1] for x in l.strip().split('\t') ] )
   cc = collections.defaultdict( dict )
   for l in ll[3:]:
     for i in range( len(ll[2]) ):
@@ -30,7 +31,7 @@ class rechecks(object):
 
   def isIntStr( self, tv ):
     """Check whether a string is a valid representation of an integer."""
-    if type( tv ) not in {type(''),type(u'')}:
+    if type( tv ) not in [type(''),type(u'')]:
       self.reason = 'NOT STRING'
       return False
     ok = self.__isInt.match( tv ) != None
@@ -48,8 +49,8 @@ class dreqItemBase(object):
        _htmlStyle = {}
        _linkAttrStyle = {}
 
-       def __init__(self,dict=None,xmlMiniDom=None,id='defaultId',etree=False):
-         dictMode = dict != None
+       def __init__(self,idict=None,xmlMiniDom=None,id='defaultId',etree=False):
+         dictMode = idict != None
          mdMode = xmlMiniDom != None
          assert not( dictMode and mdMode), 'Mode must be either dictionary of minidom: both assigned'
          assert dictMode or mdMode, 'Mode must be either dictionary of minidom: neither assigned'
@@ -58,7 +59,7 @@ class dreqItemBase(object):
          self._contentInitialised = False
          self._greenIcon = '<img height="12pt" src="/images/154g.png" alt="[i]"/>'
          if dictMode:
-           self.dictInit( dict )
+           self.dictInit( idict )
          elif mdMode:
            self.mdInit( xmlMiniDom, etree=etree )
 
@@ -87,7 +88,8 @@ class dreqItemBase(object):
            print ( 'Item <%s>: uninitialised' % self.sectionLabel )
 
        def __href__(self,odir="",label=None):
-         igns =  {'','__unset__'}
+         """Generate html text for a link to this item."""
+         igns =  ['','__unset__']
          if 'description' in self.__dict__ and self.description != None and string.strip( self.description ) not in igns:
            ttl = self.description
          elif 'title' in self.__dict__ and self.title != None and string.strip( self.title ) not in igns:
@@ -169,13 +171,14 @@ class dreqItemBase(object):
          return msg
 
 
-       def dictInit( self, dict ):
+       def dictInit( self, idict ):
          __doc__ = """Initialise from a dictionary."""
          for a in self._a.keys():
-           if a in dict:
-             self.__dict__[a] = dict[a]
+           if a in idict:
+             val = idict[a]
            else:
-             self.__dict__[a] = self._d.defaults.get( a, self._d.glob )
+             val = self._d.defaults.get( a, self._d.glob )
+           setattr( self, a, val )
          self._contentInitialised = True
 
        def mdInit( self, el, etree=False ):
@@ -212,7 +215,7 @@ class dreqItemBase(object):
                else:
                  v = string.strip(v)
                  thissect = '%s [%s]' % (self._h.title,self._h.tag)
-                 if v in { '',u'',' ', u' '}:
+                 if v in [ '',u'',' ', u' ']:
                    if nw1 < 20:
                      print ( 'WARN.050.0001: input integer non-compliant: %s: %s: "%s" -- set to zero' % (thissect,a,v) )
                      nw1 += 1
@@ -225,10 +228,10 @@ class dreqItemBase(object):
                      msg = 'ERROR: failed to convert integer: %s: %s: %s' % (thissect,a,v)
                      deferredHandling=True
              elif self._a[a].type == u'xs:boolean':
-               v = v in {'true','1'}
+               v = v in ['true','1']
              self.__dict__[a] = v
            else:
-             if a in {'uid'}:
+             if a in ['uid',]:
                thissect = '%s [%s]' % (self._h.title,self._h.tag)
                print ( 'ERROR.020.0001: missing uid: %s' % thissect )
                if etree:
@@ -304,7 +307,7 @@ class config(object):
 
     self.tt0 = {}
     for k in self.bscc:
-      self.tt0[k] = self._tableClass0(dict=self.bscc[k])
+      self.tt0[k] = self._tableClass0(idict=self.bscc[k])
       if k in self._t0.attributes:
         setattr( self._tableClass0, '%s' % k, self.tt0[k] )
       if k in self._t1.attributes:
@@ -327,7 +330,7 @@ class config(object):
       tables[t[0].label] = t
       self.tableClasses[t[0].label] = self.itemClassFact( t, ns=self.ns )
       thisc = self.tableClasses[t[0].label]
-      self.tt1[t[0].label] = self._sectClass0( dict=t.header.__dict__ )
+      self.tt1[t[0].label] = self._sectClass0( idict=t.header._asdict() )
       self.tt1[t[0].label].maxOccurs = t.header.maxOccurs
       self.tt1[t[0].label].labUnique = t.header.labUnique
       self.tt1[t[0].label].level = t.header.level
@@ -398,11 +401,12 @@ class config(object):
       self.coll[k] = self.ntf( self.recordAttributeDefn[k].header, self.recordAttributeDefn[k].attributes, self.tableItems[k] )
  
   def info(self,ss):
+    """Switchable print function ... switch off by setting self.silent=True"""
     if not self.silent:
       print ( ss )
 
-  def get(self):
-    return self.coll
+  ###def get(self):
+    ###return self.coll
 
   def itemClassFact(self, sectionInfo,ns=None):
      class dreqItem(dreqItemBase):
@@ -431,6 +435,7 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
      return dreqItem
 
   def addAttributes( self, thisClass, attrDict ):
+    """Add a set of attributes, from a dictionary, to a class"""
     for k in attrDict:
       setattr( thisClass, '%s' % k , attrDict[k] )
          
@@ -482,7 +487,7 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
 
       returnClass = True
       if returnClass:
-        return self._tableClass0( dict=ee )
+        return self._tableClass0( idict=ee )
       else:
         return self.nti( i.nodeName, l,t,ty,cls,tn )
 
@@ -570,10 +575,19 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
       print ( ss )
 
 class ds(object):
+  """Comparison object to assist sorting of lists of dictionaries"""
   def __init__(self,k):
     self.k = k
   def cmp(self,x,y):
     return cmp( x.__dict__[self.k], y.__dict__[self.k] )
+
+class kscl(object):
+  """Comparison object to assist sorting of dictionaries of class instances"""
+  def __init__(self,idict,k):
+    self.k = k
+    self.idict = idict
+  def cmp(self,x,y):
+    return cmp( self.idict[x].__dict__[self.k], self.idict[y].__dict__[self.k] )
 
 src1 = '../workbook/trial_20150831.xml'
 
@@ -595,10 +609,10 @@ class loadDreq(object):
 
   def __init__(self,dreqXML=defaultDreqPath, configdoc=defaultConfigPath, useShelve=False, htmlStyles=None ):
     self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve)
-    self.coll = self.c.get()
+    self.coll = self.c.coll
     self.inx = index(self.coll)
-    self.defaultItemLineStyle = lambda i, frm='': '<li>%s: %s</li>' % ( i.label, i.__href__(odir='../u/') )
     self.itemStyles = {}
+    self.defaultItemLineStyle = lambda i, frm='', ann='': '<li>%s: %s</li>' % ( i.label, i.__href__(odir='../u/') )
 ##
 ## add index to Item base class .. so that it can be accessed by item instances
 ##
@@ -620,17 +634,21 @@ class loadDreq(object):
 %s</body></html>"""
 
   def getHtmlItemStyle(self, sect):
+    """Get the styling method associated with a given section."""
     if sect in self.itemStyles:
       return self.itemStyles[sect]
     return self.defaultItemLineStyle
 
-  def makeHtml(self,odir='./html', ttl0 = 'Data Request Index'):
+
+  def makeHtml(self,odir='./html', ttl0 = 'Data Request Index', annotations=None):
     """Generate a html view of the vocabularies, using the "__html__" method of the vocabulary item class to generate a
 page for each item and also generating index pages.
     odir: directory for html files;
     ttl0: Title for main index (in odir/index.html)"""
 
-    for k in self.inx.uid.keys():
+    ks = self.inx.uid.keys()
+    ks.sort( kscl( self.inx.uid, 'title' ).cmp )
+    for k in ks:
       i = self.inx.uid[k]
       ttl = 'Data Request Record: [%s]%s' % (i._h.label,i.label)
       bdy = string.join( i.__html__( ghis=self.getHtmlItemStyle ), '\n' )
@@ -640,19 +658,31 @@ page for each item and also generating index pages.
 
     msg0 = ['<h1>%s</h1>' % ttl0, '<ul>',]
     ks = sorted( self.coll.keys() )
+    ee = {}
     for k in ks:
+      ee[self.coll[k].header.title] = k
+    kks = sorted( ee.keys() )
+    for kt in kks:
+      k = ee[kt]
 ##
 ## sort on item label
 ##
+      if annotations != None and k in annotations:
+        ann = annotations[k]
+      else:
+        ann = {}
+
       self.coll[k].items.sort( ds('label').cmp )
       ttl = 'Data Request Section: %s' % k
       msg0.append( '<li><a href="index/%s.html">%s [%s]</a></li>\n' % (k,self.coll[k].header.title,k) )
       msg = ['<h1>%s</h1>\n' % ttl, '<ul>',]
       msg.append( '<a href="../index.html">Home</a><br/>\n' )
       lst = self.getHtmlItemStyle(k)
+      
       for i in self.coll[k].items:
         ##m = '<li>%s: %s</li>' % ( i.label, i.__href__(odir='../u/') )
-        m = lst( i )
+       
+        m = lst( i, ann=ann.get( i.label ) )
         msg.append( m )
       msg.append( '</ul>' )
       bdy = string.join( msg, '\n' )
