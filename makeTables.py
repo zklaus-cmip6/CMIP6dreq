@@ -1,6 +1,6 @@
 
 from dreqPy import dreq
-import collections, string, xlsxwriter, os
+import collections, string, os
 import vrev
 
 class xlsx(object):
@@ -86,7 +86,7 @@ class makePurl(object):
 class makeTab(object):
   def __init__(self):
     cmv = dq.coll['CMORvar'].items
-    tables = sorted( list( {i.mipTable for i in cmv} ), cmp=cmpAnnex )
+    tables = sorted( list( set( [i.mipTable for i in cmv] ) ), cmp=cmpAnnex )
 
     addMips = True
     if addMips:
@@ -325,6 +325,10 @@ dq.coll['var'].items[0].__class__._linkAttrStyle['sn'] = styls.snLink01
 
 ht = htmlTrees(dq)
 dq.makeHtml( annotations={'var':ht.anno} )
-mt = makeTab()
+try:
+  import xlsxwriter
+  mt = makeTab()
+except:
+  print ('Could not make tables ...')
 mp = makePurl()
 mj = makeJs( dq )
