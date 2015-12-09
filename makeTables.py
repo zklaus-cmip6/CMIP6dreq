@@ -223,7 +223,7 @@ class htmlTrees(object):
           bdy.append( '</ul></li>\n' )
       bdy.append( '</ul></body></html>\n' )
       oo = open( '%s/%s.html' % (self.odir,v.label), 'w' )
-      oo.write( dq.pageTmpl % ( title, '../', string.join( bdy, '\n' ) ) )
+      oo.write( dq.pageTmpl % ( title, '', '../', string.join( bdy, '\n' ) ) )
       oo.close()
       self.anno[v.label] = '<a href="../t/%s.html">Usage</a>' % v.label
     else:
@@ -256,6 +256,24 @@ class styles(object):
   def __init__(self):
     pass
 
+  def rqvLink01(self,targ,frm='',ann=''):
+    if targ._h.label == 'remarks':
+      return '<li>%s: %s</li>' % ( targ.__href__(odir='../u/', label=targ.title), "Link to request variable broken"  )
+    elif frm != "CMORvar":
+      cmv = targ._inx.uid[ targ.vid ]
+      if targ._h.label == 'remarks':
+        return '<li>%s [%s]: %s</li>' % ( cmv.label, targ.__href__(odir='../u/',label=targ.priority) , 'Variable not defined or not found'  )
+      else:
+        return '<li>%s [%s]: %s</li>' % ( cmv.label, targ.__href__(odir='../u/',label=targ.priority) , cmv.__href__(odir='../u/',label=cmv.title)  )
+    else:
+      rg = targ._inx.uid[ targ.vgid ]
+      if targ._h.label == 'remarks':
+        return '<li>%s [%s]: %s</li>' % ( targ.label, targ.__href__(label=targ.priority) , 'Link not defined or not found'  )
+      elif rg._h.label == 'remarks':
+        return '<li>%s [%s]: %s</li>' % ( rg.label, targ.__href__(label=targ.priority) , 'Group not defined or not found'  )
+      else:
+        return '<li>%s [%s]: %s</li>' % ( rg.label, targ.__href__(label=targ.priority) , rg.__href__(label=rg.mip)  )
+
   def snLink01(self,a,targ,frm='',ann=''):
     if targ._h.label == 'remarks':
       return '<li>%s: Standard name under review [%s]</li>' % ( a, targ.__href__() )
@@ -270,13 +288,19 @@ class styles(object):
       return '<li>%s: %s [%s]</li>' % ( targ.__href__(odir='../u/', label=targ.mip), targ.title, targ.objective  )
     else:
       gpsz = len(t2._inx.iref_by_sect[t2.uid].a['requestVar'])
-      return '<li>%s: Link to group: %s [%s]</li>' % ( targ.__href__(odir='../u/', label=targ.title), t2.__href__(odir='../u/', label=t2.title), gpsz  )
+      return '<li>%s: Link to group: %s [%s]</li>' % ( targ.__href__(odir='../u/', label='%s:%s' % (targ.mip,targ.title)), t2.__href__(odir='../u/', label=t2.title), gpsz  )
 
   def snLink(self,targ,frm='',ann=''):
     return '<li>%s [%s]: %s</li>' % ( targ.title, targ.units, targ.__href__(odir='../u/') )
 
   def varLink(self,targ,frm='',ann=''):
     return '<li>%s: %s [%s]%s</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.title, targ.units, ann )
+
+  def mipLink(self,targ,frm='',ann=''):
+    if targ.url != '':
+      return '<li>%s: %s <a href="%s">[project site]</a></li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.title, targ.url )
+    else:
+      return '<li>%s: %s</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.title )
 
   def cmvLink(self,targ,frm='',ann=''):
     return '<li>%s {%s}: %s [%s]</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.mipTable, targ.title, targ.frequency )
@@ -307,6 +331,7 @@ htmlStyle['requestItem'] = {'getIrefs':['__all__']}
 htmlStyle['experiment'] = {'getIrefs':['__all__']}
 htmlStyle['mip'] = {'getIrefs':['__all__']}
 htmlStyle['remarks'] = {'getIrefs':['__all__']}
+htmlStyle['varChoice'] = {'getIrefs':['__all__']}
 htmlStyle['spatialShape'] = {'getIrefs':['__all__']}
 htmlStyle['structure'] = {'getIrefs':['__all__']}
 htmlStyle['standardname'] = {'getIrefs':['__all__']}
@@ -317,11 +342,14 @@ dq = dreq.loadDreq( htmlStyles=htmlStyle)
 
 dq.itemStyles['standardname'] = styls.snLink
 dq.itemStyles['var'] = styls.varLink
+dq.itemStyles['mip'] = styls.mipLink
 dq.itemStyles['CMORvar'] = styls.cmvLink
 dq.itemStyles['requestVarGroup'] = styls.vgrpLink
 dq.itemStyles['requestLink'] = styls.rqlLink02
 dq.itemStyles['spatialShape'] = styls.labTtl
 dq.coll['var'].items[0].__class__._linkAttrStyle['sn'] = styls.snLink01
+##dq.coll['requestVarGroup'].items[0].__class__._linkAttrStyle['requestVar'] = styls.rqvLink01
+dq.itemStyles['requestVar'] = styls.rqvLink01
 
 ht = htmlTrees(dq)
 dq.makeHtml( annotations={'var':ht.anno} )

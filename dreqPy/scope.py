@@ -170,7 +170,7 @@ class dreqQuery(object):
     self.ntot = sum( [i.ny for i in self.dq.coll['requestItem'].items if i.rlid == rql.uid] )
     return self.ntot
 
-  def volByExpt( self, l1, ex, exptList, pmax=2, cc=None, retainRedundantRank=False, intersection=False ):
+  def volByExpt( self, l1, ex, pmax=2, cc=None, retainRedundantRank=False, intersection=False ):
     """volByExpt: calculates the total data volume associated with an experiment/experiment group and a list of request items.
           The calculation has some approximations concerning the number of years in each experiment group."""
 ##
@@ -218,19 +218,33 @@ class dreqQuery(object):
     else:
       cc1 = collections.defaultdict( set )
       for i in rql:
-        cc1[inx.uid[i].mip].add( inx.uid[i].refid )
+        o = inx.uid[i]
+        if o.opt == 'priority':
+          p = int( float( o.opar ) )
+          assert p in [1,2,3], 'Priority incorrectly set .. %s, %s, %s' % (o.label,o.title, o.uid)
+          cc1[inx.uid[i].mip].add( (inx.uid[i].refid,p) )
+        else:
+          cc1[inx.uid[i].mip].add( inx.uid[i].refid )
 
       if intersection:
         ccv = {}
 #
 # set of request variables for each MIP
-##
+#
         for k in cc1:
           thisc = reduce( operator.or_, [set( inx.iref_by_sect[vg].a['requestVar'] ) for vg in cc1[k] ] )
+          rqvgs = collections.defaultdict( set )
+          for x in cc1[k]:
+            if type(x) == type( () ):
+              rqvgs[x[0]].add( x[1] )
+            else:
+              rqvgs[x].add( 3 )
+          
           s = set()
-          for l in list(thisc):
-             if inx.uid[l].priority <= pmax:
-               s.add( inx.uid[l].vid )
+          for vg in rqvgs:
+            for l in inx.iref_by_sect[vg].a['requestVar']:
+              if inx.uid[l].priority <= min(pmax,max(rqvgs[vg])):
+                s.add( inx.uid[l].vid )
           ccv[k] = s
 
         if len( ccv.keys() ) < len( list(imips) ):
@@ -238,22 +252,29 @@ class dreqQuery(object):
         else:
           vars =  reduce( operator.and_, [ccv[k] for k in ccv] )
       else:
-        rqvg = reduce( operator.or_, [cc1[k] for k in cc1] )
-
+        rqvgs = collections.defaultdict( set )
+        for k in cc1:
+          for x in cc1[k]:
+            if type(x) == type( () ):
+              rqvgs[x[0]].add( x[1] )
+            else:
+              rqvgs[x].add( 3 )
+          
 ###To obtain a set of variables associated with this collection of variable groups:
 
-        col1 = reduce( operator.or_, [set( inx.iref_by_sect[vg].a['requestVar'] ) for vg in rqvg ] )
+        vars = set()
+        for vg in rqvgs:
+          for l in inx.iref_by_sect[vg].a['requestVar']:
+            if inx.uid[l].priority <= min(pmax,max(rqvgs[vg])):
+               vars.add(inx.uid[l].vid)
+        ##col1 = reduce( operator.or_, [set( inx.iref_by_sect[vg].a['requestVar'] ) for vg in rqvg ] )
 
 ###The collector col1 here accumulates all the record uids, resulting in a single collection. These are request variables, to get a set of CMOR variables at priority <= pmax:
-        vars = set()
-        for l in list(col1):
-           if inx.uid[l].priority <= pmax:
-             vars.add(inx.uid[l].vid)
+        ##vars = set()
+        ##for l in list(col1):
+           ##if inx.uid[l].priority <= pmax:
+             ##vars.add(inx.uid[l].vid)
 ##
-## if looking for the union, would have to do a filter here ... after looking up which vars are requested by each MIP ...
-##
-## possibly some code re-arrangement would help.
-## e.g. create a set for each MIP a couple of lines back ....
 
 ### filter out cases where the request does not point to a CMOR variable.
     ##vars = {vid for vid in vars if inx.uid[vid][0] == u'CMORvar'}
@@ -300,7 +321,7 @@ class dreqQuery(object):
     for v in vars:
       szv[v] = self.sz[inx.uid[v].stid]*npy[inx.uid[v].frequency]
       ov.append( self.dq.inx.uid[v] )
-    ee = self.listIndexDual( ov, 'frequency', 'label', acount=None, alist=None, cdict=szv, cc=cc )
+    ee = self.listIndexDual( ov, 'mipTable', 'label', acount=None, alist=None, cdict=szv, cc=cc )
     ff = {}
     for v in vars:
       ff[v] = self.sz[ inx.uid[v].stid ] * npy[inx.uid[v].frequency] * nym[v]
@@ -385,7 +406,7 @@ class dreqQuery(object):
       v = self.volByMip( m, pmax=pmax )
       print ( '%12.12s: %6.2fTb' % (m,v*bytesPerFloat*1.e-12) )
 
-  def volByMip( self, mip, pmax=2, retainRedundantRank=False):
+  def volByMip( self, mip, pmax=2, retainRedundantRank=False, intersection=False):
 
     if type(mip) in [type( '' ),type( u'') ]:
       if mip not in self.mips:
@@ -411,7 +432,7 @@ class dreqQuery(object):
     for e in exps:
       expts = self.esid_to_exptList(e,deref=True)
       if expts != None:
-        self.volByE[e] = self.volByExpt( l1, e, expts, pmax=pmax, cc=cc, retainRedundantRank=retainRedundantRank )
+        self.volByE[e] = self.volByExpt( l1, e, pmax=pmax, cc=cc, retainRedundantRank=retainRedundantRank, intersection=intersection )
         vtot += self.volByE[e][0]
         self.allVars = self.allVars.union( self.vars )
     self.indexedVol = cc
@@ -471,10 +492,11 @@ class dreqUI(object):
       -p <priority>  maximum priority;
       --printLinesMax <n>: Maximum number of lines to be printed
       --printVars  : If present, a summary of the variables fitting the selection options will be printed
+      --intersection : Analyse the intersection of requests rather than union.
 """
   def __init__(self,args):
     self.adict = {}
-    self.knownargs = {'-m':('m',True), '-p':('p',True), '-t':('t',True), '-h':('h',False), '--printLinesMax':('plm',True), '--printVars':('vars',False)} 
+    self.knownargs = {'-m':('m',True), '-p':('p',True), '-t':('t',True), '-h':('h',False), '--printLinesMax':('plm',True), '--printVars':('vars',False), '--intersection':('intersection',False)} 
     aa = args[:]
     while len(aa) > 0:
       a = aa.pop(0)
@@ -492,6 +514,8 @@ class dreqUI(object):
     integerArgs = set( ['p','t','plm'] )
     for i in integerArgs.intersection( self.adict ):
       self.adict[i] = int( self.adict[i] )
+
+    self.intersection = self.adict.get( 'intersection', False )
 
   def run(self, dq=None):
     if 'h' in self.adict:
@@ -520,7 +544,7 @@ class dreqUI(object):
     tierMax = self.adict.get( 't', 2 )
     sc.setTierMax(  tierMax )
     pmax = self.adict.get( 'p', 2 )
-    v0 = sc.volByMip( self.adict['m'], pmax=pmax )
+    v0 = sc.volByMip( self.adict['m'], pmax=pmax, intersection=self.intersection )
     print ( '%7.2fTb' % (v0*2.*1.e-12) )
     cc = collections.defaultdict( int )
     for e in sc.volByE:

@@ -1,6 +1,7 @@
 """This module has a class which will analyse the usage of variables in the data request"""
 import operator
 from dreqPy import dreq
+import collections
 
 class checkVar(object):
   """checkVar
@@ -63,17 +64,40 @@ Class to analyse the usage of variables in the data request.
 
 ## filter out the ones whch link to a remark
 
+# s0: set of requestVars
+
     s0 = set( [i for i in s if dq.inx.uid[dq.inx.uid[i].vgid]._h.label != 'remarks' ] )
 
 ## set of request groups
+## dictionary, keyed on variable group uid, with values set to priority of variable
+##
 
-    s1  = set( [dq.inx.uid[i].vgid for i in s0 ] )
-
-    ll = [set(dq.inx.iref_by_sect[i].a['requestLink']) for i in s1 if dq.inx.iref_by_sect[i].a.has_key('requestLink')]
-    if len(ll) == 0:
-      return set()
-
-    s2 = reduce( operator.or_, ll) 
+    cc1 = collections.defaultdict( set )
+    for i in s0:
+      cc1[ dq.inx.uid[i].vgid ].add( dq.inx.uid[i].priority )
+    ##s1  = set( [dq.inx.uid[i].vgid for i in s0 ] )
+    
+    s2 = set()
+    for i in cc1:
+      if dq.inx.iref_by_sect[i].a.has_key('requestLink'):
+        for l in dq.inx.iref_by_sect[i].a['requestLink']:
+          lr = dq.inx.uid[l]
+          if lr.opt == 'priority':
+            p = int( float( lr.opar ) )
+            if max( cc1[i] ) <= p:
+              s2.add(l)
+          else:
+            s2.add( l )
+    ##ll = [set(dq.inx.iref_by_sect[i].a['requestLink']) for i in cc1 if dq.inx.iref_by_sect[i].a.has_key('requestLink')]
+    ##if len(ll) == 0:
+      ##return set()
+##
+    ##s2 = reduce( operator.or_, ll) 
+    if len( s2 ) == 0:
+      if byBoth:
+        return (set(),set())
+      else:
+        return s2
 
     if byBoth or not byExpt:
       mips0 = set( [dq.inx.uid[i].mip for i in s2] )
