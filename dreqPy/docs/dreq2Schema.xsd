@@ -15,7 +15,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__requestVarGroup_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="requestVarGroup"/>
 <xs:attribute name="title" type="xs:string" fixed="3.1 Request variable group: a collection of request variables"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.008"/>
+<xs:attribute name="id" type="xs:string" fixed="rqvg"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -43,7 +43,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__requestItem_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="requestItem"/>
 <xs:attribute name="title" type="xs:string" fixed="3.2 Request Item: specifying the number of years for an experiment"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.010"/>
+<xs:attribute name="id" type="xs:string" fixed="rqi"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -86,8 +86,8 @@
 <xs:complexType name="ct__exptgroup">
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__exptgroup_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="exptgroup"/>
-<xs:attribute name="title" type="xs:string" fixed="Experiment Group"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.013"/>
+<xs:attribute name="title" type="xs:string" fixed="1.9 Experiment Group"/>
+<xs:attribute name="id" type="xs:string" fixed="exg"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -113,7 +113,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__CMORvar_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="CMORvar"/>
 <xs:attribute name="title" type="xs:string" fixed="1.3 CMOR Variable"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.002"/>
+<xs:attribute name="id" type="xs:string" fixed="cmv"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -174,7 +174,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__objective_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="objective"/>
 <xs:attribute name="title" type="xs:string" fixed="1.6 Scientific objectives"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.014"/>
+<xs:attribute name="id" type="xs:string" fixed="obj"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -201,7 +201,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__spatialShape_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="spatialShape"/>
 <xs:attribute name="title" type="xs:string" fixed="2.1 Spatial dimensions"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.004"/>
+<xs:attribute name="id" type="xs:string" fixed="ss"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -231,7 +231,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__requestLink_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="requestLink"/>
 <xs:attribute name="title" type="xs:string" fixed="3.3 Request link: linking a set of variables and a set of experiments"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.009"/>
+<xs:attribute name="id" type="xs:string" fixed="rql"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -275,7 +275,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__tableSection_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="tableSection"/>
 <xs:attribute name="title" type="xs:string" fixed="3.4 CMOR Table Sections"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.007"/>
+<xs:attribute name="id" type="xs:string" fixed="tbs"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -305,7 +305,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__modelConfig_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="modelConfig"/>
 <xs:attribute name="title" type="xs:string" fixed="3.5 Model configuration options"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.020"/>
+<xs:attribute name="id" type="xs:string" fixed="mcfg"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -336,7 +336,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__varChoiceLinkC_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="varChoiceLinkC"/>
 <xs:attribute name="title" type="xs:string" fixed="3.6 Links a variable to a choice element"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.017"/>
+<xs:attribute name="id" type="xs:string" fixed="vclc"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -366,7 +366,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__objectiveLink_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="objectiveLink"/>
 <xs:attribute name="title" type="xs:string" fixed="3.7 Link between scientific objectives and requests"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.015"/>
+<xs:attribute name="id" type="xs:string" fixed="objl"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -391,8 +391,8 @@
 <xs:complexType name="ct__remarks">
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__remarks_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="remarks"/>
-<xs:attribute name="title" type="xs:string" fixed="3.08 Remarks about other items"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.011"/>
+<xs:attribute name="title" type="xs:string" fixed="3.8 Remarks about other items"/>
+<xs:attribute name="id" type="xs:string" fixed="rmk"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -428,7 +428,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__experiment_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="experiment"/>
 <xs:attribute name="title" type="xs:string" fixed="1.5 Experiments"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.012"/>
+<xs:attribute name="id" type="xs:string" fixed="exp"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -474,7 +474,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__requestVar_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="requestVar"/>
 <xs:attribute name="title" type="xs:string" fixed="1.4 Request variable (carrying priority and link to group)"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.006"/>
+<xs:attribute name="id" type="xs:string" fixed="rqv"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -506,7 +506,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__standardname_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="standardname"/>
 <xs:attribute name="title" type="xs:string" fixed="1.8 CF Standard Names"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.021"/>
+<xs:attribute name="id" type="xs:string" fixed="sn"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -533,8 +533,8 @@
 <xs:complexType name="ct__varChoiceLinkR">
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__varChoiceLinkR_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="varChoiceLinkR"/>
-<xs:attribute name="title" type="xs:string" fixed="3.09 Links a variable to a choice element"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.016"/>
+<xs:attribute name="title" type="xs:string" fixed="3.9 Links a variable to a choice element"/>
+<xs:attribute name="id" type="xs:string" fixed="vclr"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -562,15 +562,14 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__var_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="var"/>
 <xs:attribute name="title" type="xs:string" fixed="1.2 MIP Variable"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.001"/>
+<xs:attribute name="id" type="xs:string" fixed="var"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titlelabel;
-   xs:stringRecord Labeltitle;
-   xs:stringRecord Titlesn;
+   xs:stringVariable Namesn;
    xs:stringCF Standard Nameunits;
    xs:stringUnitsdescription;
    xs:stringtitle;
@@ -578,7 +577,8 @@
    xs:stringProcessing notesprocComment;
    xs:stringProcessing commentsprov;
    xs:stringProvenanceuid;
-   xs:stringRecord identifier</xs:documentation></xs:annotation>
+   xs:stringRecord identifierprovmip;
+   xs:stringMIP defining this variables</xs:documentation></xs:annotation>
 <xs:complexType name="ct__var_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -589,6 +589,7 @@
 <xs:attribute name="procComment" type="xs:string"/>
 <xs:attribute name="prov" type="xs:string"/>
 <xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="provmip" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">mip: Complex Type declaration
@@ -597,7 +598,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__mip_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="mip"/>
 <xs:attribute name="title" type="xs:string" fixed="1.1 Model Intercomparison Project"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.019"/>
+<xs:attribute name="id" type="xs:string" fixed="mip"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -606,18 +607,15 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord identifiertitle;
-   xs:stringdescription;
+   xs:stringRecord identifierdescription;
    xs:stringurl;
-   xs:stringstatus;
-   xs:string</xs:documentation></xs:annotation>
+   xs:stringProject Home Page</xs:documentation></xs:annotation>
 <xs:complexType name="ct__mip_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
 <xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="url" type="xs:string"/>
-<xs:attribute name="status" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">varChoice: Complex Type declaration
@@ -626,7 +624,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__varChoice_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="varChoice"/>
 <xs:attribute name="title" type="xs:string" fixed="3.10 Indicates variables for which a there is a range of potential CMOR Varibles"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.018"/>
+<xs:attribute name="id" type="xs:string" fixed="vc"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -657,7 +655,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__temporalShape_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="temporalShape"/>
 <xs:attribute name="title" type="xs:string" fixed="2.2 Temporal dimension"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.005"/>
+<xs:attribute name="id" type="xs:string" fixed="ts"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -684,7 +682,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__structure_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="structure"/>
 <xs:attribute name="title" type="xs:string" fixed="2.3 Dimensions and related information"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.003"/>
+<xs:attribute name="id" type="xs:string" fixed="str"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -728,7 +726,7 @@
 <xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__grids_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="grids"/>
 <xs:attribute name="title" type="xs:string" fixed="1.7 Specification of dimensions"/>
-<xs:attribute name="id" type="xs:string" fixed="cmip.drv.003"/>
+<xs:attribute name="id" type="xs:string" fixed="grd"/>
 <xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
@@ -783,6 +781,38 @@
 <xs:attribute name="tolRequested" type="xs:string"/>
 <xs:attribute name="isGrid" type="xs:string"/>
 
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">timeSlice: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__timeSlice">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__timeSlice_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="timeSlice"/>
+<xs:attribute name="title" type="xs:string" fixed="3.11 Time Slices for Output Requests"/>
+<xs:attribute name="id" type="xs:string" fixed="tsl"/>
+<xs:attribute name="useClass" fixed="vocab"/>
+<xs:attribute name="uid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titletype;
+   xs:stringType of time slicestart;
+   xs:integerStart yearend;
+   xs:integerEnd yearstep;
+   xs:integerStep (years)sliceLen;
+   xs:integerLength of slicenyears;
+   xs:integerTotal number of yearsuid;
+   xs:stringUnique identifier</xs:documentation></xs:annotation>
+<xs:complexType name="ct__timeSlice_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="aa:st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="type" type="xs:string"/>
+<xs:attribute name="start" type="xs:integer"/>
+<xs:attribute name="end" type="xs:integer"/>
+<xs:attribute name="step" type="xs:integer"/>
+<xs:attribute name="sliceLen" type="xs:integer"/>
+<xs:attribute name="nyears" type="xs:integer"/>
+<xs:attribute name="uid" type="xs:string"/>
+
 </xs:complexType><xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
        This schema is automatically generated by xsltproc.
     </xs:documentation></xs:annotation>
@@ -831,6 +861,8 @@
 <xs:element name="structure" type="aa:ct__structure"/>
 <!--[applying elem main] grids-->
 <xs:element name="grids" type="aa:ct__grids"/>
+<!--[applying elem main] timeSlice-->
+<xs:element name="timeSlice" type="aa:ct__timeSlice"/>
 </xs:all></xs:complexType>
 <xs:unique name="uniqueIdentifierConstraint"><xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
        The uniqueIdentifierConstraint imposes the condition that the uid attribute on "item" elements should have a unique value.

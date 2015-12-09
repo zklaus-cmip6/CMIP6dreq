@@ -1,16 +1,17 @@
-"Block schema definition"							
-							
-"label"	"uid"	"title"	"description"	"useClass"	"type"	"techNote"	"superclass"
-"label"	"__core__:label"	"Record Label"	"A single word, with restricted character set"	"__core__"	"xs:string"		"rdf:property"
-"uid"	"__core__:uid"	"Record Identifier"	"Unique identifier"	"__core__"	"xs:string"		"rdf:property"
-"title"	"__core__:title"	"Record Title"	"A few words describing the object"	"__core__"	"xs:string"		"rdf:property"
-"description"	"__core__:description"	"Record Description"	"An extended description of the object"	"__core__"	"xs:string"		"rdf:property"
-"useClass"	"__core__:useClass"	"Record Class"	'"The class: value should be from a defined vocabulary. All records in the schema definition section must have class set to ''__core__''."'	"__core__"	"xs:string"		"rdf:property"
-"type"	"__core__:type"	"Record Type"	"The type specifies the XSD value type constraint, e.g. xs:string."	"__core__"	"xs:string"		"rdfs:range"
-"techNote"	"__core__:techNote"	"Technical Note"	"Additional technical information which can be used to specify additional properties."	"__core__"	"xs:string"		"rdf:property"
-"superclass"	"__core__:superclass"	"Superclass"	"States what class the property is derived from"	"__core__"	"xs:string"		"rdf:property"
-"id"	"__core__:id"	"Alternative identifier"	"Alternative identifier"	"__core__"	"xs:string"		"rdf:property"
-"itemLabelMode"	"__core__:iitemLabelMode"	"Item Label Mode"	"Item Label Mode"	"__core__"	"xs:string"		"rdf:property"
-"level"	"__core__:level"	"Level"	"Level"	"__core__"	"xs:integer"		"rdf:property"
-"maxOccurs"	"__core__:maxOccurs"	"Maximum number of permissible occurrences of this section"	"Maximum number of permissible occurences of this section"	"__core__"	"xs:string"		"rdf:property"
-"labUnique"	"__core__:labUnique"	"Set true if label of each record is unique within section"	"Set true if label of each record is unique within section"	"__core__"	"xs:boolean"		"rdf:property"
+Block schema definition								
+								
+label	uid	title	description	useClass	type	techNote	superclass	usage
+label	__core__:label	Record Label	A single word,  with restricted character set	__core__	xs:string		rdf:property	A short mnemonic word which is potentially meaningful but also concise and suitable for use in a programming environment.
+uid	__core__:uid	Record Identifier	Unique identifier	__core__	xs:string		rdf:property	Must be unique in the data request. For well known concepts this may be related to the label, but for items such as simple links between concepts an  a random string will be used.
+title	__core__:title	Record Title	A few words describing the object	__core__	xs:string		rdf:property	A short phrase, suitable for use as a section heading
+description	__core__:description	Record Description	An extended description of the object/concept. 	__core__	xs:string		skos:definition	
+useClass	__core__:useClass	Record Class	The class: value should be from a defined vocabulary. All records in the schema definition section must have class set to ''__core__''.	__core__	xs:string		rdf:property	The useClass declared for an attribute can affect its interpretation in the Python package. For example, attributes labelled as “useClass=internalLink” should refer to another data request record.
+type	__core__:type	Record Type	The type specifies the XSD value type constraint,  e.g. xs:string.	__core__	xs:string		rdfs:range	Used in the XSD schema to constrain attribute values.
+techNote	__core__:techNote	Technical Note	Additional technical information which can be used to specify additional properties.	__core__	xs:string		rdf:property	
+superclass	__core__:superclass	Superclass	States what class the property is derived from	__core__	xs:string		rdf:property	
+id	__core__:id	Alternative identifier	Alternative identifier	__core__	xs:string		rdf:property	For sections, the id provides a short alias for the section label.
+itemLabelMode	__core__:itemLabelMode	Item Label Mode	Item Label Mode	__core__	xs:string		rdf:property	
+level	__core__:level	Level	Level	__core__	xs:integer		rdf:property	
+maxOccurs	__core__:maxOccurs	Maximum number of permissible occurrences of this section	Maximum number of permissible occurrences of this section	__core__	xs:string		rdf:property	Used in defining sections. In the CMIP6 Data Request each section only occurs once.
+labUnique	__core__:labUnique	Set true if label of each record is unique within section	Set true if label of each record is unique within section	__core__	xs:boolean		rdf:property	Used in defining sections.
+usage	__core__:usage	Usage notes	Notes on the usage of the predicate/concept defined by this node	__core__	xs:string		rdf:property	

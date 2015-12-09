@@ -9,6 +9,11 @@ import xml.dom.minidom
 import re, shelve
 from __init__ import DOC_DIR
 
+jsh='''<link type="text/css" href="/css/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />
+ <script src="/js/2013/jquery.min.js" type="text/javascript"></script>
+ <script src="/js/2013/jquery-ui.min.js" type="text/javascript"></script>
+ <script src="/js/2013/jquery.cookie.js" type="text/javascript"></script>
+'''
 
 blockSchemaFile = '%s/%s' % (DOC_DIR, 'BlockSchema.csv' )
 
@@ -17,11 +22,18 @@ def loadBS(bsfile):
   ii = open( bsfile, 'r' ).readlines()
   ll = []
   for l in ii:
-    ll.append( [x[1:-1] for x in l.strip().split('\t') ] )
+    ll.append( [x for x in l.strip().split('\t') ] )
   cc = collections.defaultdict( dict )
+  
   for l in ll[3:]:
-    for i in range( len(ll[2]) ):
-      cc[l[0]][ll[2][i]] = l[i]
+    if len(l) < len(ll[2]):
+      l.append( '' )
+    try:
+      for i in range( len(ll[2]) ):
+        cc[l[0]][ll[2][i]] = l[i]
+    except:
+      print (l)
+      raise
   return cc
 
 class rechecks(object):
@@ -52,6 +64,7 @@ class dreqItemBase(object):
        def __init__(self,idict=None,xmlMiniDom=None,id='defaultId',etree=False):
          dictMode = idict != None
          mdMode = xmlMiniDom != None
+         self._htmlTtl = None
          assert not( dictMode and mdMode), 'Mode must be either dictionary of minidom: both assigned'
          assert dictMode or mdMode, 'Mode must be either dictionary of minidom: neither assigned'
          ##self._defaults = { }
@@ -90,15 +103,20 @@ class dreqItemBase(object):
        def __href__(self,odir="",label=None):
          """Generate html text for a link to this item."""
          igns =  ['','__unset__']
-         if 'description' in self.__dict__ and self.description != None and string.strip( self.description ) not in igns:
-           ttl = self.description
-         elif 'title' in self.__dict__ and self.title != None and string.strip( self.title ) not in igns:
-           ttl = self.title
-         else:
-           ttl = self.label
+         if self._htmlTtl == None:
+           if 'description' in self.__dict__ and self.description != None and string.strip( self.description ) not in igns:
+             ttl = self.description
+           elif 'title' in self.__dict__ and self.title != None and string.strip( self.title ) not in igns:
+             ttl = self.title
+           else:
+             ttl = self.label
+           ttl = string.replace( ttl,'"', '&quot;' )
+           ttl = string.replace( ttl,'<', '&lt;' )
+           self._htmlTtl = string.replace( ttl,'>', '&gt;' )
          if label == None:
-           label = self.uid
-         return '<span title="%s"><a href="%s%s.html">%s</a></span>' % (ttl,odir,self.uid,label)
+             label = self.uid
+
+         return '<span title="%s"><a href="%s%s.html">%s</a></span>' % (self._htmlTtl,odir,self.uid,label)
 
        def getHtmlLinkAttrStyle(self,a):
          """Return a string containing a html fragment for a link to an attribute."""
@@ -124,12 +142,15 @@ class dreqItemBase(object):
                  else:
                    try:
                      targ = self._base._inx.uid[ self.__dict__[a] ]
+                     lst = self.getHtmlLinkAttrStyle(a)
+                     m = lst( app, targ, frm=sect )
                    except:
                      print ( a, self.__dict__[a], sect )
-                     raise
-                   lst = self.getHtmlLinkAttrStyle(a)
-                   m = lst( app, targ, frm=sect )
+                     m = '<li>%s: %s .... broken link</li>' % ( app, self.__dict__[a] )
+                     ##raise
                    ##m = '<li>%s, %s: [%s] %s [%s]</li>' % ( a, self.__class__.__dict__[a].__href__(label=self._greenIcon), targ._h.label, targ.label, targ.__href__() )
+               elif hasattr( self._a[a], 'useClass') and self._a[a].useClass == 'externalUrl':
+                 m = '<li>%s: <a href="%s" title="%s">%s</a></li>' % ( app, self.__dict__[a], self._a[a].description, self._a[a].title )
                else:
                  m = '<li>%s: %s</li>' % ( app, self.__dict__[a] )
                msg.append( m )
@@ -146,10 +167,22 @@ class dreqItemBase(object):
                doall = '__all__' in tl
                if doall:
                  tl = self._inx.iref_by_sect[self.uid].a.keys()
-               am = []
+               tl1 = []
                for t in tl:
-                 if t in self._inx.iref_by_sect[self.uid].a:
-                   am.append( '<h3>%s</h3>' % t )
+                 if t in self._inx.iref_by_sect[self.uid].a and len( self._inx.iref_by_sect[self.uid].a[t] ) > 0:
+                   tl1.append( t )
+               am = []
+               if len(tl1) > 0:
+                 am.append( '''<div class="demo">\n<div id="tabs">\n<ul>''' )
+                 for t in tl1:
+                   u0 = self._inx.iref_by_sect[self.uid].a[t][0]
+                   this1 = '<li><a href="#tabs-%s">%s</a></li>' % (t,self._inx.uid[u0]._h.title )
+                   am.append( this1 )
+                 am.append( '</ul>' )
+               for t in tl1:
+                   u0 = self._inx.iref_by_sect[self.uid].a[t][0]
+                   am.append( '<div id="tabs-%s">' % t )
+                   am.append( '<h3>%s</h3>' % self._inx.uid[u0]._h.title )
                    am.append( '<ul>' )
                    items = [self._inx.uid[u] for  u in self._inx.iref_by_sect[self.uid].a[t] ]
                    items.sort( ds('label').cmp )
@@ -161,9 +194,17 @@ class dreqItemBase(object):
                        m = lst( targ, frm=sect )
                      am.append( m )
                    am.append( '</ul>' )
+                   am.append( '</div>' )
                if len(am) > 0:
-                  msg.append( '<h2>Links from other sections</h2>' )
-                  for m in am:
+                 am.append( '</div>' )
+                 msg.append( '<h2>Links from other sections</h2>' )
+                 msg.append( ''' <script>
+        $(function() {
+                $( "#tabs" ).tabs({cookie: { expires: 1 } });
+        });
+ </script>
+<!-- how to make tab selection stick: http://stackoverflow.com/questions/5066581/jquery-ui-tabs-wont-save-selected-tab-index-upon-page-reload  expiry time in days-->''' )
+                 for m in am:
                     msg.append(m)
                
          else:
@@ -214,7 +255,7 @@ class dreqItemBase(object):
                  v = int(v)
                else:
                  v = string.strip(v)
-                 thissect = '%s [%s]' % (self._h.title,self._h.tag)
+                 thissect = '%s [%s]' % (self._h.title,self._h.label)
                  if v in [ '',u'',' ', u' ']:
                    if nw1 < 20:
                      print ( 'WARN.050.0001: input integer non-compliant: %s: %s: "%s" -- set to zero' % (thissect,a,v) )
@@ -258,7 +299,7 @@ class config(object):
     self.vdef = configdoc
     self.vsamp = thisdoc
 
-    self.nts = collections.namedtuple( 'sectdef', ['tag','label','title','id','itemLabelMode','level','maxOccurs','labUnique'] )
+    self.nts = collections.namedtuple( 'sectdef', ['tag','label','title','id','itemLabelMode','level','maxOccurs','labUnique','uid'] )
     self.nti = collections.namedtuple( 'itemdef', ['tag','label','title','type','useClass','techNote'] )
     self.ntt = collections.namedtuple( 'sectinit', ['header','attributes','defaults'] )
     self.nt__default = collections.namedtuple( 'deflt', ['defaults','glob'] )
@@ -297,7 +338,6 @@ class config(object):
 ##
     self._t0 = self.parsevcfg(None)
     self._tableClass0 = self.itemClassFact( self._t0, ns=self.ns )
-
 ##
 ## define a class for the section heading records.
 ##
@@ -446,13 +486,13 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
          'techNote':'', 'useClass':'__core__', 'superclass':'rdf:property',\
          'type':'xs:string', 'uid':'__core__:description', 'label':'label' }
         if v == None:
-          vtt = self.nts( '__core__', 'CoreAttributes', 'Core Attributes', '00000000', 'def', '0', '0', 'false' )
+          vtt = self.nts( '__core__', 'CoreAttributes', 'X.1 Core Attributes', '00000000', 'def', '0', '0', 'false', '__core__' )
         else:
-          vtt = self.nts( '__main__', 'Attributes defined for the Data Request', 'Data Request Attributes', '00000001', 'def', '0', '0', 'false' )
+          vtt = self.nts( '__main__', 'DataRequestAttributes', 'X.2 Data Request Attributes', '00000001', 'def', '0', '0', 'false', '__main__' )
       elif v == '__sect__':
         idict = {'title':'Record Description', \
          'uid':'__core__:description', 'label':'label', 'useClass':'text', 'id':'id', 'maxOccurs':'', 'itemLabelMode':'', 'level':'', 'labUnique':'' }
-        vtt = self.nts( '__core__', 'sectionAttributes', 'Section Attributes', '00000000', 'def', '0', '0', 'false' )
+        vtt = self.nts( '__sect__', 'sectionAttributes', 'X.3 Section Attributes', '00000000', 'def', '0', '0', 'false', '__sect__' )
 ##<var label="var" uid="SECTION:var" useClass="vocab" title="MIP Variable" id="cmip.drv.001">
       else:
         l = v.getAttribute( 'label' )
@@ -463,7 +503,7 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
         maxo = v.getAttribute( 'maxOccurs' )
         labu = v.getAttribute( 'labUnique' )
         il = v.getElementsByTagName( 'rowAttribute' )
-        vtt = self.nts( v.nodeName, l,t,i,ilm,lev, maxo, labu )
+        vtt = self.nts( v.nodeName, l,t,i,ilm,lev, maxo, labu, 's__%s' % v.nodeName )
         idict = {}
         for i in il:
           tt = self.parseicfg(i)
@@ -628,6 +668,7 @@ class loadDreq(object):
 ##    dreqItemBase._htmlStyle['__general__'] = {'addRemarks':True}
 
     self.pageTmpl = """<html><head><title>%s</title>
+%s
 <link rel="stylesheet" type="text/css" href="%scss/dreq.css">
 </head><body>
 <div id="top">CMIP6 Data Request</div>
@@ -639,6 +680,22 @@ class loadDreq(object):
       return self.itemStyles[sect]
     return self.defaultItemLineStyle
 
+
+  def _sectionSortHelper(self,title):
+    ab = string.split( string.split(title)[0], '.' )
+    if len( ab ) == 2:
+      a,b = ab
+    ##sorter =  lambda x: [int(y) for y in string.split( string.split(x,':')[0], '.' )]
+      if self.c.rc.isIntStr(a):
+        a = int(a)
+      if self.c.rc.isIntStr(b):
+        b = int(b)
+      rv = (a,b)
+    elif len(ab) == 1:
+      rv = (ab[0],0)
+    else:
+      rv = ab 
+    return rv
 
   def makeHtml(self,odir='./html', ttl0 = 'Data Request Index', annotations=None):
     """Generate a html view of the vocabularies, using the "__html__" method of the vocabulary item class to generate a
@@ -653,7 +710,7 @@ page for each item and also generating index pages.
       ttl = 'Data Request Record: [%s]%s' % (i._h.label,i.label)
       bdy = string.join( i.__html__( ghis=self.getHtmlItemStyle ), '\n' )
       oo = open( '%s/u/%s.html' % (odir,i.uid), 'w' )
-      oo.write( self.pageTmpl % (ttl, '../', bdy ) )
+      oo.write( self.pageTmpl % (ttl, jsh, '../', bdy ) )
       oo.close()
 
     msg0 = ['<h1>%s</h1>' % ttl0, '<ul>',]
@@ -661,7 +718,7 @@ page for each item and also generating index pages.
     ee = {}
     for k in ks:
       ee[self.coll[k].header.title] = k
-    kks = sorted( ee.keys() )
+    kks = sorted( ee.keys(),  key = self._sectionSortHelper )
     for kt in kks:
       k = ee[kt]
 ##
@@ -687,12 +744,12 @@ page for each item and also generating index pages.
       msg.append( '</ul>' )
       bdy = string.join( msg, '\n' )
       oo = open( '%s/index/%s.html' % (odir,k), 'w' )
-      oo.write( self.pageTmpl % (ttl, '../', bdy ) )
+      oo.write( self.pageTmpl % (ttl, '', '../', bdy ) )
       oo.close()
     msg0.append( '</ul>' )
     bdy = string.join( msg0, '\n' )
     oo = open( '%s/index.html' % odir, 'w' )
-    oo.write( self.pageTmpl % (ttl0, '', bdy ) )
+    oo.write( self.pageTmpl % (ttl0, '', '', bdy ) )
     oo.close()
     
 if __name__ == '__main__':

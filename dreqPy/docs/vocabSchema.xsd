@@ -8,7 +8,7 @@
 <xs:simpleType name="st__attLabel_und"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9_])+"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="st__attLabel_int"><xs:restriction base="xs:integer"/></xs:simpleType>
 <xs:simpleType name="st__attLabel_an"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9])+"/></xs:restriction></xs:simpleType>
-<xs:complexType name="ct__info" mixed="true"><xs:attribute name="srcType" type="xs:string"/><xs:attribute name="srcRef" type="xs:string"/></xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:simpleType name="st__floatList"><xs:restriction base="aa:base__floatList"><xs:minLength value="0"/></xs:restriction></xs:simpleType><xs:simpleType name="base__floatList"><xs:list itemType="xs:float"/></xs:simpleType><xs:complexType name="ct__info" mixed="true"><xs:attribute name="srcType" type="xs:string"/><xs:attribute name="srcRef" type="xs:string"/></xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">institute: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__institute">
@@ -16,16 +16,16 @@
 <xs:attribute name="label" type="xs:string" fixed="institute"/>
 <xs:attribute name="title" type="xs:string" fixed="Institute"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.001"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titleurl;
-   Home pageisni;
-   International Standard Name Identifier (ISO 27729)description;
-   uid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titleurl;
+   xs:stringHome pageisni;
+   xs:stringInternational Standard Name Identifier (ISO 27729)description;
+   xs:stringuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__institute_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -42,17 +42,17 @@
 <xs:attribute name="label" type="xs:string" fixed="model"/>
 <xs:attribute name="title" type="xs:string" fixed="Model"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.002"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titledescription;
-   url;
-   altUrl;
-   source;
-   List of major model componentsuid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titledescription;
+   xs:stringurl;
+   xs:stringaltUrl;
+   xs:stringsource;
+   xs:stringList of major model componentsuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__model_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -70,14 +70,14 @@
 <xs:attribute name="label" type="xs:string" fixed="physicsvers"/>
 <xs:attribute name="title" type="xs:string" fixed="Physics Version"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.003"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titledescription;
-   uid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titledescription;
+   xs:stringuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__physicsvers_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -92,14 +92,14 @@
 <xs:attribute name="label" type="xs:string" fixed="initialisationmethod"/>
 <xs:attribute name="title" type="xs:string" fixed="Initialisation Method"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.004"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titledescription;
-   uid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titledescription;
+   xs:stringuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__initialisationmethod_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -114,16 +114,16 @@
 <xs:attribute name="label" type="xs:string" fixed="modelComp"/>
 <xs:attribute name="title" type="xs:string" fixed="Model Components"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.005"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record TitlecomponentType;
-   sizeH;
-   sizeV;
-   uid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord TitlecomponentType;
+   xs:stringsizeH;
+   xs:stringsizeV;
+   xs:stringuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__modelComp_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -140,21 +140,23 @@
 <xs:attribute name="label" type="xs:string" fixed="activity"/>
 <xs:attribute name="title" type="xs:string" fixed="Coordinating activity"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.006"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titleurl;
-   status;
-   Status and role within the CMIP6 processuid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titleurl;
+   xs:stringstatus;
+   xs:stringStatus and role within the CMIP6 processuid;
+   xs:stringproject;
+   xs:stringProject which is sponsoring the CMIP6 contribution, if applicable</xs:documentation></xs:annotation>
 <xs:complexType name="ct__activity_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="url" type="xs:string"/>
 <xs:attribute name="status" type="xs:string"/>
 <xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="project" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">product: Complex Type declaration
@@ -164,13 +166,13 @@
 <xs:attribute name="label" type="xs:string" fixed="product"/>
 <xs:attribute name="title" type="xs:string" fixed="Data product"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.007"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titleuid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titleuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__product_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -184,17 +186,17 @@
 <xs:attribute name="label" type="xs:string" fixed="experiment"/>
 <xs:attribute name="title" type="xs:string" fixed="Numerical Experiment"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.008"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record TitlealtLabel;
-   description;
-   url;
-   sponsor;
-   uid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord TitlealtLabel;
+   xs:stringdescription;
+   xs:stringurl;
+   xs:stringsponsor;
+   xs:stringuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__experiment_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -212,14 +214,14 @@
 <xs:attribute name="label" type="xs:string" fixed="frequency"/>
 <xs:attribute name="title" type="xs:string" fixed="Temporal frequency of data values"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.009"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titleiso;
-   uid;
-   isClimatology;
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titleiso;
+   xs:stringuid;
+   xs:stringisClimatology;
    xs:booleanTrue if term is a climatology label</xs:documentation></xs:annotation>
 <xs:complexType name="ct__frequency_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
@@ -236,13 +238,13 @@
 <xs:attribute name="label" type="xs:string" fixed="realm"/>
 <xs:attribute name="title" type="xs:string" fixed="Modeling realm"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.010"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titleuid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titleuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__realm_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -256,13 +258,13 @@
 <xs:attribute name="label" type="xs:string" fixed="grid"/>
 <xs:attribute name="title" type="xs:string" fixed="Native grid"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.011"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titleuid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titleuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__grid_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -276,16 +278,16 @@
 <xs:attribute name="label" type="xs:string" fixed="dimensions"/>
 <xs:attribute name="title" type="xs:string" fixed="MIP table variable dimensions"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.012"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record TitlealtLabel;
-   sn;
-   size;
+   xs:stringRecord Labeltitle;
+   xs:stringRecord TitlealtLabel;
+   xs:stringsn;
+   xs:stringsize;
    xs:integeruid;
-   </xs:documentation></xs:annotation>
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__dimensions_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_an"/>
@@ -302,13 +304,13 @@
 <xs:attribute name="label" type="xs:string" fixed="forcings"/>
 <xs:attribute name="title" type="xs:string" fixed="Forcing"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.013"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titleuid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titleuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__forcings_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -322,16 +324,16 @@
 <xs:attribute name="label" type="xs:string" fixed="table"/>
 <xs:attribute name="title" type="xs:string" fixed="Data specification table"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.014"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titledescription;
-   comment;
-   frequency;
-   uid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titledescription;
+   xs:stringcomment;
+   xs:stringfrequency;
+   xs:stringuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__table_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -348,14 +350,14 @@
 <xs:attribute name="label" type="xs:string" fixed="cref"/>
 <xs:attribute name="title" type="xs:string" fixed="Coordinate Reference"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.015"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titlelabel;
-   uid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titlelabel;
+   xs:stringuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__cref_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -369,14 +371,14 @@
 <xs:attribute name="label" type="xs:string" fixed="areaType"/>
 <xs:attribute name="title" type="xs:string" fixed="CMIP Area Type"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.016"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record TitleinCF;
-   uid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord TitleinCF;
+   xs:stringuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__areaType_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -391,21 +393,29 @@
 <xs:attribute name="label" type="xs:string" fixed="timeSlice"/>
 <xs:attribute name="title" type="xs:string" fixed="Time slices used in data request"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.017"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titletype;
-   specification;
-   uid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titleuid;
+   xs:stringtype;
+   xs:stringstart;
+   xs:stringend;
+   xs:stringstep;
+   xs:stringsliceLen;
+   xs:stringnyears;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__timeSlice_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="type" type="xs:string"/>
-<xs:attribute name="specification" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="type" type="xs:string"/>
+<xs:attribute name="start" type="xs:string"/>
+<xs:attribute name="end" type="xs:string"/>
+<xs:attribute name="step" type="xs:string"/>
+<xs:attribute name="sliceLen" type="xs:string"/>
+<xs:attribute name="nyears" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">modelFamily: Complex Type declaration
@@ -415,13 +425,13 @@
 <xs:attribute name="label" type="xs:string" fixed="modelFamily"/>
 <xs:attribute name="title" type="xs:string" fixed="Family of model"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.018"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titleuid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titleuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__modelFamily_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -435,14 +445,14 @@
 <xs:attribute name="label" type="xs:string" fixed="priority"/>
 <xs:attribute name="title" type="xs:string" fixed="Variable priority"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.019"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titledescription;
-   uid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titledescription;
+   xs:stringuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__priority_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_int"/>
@@ -457,13 +467,13 @@
 <xs:attribute name="label" type="xs:string" fixed="qcLevel"/>
 <xs:attribute name="title" type="xs:string" fixed="Quality control level"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.020"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titleuid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titleuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__qcLevel_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_int"/>
@@ -477,13 +487,13 @@
 <xs:attribute name="label" type="xs:string" fixed="complianceCode"/>
 <xs:attribute name="title" type="xs:string" fixed="Data specification compliance codes"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.021"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titleuid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titleuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__complianceCode_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -497,16 +507,16 @@
 <xs:attribute name="label" type="xs:string" fixed="glossary"/>
 <xs:attribute name="title" type="xs:string" fixed="Glossary"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.022"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record TitlefullName;
-   description;
-   url;
-   uid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord TitlefullName;
+   xs:stringdescription;
+   xs:stringurl;
+   xs:stringuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__glossary_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -523,13 +533,13 @@
 <xs:attribute name="label" type="xs:string" fixed="modelCompType"/>
 <xs:attribute name="title" type="xs:string" fixed="Model Component Types/Categories [redundant with *Native Grid*]"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.023"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titleuid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titleuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__modelCompType_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -543,13 +553,13 @@
 <xs:attribute name="label" type="xs:string" fixed="modelType"/>
 <xs:attribute name="title" type="xs:string" fixed="Class of model"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.024"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titleuid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titleuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__modelType_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -563,16 +573,16 @@
 <xs:attribute name="label" type="xs:string" fixed="index"/>
 <xs:attribute name="title" type="xs:string" fixed="Index of vocabularies"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.025"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titletable;
-   title;
-   description;
-   uid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titletable;
+   xs:stringtitle;
+   xs:stringdescription;
+   xs:stringuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__index_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -588,15 +598,15 @@
 <xs:attribute name="label" type="xs:string" fixed="cmorDimAttr"/>
 <xs:attribute name="title" type="xs:string" fixed="CMOR Dimension Attributes"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.026"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titledescription;
-   uid;
-   CMORattr;
-   Corresponding label in the CMOR MIP tables, if different</xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titledescription;
+   xs:stringuid;
+   xs:stringCMORattr;
+   xs:stringCorresponding label in the CMOR MIP tables, if different</xs:documentation></xs:annotation>
 <xs:complexType name="ct__cmorDimAttr_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_und"/>
@@ -612,14 +622,14 @@
 <xs:attribute name="label" type="xs:string" fixed="processingOptions"/>
 <xs:attribute name="title" type="xs:string" fixed="Processing steps required"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.027"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titledescription;
-   uid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titledescription;
+   xs:stringuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__processingOptions_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_an"/>
@@ -634,16 +644,16 @@
 <xs:attribute name="label" type="xs:string" fixed="coordinateReference"/>
 <xs:attribute name="title" type="xs:string" fixed="Processing steps required"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.028"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titletitle;
-   ogc_wkt;
-   url;
-   uid;
-   </xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titletitle;
+   xs:stringogc_wkt;
+   xs:stringurl;
+   xs:stringuid;
+   xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__coordinateReference_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_an"/>
@@ -659,17 +669,17 @@
 <xs:attribute name="label" type="xs:string" fixed="modelConfig"/>
 <xs:attribute name="title" type="xs:string" fixed="Model configuration options"/>
 <xs:attribute name="id" type="xs:string" fixed="cmip.drv.029"/>
-<xs:attribute name="class" fixed="vocab"/>
+<xs:attribute name="useClass" fixed="vocab"/>
 <xs:attribute name="uid" type="xs:string"/>
 </xs:complexType>
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
-   Record Labeltitle;
-   Record Titletitle;
-   MIPs;
-   usage;
-   type;
-   range;
-   Range of valid values, e.g. xs:boolean</xs:documentation></xs:annotation>
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titletitle;
+   xs:stringMIPs;
+   xs:stringusage;
+   xs:stringtype;
+   xs:stringrange;
+   xs:stringRange of valid values, e.g. xs:boolean</xs:documentation></xs:annotation>
 <xs:complexType name="ct__modelConfig_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_an"/>
