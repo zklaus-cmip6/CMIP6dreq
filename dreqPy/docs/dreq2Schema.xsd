@@ -134,15 +134,16 @@
    xs:stringDeflate Level: NetCDF compression parametershuffle;
    xs:stringShuffle: NetCDF compression parameterdefaultPriority;
    xs:integerIndicative priority for this parameter, which is over-ruled by the requestVar priority setting, but provides a reference for organisation of the CMORvariablestype;
-   xs:stringmodeling_realm;
-   xs:stringpositive;
-   xs:stringmipTable;
+   xs:stringData value type, e.g. float or doublemodeling_realm;
+   xs:stringModeling Realmpositive;
+   xs:stringCMOR Directive PositivemipTableSection;
+   xs:stringSection of a tablemipTable;
    xs:stringThe MIP table: each table identifies a collection of variablesprov;
-   xs:stringprovNote;
-   xs:stringfrequency;
+   xs:stringProvenanceprovNote;
+   xs:stringProvenance Notefrequency;
    xs:stringFrequency of time steps to be archived.rowIndex;
    xs:integerRow index of entry in source sheetdescription;
-   xs:string</xs:documentation></xs:annotation>
+   xs:stringDescription</xs:documentation></xs:annotation>
 <xs:complexType name="ct__CMORvar_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -160,6 +161,7 @@
 <xs:attribute name="type" type="xs:string"/>
 <xs:attribute name="modeling_realm" type="xs:string"/>
 <xs:attribute name="positive" type="xs:string"/>
+<xs:attribute name="mipTableSection" type="xs:string"/>
 <xs:attribute name="mipTable" type="xs:string"/>
 <xs:attribute name="prov" type="xs:string"/>
 <xs:attribute name="provNote" type="xs:string"/>
@@ -184,8 +186,7 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
    xs:stringRecord identifierdescription;
-   xs:stringDescriptiontitle;
-   xs:stringLong namemip;
+   xs:stringDescriptionmip;
    xs:stringEndorsed MIP</xs:documentation></xs:annotation>
 <xs:complexType name="ct__objective_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
@@ -211,8 +212,8 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
    xs:stringdimensions;
-   xs:stringshape;
-   xs:stringlevels;
+   xs:stringList of spatial dimensionsshape;
+   xs:stringShape - as used in input levels;
    xs:integerNumber of vertical levels (ignored if levelFlag=false)levelFlag;
    xs:booleanFlag set to *false* if number of levels is optional (e.g. determined by the model)</xs:documentation></xs:annotation>
 <xs:complexType name="ct__spatialShape_vocabItem">
@@ -484,10 +485,9 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
    xs:stringpriority;
-   xs:integervid;
+   xs:integerVariable priorityvid;
    xs:stringIdentifier for MIP Output Variablevgid;
    xs:stringIdentifier for Variable Groupmip;
-   xs:stringtable;
    xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__requestVar_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
@@ -497,7 +497,6 @@
 <xs:attribute name="vid" type="xs:string"/>
 <xs:attribute name="vgid" type="xs:string"/>
 <xs:attribute name="mip" type="xs:string"/>
-<xs:attribute name="table" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">standardname: Complex Type declaration
@@ -665,9 +664,8 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
    xs:stringdimensions;
-   xs:stringlabel;
-   xs:stringdescription;
-   xs:string</xs:documentation></xs:annotation>
+   xs:stringDimensionsdescription;
+   xs:stringDescription</xs:documentation></xs:annotation>
 <xs:complexType name="ct__temporalShape_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -692,17 +690,17 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
    xs:stringspid;
-   xs:stringtmid;
-   xs:stringodims;
-   xs:stringcoords;
-   xs:stringcell_methods;
-   xs:stringcell_measures;
-   xs:stringflag_values;
-   xs:stringflag_meanings;
-   xs:stringdescription;
-   xs:stringprocNote;
-   xs:stringprov;
-   xs:string</xs:documentation></xs:annotation>
+   xs:stringSpatial Shapetmid;
+   xs:stringTemporal Shapeodims;
+   xs:stringOther Dimensionscoords;
+   xs:stringCoordinatescell_methods;
+   xs:stringCell Methodscell_measures;
+   xs:stringCell Measuresflag_values;
+   xs:stringFlag Valuesflag_meanings;
+   xs:stringFLag Meaningsdescription;
+   xs:stringDescriptionprocNote;
+   xs:stringProcessing Noteprov;
+   xs:stringProvenance</xs:documentation></xs:annotation>
 <xs:complexType name="ct__structure_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -745,9 +743,9 @@
    xs:stringindex axis?coords;
    xs:stringcoords_attribbounds;
    xs:stringbounds?direction;
-   xs:stringstored directionvalidMin;
-   xs:stringvalid_minvalidMax;
-   xs:stringvalid_maxtype;
+   xs:stringstored directionvalid_min;
+   xs:floatvalid_minvalid_max;
+   xs:floatvalid_maxtype;
    xs:stringtypepositive;
    xs:stringpositivevalue;
    xs:stringvalueboundsValues;
@@ -770,8 +768,8 @@
 <xs:attribute name="coords" type="xs:string"/>
 <xs:attribute name="bounds" type="xs:string"/>
 <xs:attribute name="direction" type="xs:string"/>
-<xs:attribute name="validMin" type="xs:string"/>
-<xs:attribute name="validMax" type="xs:string"/>
+<xs:attribute name="valid_min" type="xs:float"/>
+<xs:attribute name="valid_max" type="xs:float"/>
 <xs:attribute name="type" type="xs:string"/>
 <xs:attribute name="positive" type="xs:string"/>
 <xs:attribute name="value" type="xs:string"/>
@@ -798,9 +796,9 @@
    xs:stringType of time slicestart;
    xs:integerStart yearend;
    xs:integerEnd yearstep;
-   xs:integerStep (years)sliceLen;
+   xs:floatStep (years)sliceLen;
    xs:integerLength of slicenyears;
-   xs:integerTotal number of yearsuid;
+   xs:floatTotal number of yearsuid;
    xs:stringUnique identifier</xs:documentation></xs:annotation>
 <xs:complexType name="ct__timeSlice_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
@@ -808,9 +806,33 @@
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="type" type="xs:string"/>
 <xs:attribute name="start" type="xs:integer"/>
 <xs:attribute name="end" type="xs:integer"/>
-<xs:attribute name="step" type="xs:integer"/>
+<xs:attribute name="step" type="xs:float"/>
 <xs:attribute name="sliceLen" type="xs:integer"/>
-<xs:attribute name="nyears" type="xs:integer"/>
+<xs:attribute name="nyears" type="xs:float"/>
+<xs:attribute name="uid" type="xs:string"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">tags: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__tags">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__tags_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="tags"/>
+<xs:attribute name="title" type="xs:string" fixed="6.1 Tags"/>
+<xs:attribute name="id" type="xs:string" fixed="tag"/>
+<xs:attribute name="useClass" fixed="vocab"/>
+<xs:attribute name="uid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titlelabel;
+   xs:stringLabeltitle;
+   xs:stringTitledescription;
+   xs:stringDescriptionuid;
+   xs:stringIdentifier</xs:documentation></xs:annotation>
+<xs:complexType name="ct__tags_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="aa:st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="uid" type="xs:string"/>
 
 </xs:complexType><xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
@@ -864,9 +886,14 @@
 <!--[applying elem main] timeSlice-->
 <xs:element name="timeSlice" type="aa:ct__timeSlice"/>
 </xs:all></xs:complexType>
-<xs:unique name="uniqueIdentifierConstraint"><xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
+</xs:element>
+<xs:element name="annex"><xs:complexType><xs:all>
+<!--[applying elem main] tags-->
+<xs:element name="tags" type="aa:ct__tags"/>
+</xs:all></xs:complexType>
+</xs:element>
+</xs:all></xs:complexType><xs:unique name="uniqueIdentifierConstraint"><xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
        The uniqueIdentifierConstraint imposes the condition that the uid attribute on "item" elements should have a unique value.
         </xs:documentation></xs:annotation>
 <xs:selector xpath=".//aa:item"/><xs:field xpath="@uid"/></xs:unique>
-</xs:element>
-</xs:all></xs:complexType></xs:element></xs:schema>
+</xs:element></xs:schema>
