@@ -13,6 +13,8 @@ jsh='''<link type="text/css" href="/css/jquery-ui-1.8.16.custom.css" rel="Styles
  <script src="/js/2013/jquery.min.js" type="text/javascript"></script>
  <script src="/js/2013/jquery-ui.min.js" type="text/javascript"></script>
  <script src="/js/2013/jquery.cookie.js" type="text/javascript"></script>
+
+<link type="text/css" href="/css/dreq.css" rel="Stylesheet" />
 '''
 
 blockSchemaFile = '%s/%s' % (DOC_DIR, 'BlockSchema.csv' )
@@ -100,23 +102,25 @@ class dreqItemBase(object):
          else:
            print ( 'Item <%s>: uninitialised' % self.sectionLabel )
 
-       def __href__(self,odir="",label=None):
+       def __href__(self,odir="",label=None,title=None):
          """Generate html text for a link to this item."""
          igns =  ['','__unset__']
-         if self._htmlTtl == None:
-           if 'description' in self.__dict__ and self.description != None and string.strip( self.description ) not in igns:
-             ttl = self.description
-           elif 'title' in self.__dict__ and self.title != None and string.strip( self.title ) not in igns:
-             ttl = self.title
-           else:
-             ttl = self.label
-           ttl = string.replace( ttl,'"', '&quot;' )
-           ttl = string.replace( ttl,'<', '&lt;' )
-           self._htmlTtl = string.replace( ttl,'>', '&gt;' )
+         if title == None:
+           if self._htmlTtl == None:
+             if 'description' in self.__dict__ and self.description != None and string.strip( self.description ) not in igns:
+               ttl = self.description
+             elif 'title' in self.__dict__ and self.title != None and string.strip( self.title ) not in igns:
+               ttl = self.title
+             else:
+               ttl = self.label
+             ttl = string.replace( ttl,'"', '&quot;' )
+             ttl = string.replace( ttl,'<', '&lt;' )
+             self._htmlTtl = string.replace( ttl,'>', '&gt;' )
+           title=self._htmlTtl
          if label == None:
              label = self.uid
 
-         return '<span title="%s"><a href="%s%s.html">%s</a></span>' % (self._htmlTtl,odir,self.uid,label)
+         return '<span title="%s"><a href="%s%s.html">%s</a></span>' % (title,odir,self.uid,label)
 
        def getHtmlLinkAttrStyle(self,a):
          """Return a string containing a html fragment for a link to an attribute."""
@@ -245,11 +249,14 @@ class dreqItemBase(object):
          for a,tv,v in tvtl:
            if tv:
              if self._a[a].type == u'xs:float':
-               try:
-                 v = float(v)
-               except:
-                 print ( 'Failed to convert real number: %s' % v )
-                 raise
+               if v == '':
+                 v = None
+               else:
+                 try:
+                   v = float(v)
+                 except:
+                   print ( 'Failed to convert real number: %s,%s,%s' % (a,tv,v) )
+                   raise
              elif self._a[a].type == u'xs:integer':
                if self._rc.isIntStr( v ):
                  v = int(v)
@@ -293,7 +300,7 @@ class dreqItemBase(object):
 class config(object):
   """Read in a vocabulary collection configuration document and a vocabulary document"""
 
-  def __init__(self, configdoc='out/dreqDefn.xml', thisdoc='../workbook/trial_20150724.xml', useShelve=False):
+  def __init__(self, configdoc='out/dreqDefn.xml', thisdoc='../workbook/trial_20150724.xml', useShelve=False, strings=False):
     self.rc = rechecks()
     self.silent = True
     self.vdef = configdoc
@@ -307,7 +314,10 @@ class config(object):
     self.bscc = loadBS(blockSchemaFile)
 
     self.coll = {}
-    doc = xml.dom.minidom.parse( self.vdef  )
+    if strings:
+      doc = xml.dom.minidom.parseString( self.vdef  )
+    else:
+      doc = xml.dom.minidom.parse( self.vdef  )
 ##
 ## elementTree parsing implemented for main document
 ##
@@ -316,8 +326,11 @@ class config(object):
     if self.etree:
       import xml.etree.cElementTree as cel
 
-      self.contentDoc = cel.parse( self.vsamp )
-      root = self.contentDoc.getroot()
+      if not strings:
+        self.contentDoc = cel.parse( self.vsamp )
+        root = self.contentDoc.getroot()
+      else:
+        root = cel.fromstring(self.vsamp)
       ##bs = string.split( root.tag, '}' )
       bs = root.tag.split( '}' )
       if len( bs ) > 1:
@@ -325,7 +338,10 @@ class config(object):
       else:
         self.ns = None
     else:
-      self.contentDoc = xml.dom.minidom.parse( self.vsamp )
+      if strings:
+        self.contentDoc = xml.dom.minidom.parseString( self.vsamp  )
+      else:
+        self.contentDoc = xml.dom.minidom.parse( self.vsamp )
       self.ns = None
 
     vl = doc.getElementsByTagName( 'table' )
@@ -549,7 +565,7 @@ Invalid internal links are recorded in tme "missingIds" dictionary.
 For any record, with identifier u, iref_by_uid[u] gives a list of the section and identifier of records linking to that record.
 """
 
-  def __init__(self, dreq):
+  def __init__(self, dreq,lock=True):
     self.silent = True
     self.uid = {}
     self.uid2 = collections.defaultdict( list )
@@ -610,6 +626,13 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
         if 'sn' in dreq[k].attDefn:
           self.__dict__[k].sn[i.sn].append( i.uid )
 
+    if lock:
+      for k in self.iref_by_uid:  
+         self.iref_by_uid[k] = tuple( self.iref_by_uid[k] )
+      for k in self.iref_by_sect:
+        for s in self.iref_by_sect[ k ].a:
+          self.iref_by_sect[ k ].a[s] = tuple( self.iref_by_sect[ k ].a[s] )
+
   def info(self,ss):
     if not self.silent:
       print ( ss )
@@ -647,8 +670,8 @@ class loadDreq(object):
   htmlStyles: dictionary of styling directives which influence structure of html page generates by the "makeHtml" method
 """
 
-  def __init__(self,dreqXML=defaultDreqPath, configdoc=defaultConfigPath, useShelve=False, htmlStyles=None ):
-    self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve)
+  def __init__(self,dreqXML=defaultDreqPath, configdoc=defaultConfigPath, useShelve=False, htmlStyles=None, strings=False ):
+    self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve,strings=strings)
     self.coll = self.c.coll
     self.inx = index(self.coll)
     self.itemStyles = {}
@@ -671,8 +694,17 @@ class loadDreq(object):
 %s
 <link rel="stylesheet" type="text/css" href="%scss/dreq.css">
 </head><body>
-<div id="top">CMIP6 Data Request</div>
-%s</body></html>"""
+
+<div id="top">
+   <div id="corner"></div>
+   CMIP6 Data Request
+</div>
+<div id="nav"><div><a href="%s" title="Home">Home</a></div></div>
+
+<div id="section">
+%s
+</div>
+</body></html>"""
 
   def getHtmlItemStyle(self, sect):
     """Get the styling method associated with a given section."""
@@ -710,7 +742,7 @@ page for each item and also generating index pages.
       ttl = 'Data Request Record: [%s]%s' % (i._h.label,i.label)
       bdy = string.join( i.__html__( ghis=self.getHtmlItemStyle ), '\n' )
       oo = open( '%s/u/%s.html' % (odir,i.uid), 'w' )
-      oo.write( self.pageTmpl % (ttl, jsh, '../', bdy ) )
+      oo.write( self.pageTmpl % (ttl, jsh, '../', '../index.html', bdy ) )
       oo.close()
 
     msg0 = ['<h1>%s</h1>' % ttl0, '<ul>',]
@@ -744,12 +776,12 @@ page for each item and also generating index pages.
       msg.append( '</ul>' )
       bdy = string.join( msg, '\n' )
       oo = open( '%s/index/%s.html' % (odir,k), 'w' )
-      oo.write( self.pageTmpl % (ttl, '', '../', bdy ) )
+      oo.write( self.pageTmpl % (ttl, '', '../', '../index.html', bdy ) )
       oo.close()
     msg0.append( '</ul>' )
     bdy = string.join( msg0, '\n' )
     oo = open( '%s/index.html' % odir, 'w' )
-    oo.write( self.pageTmpl % (ttl0, '', '', bdy ) )
+    oo.write( self.pageTmpl % (ttl0, '', '', 'index.html', bdy ) )
     oo.close()
     
 if __name__ == '__main__':

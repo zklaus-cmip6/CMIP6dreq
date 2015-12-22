@@ -15,7 +15,7 @@ def main_entry():
       return
 
   if sys.argv[1] == '-v':
-      from __init__ import __version__, __versionComment__
+      from packageConfig import __version__, __versionComment__
       print( 'dreqPy version %s [%s]' % (__version__,__versionComment__) )
   elif sys.argv[1] == '--unitTest':
       print( "Starting test suite 1" )

@@ -87,6 +87,30 @@ class check2(checkbase):
     os.unlink( '.simpleCheck_check2_err.txt' )
     os.unlink( '.simpleCheck_check2.txt' )
 
+  def _clear_ch04(self):
+    os.unlink( '.simpleCheck_check2_err.txt' )
+    os.unlink( '.simpleCheck_check2.txt' )
+
+  def _ch04_checkCmd(self):
+    import os
+    os.popen( 'python dreqCmdl.py -v  2> .simpleCheck_check2_err.txt 1>.simpleCheck_check2.txt' ).readlines()
+    ii = open( '.simpleCheck_check2_err.txt' ).readlines()
+    if len(ii) > 0:
+      print ( 'WARNING[003]: failed to get version with command line call' )
+      self.ok = False
+      self._clear_ch04()
+      return
+
+    ii = open( '.simpleCheck_check2.txt' ).readlines()
+    if len(ii) < 1:
+      print ( 'WARNING[004]: failed to get version with command line call' )
+      self.ok = False
+      self._clear_ch04()
+      return
+
+    self.ok = True
+    return
+
   def _ch03_checkXML(self):
     import os
     os.popen( 'which xmllint 2> .simpleCheck_check2_err.txt 1>.simpleCheck_check2.txt' ).readlines()
@@ -125,7 +149,7 @@ class check2(checkbase):
     return
     
 all &= check1('Suite 1 (dreq module)').ok
-all &= check2('Suite 2 (xmllint)').ok
+all &= check2('Suite 2 (xmllint & command line)').ok
 
 if all:
   print ( 'ALL CHECK PASSED' )

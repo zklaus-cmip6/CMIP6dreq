@@ -2,6 +2,10 @@
 from dreqPy import dreq
 import collections, string, os
 import vrev
+try:
+    import xlsxwriter
+except:
+    print ('No xlsxwrite: will not make tables ...')
 
 class xlsx(object):
   def __init__(self,fn):
@@ -84,16 +88,19 @@ class makePurl(object):
     oo.close()
       
 class makeTab(object):
-  def __init__(self):
-    cmv = dq.coll['CMORvar'].items
+  def __init__(self, subset=None, dest='tables/test.xlsx'):
+    if subset != None:
+      cmv = [x for x in dq.coll['CMORvar'].items if x.uid in subset]
+    else:
+      cmv = dq.coll['CMORvar'].items
     tables = sorted( list( set( [i.mipTable for i in cmv] ) ), cmp=cmpAnnex )
+    print tables
 
     addMips = True
     if addMips:
       c = vrev.checkVar(dq)
 
-    wb = xlsx( 'tables/test.xlsx' )
-
+    wb = xlsx( dest )
 
     hdr_cell_format = wb.wb.add_format({'text_wrap': True, 'font_size': 14, 'font_color':'#0000ff', 'bold':1, 'fg_color':'#aaaacc'})
     hdr_cell_format.set_text_wrap()
@@ -141,13 +148,18 @@ class makeTab(object):
           if hcmt[i] != '':
             sht.write_comment( j,i,hcmt[i])
       thiscmv =  sorted( [v for v in cmv if v.mipTable == t], cmp=cmpdn(['prov','rowIndex','label']).cmp )
+      print 'INFO.001: Table %s, rows: %s' % (t,len(thiscmv) )
       
       for v in thiscmv:
           cv = dq.inx.uid[ v.vid ]
           strc = dq.inx.uid[ v.stid ]
-          sshp = dq.inx.uid[ strc.spid ]
-          tshp = dq.inx.uid[ strc.tmid ]
-          ok = all( [i._h.label != 'remarks' for i in [cv,strc,sshp,tshp]] )
+          if strc._h.label == 'remarks':
+            print 'ERROR: structure not found for %s: %s .. %s (%s)' % (v.uid,v.label,v.title,v.mipTable)
+            ok = False
+          else:
+            sshp = dq.inx.uid[ strc.spid ]
+            tshp = dq.inx.uid[ strc.tmid ]
+            ok = all( [i._h.label != 'remarks' for i in [cv,strc,sshp,tshp]] )
           #[u'shuffle', u'ok_max_mean_abs', u'vid', '_contentInitialised', u'valid_min', u'frequency', u'uid', u'title', u'rowIndex', u'positive', u'stid', u'mipTable', u'label', u'type', u'description', u'deflate_level', u'deflate', u'provNote', u'ok_min_mean_abs', u'modeling_realm', u'prov', u'valid_max']
 
           if not ok:
@@ -223,7 +235,7 @@ class htmlTrees(object):
           bdy.append( '</ul></li>\n' )
       bdy.append( '</ul></body></html>\n' )
       oo = open( '%s/%s.html' % (self.odir,v.label), 'w' )
-      oo.write( dq.pageTmpl % ( title, '', '../', string.join( bdy, '\n' ) ) )
+      oo.write( dq.pageTmpl % ( title, '', '../', '../index.html', string.join( bdy, '\n' ) ) )
       oo.close()
       self.anno[v.label] = '<a href="../t/%s.html">Usage</a>' % v.label
     else:
@@ -305,6 +317,22 @@ class styles(object):
   def cmvLink(self,targ,frm='',ann=''):
     return '<li>%s {%s}: %s [%s]</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.mipTable, targ.title, targ.frequency )
 
+  def objLink(self,targ,frm='',ann=''):
+    return '<li>%s: %s</li>' % (  targ.label, targ.__href__(odir='../u/', label=targ.title,title=targ.description) )
+
+  def strLink(self,targ,frm='',ann=''):
+    return '<li>%s: %s</li>' % (  targ.label, targ.__href__(odir='../u/', label=targ.title) )
+
+  def objLnkLink(self,targ,frm='',ann=''):
+    if frm == 'objective':
+      t2 = targ._inx.uid[targ.rid]
+      t3 = targ._inx.uid[t2.refid]
+      thislab = '%s (%s)' % (t2.mip,t3.label)
+      return '<li>%s: %s</li>' % (  t2.title, t2.__href__(odir='../u/',label=thislab) )
+    else:
+      t2 = targ._inx.uid[targ.oid]
+      return '<li>%s: %s</li>' % (  t2.label, t2.__href__(odir='../u/',label=t2.title) )
+
   def labTtl(self,targ,frm='',ann=''):
     return '<li>%s: %s</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.title )
 
@@ -333,6 +361,7 @@ htmlStyle['mip'] = {'getIrefs':['__all__']}
 htmlStyle['remarks'] = {'getIrefs':['__all__']}
 htmlStyle['varChoice'] = {'getIrefs':['__all__']}
 htmlStyle['spatialShape'] = {'getIrefs':['__all__']}
+htmlStyle['temporalShape'] = {'getIrefs':['__all__']}
 htmlStyle['structure'] = {'getIrefs':['__all__']}
 htmlStyle['standardname'] = {'getIrefs':['__all__']}
 dq = dreq.loadDreq( htmlStyles=htmlStyle)
@@ -344,6 +373,9 @@ dq.itemStyles['standardname'] = styls.snLink
 dq.itemStyles['var'] = styls.varLink
 dq.itemStyles['mip'] = styls.mipLink
 dq.itemStyles['CMORvar'] = styls.cmvLink
+dq.itemStyles['objective'] = styls.objLink
+dq.itemStyles['structure'] = styls.strLink
+dq.itemStyles['objectiveLink'] = styls.objLnkLink
 dq.itemStyles['requestVarGroup'] = styls.vgrpLink
 dq.itemStyles['requestLink'] = styls.rqlLink02
 dq.itemStyles['spatialShape'] = styls.labTtl
@@ -351,12 +383,14 @@ dq.coll['var'].items[0].__class__._linkAttrStyle['sn'] = styls.snLink01
 ##dq.coll['requestVarGroup'].items[0].__class__._linkAttrStyle['requestVar'] = styls.rqvLink01
 dq.itemStyles['requestVar'] = styls.rqvLink01
 
-ht = htmlTrees(dq)
-dq.makeHtml( annotations={'var':ht.anno} )
-try:
-  import xlsxwriter
-  mt = makeTab()
-except:
-  print ('Could not make tables ...')
-mp = makePurl()
-mj = makeJs( dq )
+if __name__ == "__main__":
+  ht = htmlTrees(dq)
+  dq.makeHtml( annotations={'var':ht.anno} )
+  try:
+    import xlsxwriter
+    mt = makeTab()
+  except:
+    print ('Could not make tables ...')
+    raise
+  mp = makePurl()
+  mj = makeJs( dq )
