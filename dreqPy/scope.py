@@ -481,7 +481,7 @@ class dreqQuery(object):
       expts1 = []
       for i in expts:
         if self.dq.inx.uid[i]._h.label == 'experiment':
-          if self.dq.inx.uid[i].tier <= self.tierMax:
+          if self.dq.inx.uid[i].tier[0] <= self.tierMax:
             expts1.append( i )
         elif self.dq.inx.uid[i]._h.label == 'exptgroup':
           if self.dq.inx.uid[i].tierMin <= self.tierMax:
@@ -524,7 +524,7 @@ class dreqQuery(object):
       return (None, None, None)
 
     if self.tierMax > 0:
-      expts = [i for i in expts if self.dq.inx.uid[i].tier <= self.tierMax]
+      expts = [i for i in expts if self.dq.inx.uid[i].tier[0] <= self.tierMax]
 
     if len(expts) > 0:
       e = [self.dq.inx.uid[i] for i in expts]
