@@ -8,7 +8,10 @@
 <xs:simpleType name="st__attLabel_und"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9_])+"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="st__attLabel_int"><xs:restriction base="xs:integer"/></xs:simpleType>
 <xs:simpleType name="st__attLabel_an"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9])+"/></xs:restriction></xs:simpleType>
-<xs:simpleType name="st__floatList"><xs:restriction base="aa:base__floatList"><xs:minLength value="0"/></xs:restriction></xs:simpleType><xs:simpleType name="base__floatList"><xs:list itemType="xs:float"/></xs:simpleType><xs:complexType name="ct__info" mixed="true"><xs:attribute name="srcType" type="xs:string"/><xs:attribute name="srcRef" type="xs:string"/></xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:simpleType name="st__integerList"><xs:restriction base="aa:base__integerList"><xs:minLength value="0"/></xs:restriction></xs:simpleType><xs:simpleType name="base__integerList"><xs:list itemType="xs:integer"/></xs:simpleType>
+<xs:simpleType name="st__integerListMonInc"><xs:restriction base="aa:st__integerList"/></xs:simpleType>
+<xs:simpleType name="st__floatList"><xs:restriction base="aa:base__floatList"><xs:minLength value="0"/></xs:restriction></xs:simpleType><xs:simpleType name="base__floatList"><xs:list itemType="xs:float"/></xs:simpleType>
+<xs:complexType name="ct__info" mixed="true"><xs:attribute name="srcType" type="xs:string"/><xs:attribute name="srcRef" type="xs:string"/></xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">requestVarGroup: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__requestVarGroup">
@@ -26,8 +29,8 @@
    xs:stringRecord Titleuid;
    xs:stringmip;
    xs:stringEndorsed MIP defining the variable groupref;
-   xs:stringrefNote;
-   xs:string</xs:documentation></xs:annotation>
+   xs:stringReferencerefNote;
+   xs:stringReference Note</xs:documentation></xs:annotation>
 <xs:complexType name="ct__requestVarGroup_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -53,17 +56,19 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
    xs:stringmip;
-   xs:stringtab;
-   xs:stringexpt;
-   xs:stringrlid;
+   xs:stringThe MIP making the request. tab;
+   xs:stringRedundant?expt;
+   xs:stringName of experiment or group of experimentsrlid;
    xs:stringIdentifier of corresponding requestLinkesid;
    xs:stringIdentifier experiment(s): a link to an experiment, an experiment group or a MIPesidComment;
-   xs:stringpreset;
-   xs:integerOption to override priority set in each variable groupny;
-   xs:integernexmax;
-   xs:integernenmax;
-   xs:integernymax;
-   xs:float</xs:documentation></xs:annotation>
+   xs:stringComment on experiment(s) linked to.preset;
+   xs:integerOption to override priority set in each variable grouptreset;
+   xs:integerOption to override tier set for experiment(s)ny;
+   xs:integerDefault number of years.nexmax;
+   xs:integerMaximum number of experiments requested.nenmax;
+   xs:integerNumber of ensemble members requested.nymax;
+   xs:floatNumber of years requested.tslice;
+   xs:stringSelection of years from experiment</xs:documentation></xs:annotation>
 <xs:complexType name="ct__requestItem_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -75,10 +80,12 @@
 <xs:attribute name="esid" type="xs:string"/>
 <xs:attribute name="esidComment" type="xs:string"/>
 <xs:attribute name="preset" type="xs:integer"/>
+<xs:attribute name="treset" type="xs:integer"/>
 <xs:attribute name="ny" type="xs:integer"/>
 <xs:attribute name="nexmax" type="xs:integer"/>
 <xs:attribute name="nenmax" type="xs:integer"/>
 <xs:attribute name="nymax" type="xs:float"/>
+<xs:attribute name="tslice" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">exptgroup: Complex Type declaration
@@ -126,10 +133,10 @@
    xs:stringLong namestid;
    xs:stringLink to a record specifying the structure of the variable (dimensions and associated variable attributes).vid;
    xs:stringMIP Variablevalid_min;
-   xs:stringMinimum expected value for this variable.valid_max;
-   xs:stringMaximum expected value for this variable.ok_min_mean_abs;
-   xs:stringMinimum expected value of the mean absolute value at each point in timeok_max_mean_abs;
-   xs:stringMaximum expected value of the mean absolute value at each point in timedeflate;
+   xs:floatMinimum expected value for this variable.valid_max;
+   xs:floatMaximum expected value for this variable.ok_min_mean_abs;
+   xs:floatMinimum expected value of the mean absolute value at each point in timeok_max_mean_abs;
+   xs:floatMaximum expected value of the mean absolute value at each point in timedeflate;
    xs:stringDeflate: NetCDF compression parameterdeflate_level;
    xs:stringDeflate Level: NetCDF compression parametershuffle;
    xs:stringShuffle: NetCDF compression parameterdefaultPriority;
@@ -150,10 +157,10 @@
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
 <xs:attribute name="stid" type="xs:string"/>
 <xs:attribute name="vid" type="xs:string"/>
-<xs:attribute name="valid_min" type="xs:string"/>
-<xs:attribute name="valid_max" type="xs:string"/>
-<xs:attribute name="ok_min_mean_abs" type="xs:string"/>
-<xs:attribute name="ok_max_mean_abs" type="xs:string"/>
+<xs:attribute name="valid_min" type="xs:float"/>
+<xs:attribute name="valid_max" type="xs:float"/>
+<xs:attribute name="ok_min_mean_abs" type="xs:float"/>
+<xs:attribute name="ok_max_mean_abs" type="xs:float"/>
 <xs:attribute name="deflate" type="xs:string"/>
 <xs:attribute name="deflate_level" type="xs:string"/>
 <xs:attribute name="shuffle" type="xs:string"/>
@@ -443,12 +450,12 @@
    xs:stringIdentifier for experiment groupmip;
    xs:stringMIP defining experimentmcfg;
    xs:stringModel categorytier;
-   xs:integerTier of experimentnstart;
+   aa:st__integerListMonIncTier of experimentnstart;
    xs:integerNumber of start datesstarty;
    xs:stringendy;
    xs:stringyps;
    xs:integerYears per simulationensz;
-   xs:integerEnsemble sizentot;
+   aa:st__integerListMonIncEnsemble sizentot;
    xs:integerTotal number of yearscomment;
    xs:stringComment</xs:documentation></xs:annotation>
 <xs:complexType name="ct__experiment_vocabItem">
@@ -459,12 +466,12 @@
 <xs:attribute name="egid" type="xs:string"/>
 <xs:attribute name="mip" type="xs:string"/>
 <xs:attribute name="mcfg" type="xs:string"/>
-<xs:attribute name="tier" type="xs:integer"/>
+<xs:attribute name="tier" type="aa:st__integerListMonInc"/>
 <xs:attribute name="nstart" type="xs:integer"/>
 <xs:attribute name="starty" type="xs:string"/>
 <xs:attribute name="endy" type="xs:string"/>
 <xs:attribute name="yps" type="xs:integer"/>
-<xs:attribute name="ensz" type="xs:integer"/>
+<xs:attribute name="ensz" type="aa:st__integerListMonInc"/>
 <xs:attribute name="ntot" type="xs:integer"/>
 <xs:attribute name="comment" type="xs:string"/>
 

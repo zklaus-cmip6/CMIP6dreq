@@ -88,13 +88,12 @@ class makePurl(object):
     oo.close()
       
 class makeTab(object):
-  def __init__(self, subset=None, dest='tables/test.xlsx'):
+  def __init__(self, subset=None, dest='tables/test.xlsx', skipped=set()):
     if subset != None:
       cmv = [x for x in dq.coll['CMORvar'].items if x.uid in subset]
     else:
       cmv = dq.coll['CMORvar'].items
     tables = sorted( list( set( [i.mipTable for i in cmv] ) ), cmp=cmpAnnex )
-    print tables
 
     addMips = True
     if addMips:
@@ -148,7 +147,7 @@ class makeTab(object):
           if hcmt[i] != '':
             sht.write_comment( j,i,hcmt[i])
       thiscmv =  sorted( [v for v in cmv if v.mipTable == t], cmp=cmpdn(['prov','rowIndex','label']).cmp )
-      print 'INFO.001: Table %s, rows: %s' % (t,len(thiscmv) )
+      ##print 'INFO.001: Table %s, rows: %s' % (t,len(thiscmv) )
       
       for v in thiscmv:
           cv = dq.inx.uid[ v.vid ]
@@ -163,7 +162,9 @@ class makeTab(object):
           #[u'shuffle', u'ok_max_mean_abs', u'vid', '_contentInitialised', u'valid_min', u'frequency', u'uid', u'title', u'rowIndex', u'positive', u'stid', u'mipTable', u'label', u'type', u'description', u'deflate_level', u'deflate', u'provNote', u'ok_min_mean_abs', u'modeling_realm', u'prov', u'valid_max']
 
           if not ok:
-            print 'skipping %s %s' % (t,v.label)
+            if (t,v.label) not in skipped:
+              print 'makeTables: skipping %s %s' % (t,v.label)
+              skipped.add( (t,v.label) )
           else:
             dims = []
             dims += string.split( sshp.dimensions, '|' )

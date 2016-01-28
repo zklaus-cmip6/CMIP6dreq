@@ -1,3 +1,6 @@
 
-from packageConfig import *
+try:
+  from packageConfig import *
+except:
+  from dreqPy.packageConfig import *
 

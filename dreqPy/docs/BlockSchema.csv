@@ -15,3 +15,4 @@ level	__core__:level	Level	Level	__core__	xs:integer		rdf:property
 maxOccurs	__core__:maxOccurs	Maximum number of permissible occurrences of this section	Maximum number of permissible occurrences of this section	__core__	xs:string		rdf:property	Used in defining sections. In the CMIP6 Data Request each section only occurs once.
 labUnique	__core__:labUnique	Set true if label of each record is unique within section	Set true if label of each record is unique within section	__core__	xs:boolean		rdf:property	Used in defining sections.
 usage	__core__:usage	Usage notes	Notes on the usage of the predicate/concept defined by this node	__core__	xs:string		rdf:property	
+required	__core__:required	Required flag	Flag indicating whether an attribute is required	__core__	xs:boolean		rdf:property	

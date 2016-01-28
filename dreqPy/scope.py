@@ -2,8 +2,13 @@
 ---------------------------
 The scope.py module contains the dreqQuery class and a set of ancilliary functions. The dreqQuery class contains methods for analysing the data request.
 """
-import dreq
-from utilities import cmvFilter 
+try:
+  import dreq
+  from utilities import cmvFilter 
+except:
+  import dreqPy.dreq
+  from dreqPy.utilities import cmvFilter 
+
 import collections, string, operator
 import sys
 
@@ -11,7 +16,10 @@ python2 = True
 if sys.version_info[0] == 3:
   python2 = False
   from functools import reduce
-  from utilP3 import mlog3
+  try: 
+    from utilP3 import mlog3
+  except:
+    from dreqPy.utilP3 import mlog3
   mlg = mlog3()
 else:
   from utilP2 import mlog
@@ -43,6 +51,16 @@ def filter1( a, b ):
     return a
   else:
     return min( [a,b] )
+
+def filter2( a, b, tt, tm ):
+## largest tier less than or equal to tm
+  t1 = [t for t in tt if t <= tm][-1]
+  it1 = tt.index(t1)
+  aa = a[it1]
+  if b < 0:
+    return aa
+  else:
+    return min( [aa,b] )
 
 npy = {'daily':365, u'Annual':1, u'fx':0.01, u'1hr':24*365, u'3hr':8*365, u'monClim':12, u'Timestep':100, u'6hr':4*365, u'day':365, u'1day':365, u'mon':12, u'yr':1, u'1mon':12, 'month':12, 'year':1, 'monthly':12, 'hr':24*365, 'other':24*365, 'subhr':24*365, 'Day':365, '6h':4*365,
 '3 hourly':8*365, '':1 }
@@ -274,7 +292,7 @@ class dreqQuery(object):
 
       return thisvars
 
-  def volByExpt( self, l1, ex, pmax=1, cc=None, retainRedundantRank=False, intersection=False,expFullEx=False ):
+  def volByExpt( self, l1, ex, pmax=1, cc=None, retainRedundantRank=False, intersection=False,expFullEx=False, adsCount=False ):
     """volByExpt: calculates the total data volume associated with an experiment/experiment group and a list of request items.
           The calculation has some approximations concerning the number of years in each experiment group.
           cc: an optional collector, to accumulate indexed volumes. """
@@ -316,6 +334,10 @@ class dreqQuery(object):
       for u in rql0:
          if inx.uid[u]._h.label != 'remarks':
            rql.add( u ) 
+    else:
+      exi = self.dq.inx.uid[ex]
+      if exi._h.label == 'experiment':
+        exset = set( [ex,exi.egid,exi.mip] )
 
 #####
     if len( rql ) == 0:
@@ -384,13 +406,6 @@ class dreqQuery(object):
                vars.add(inx.uid[l].vid)
         ##col1 = reduce( operator.or_, [set( inx.iref_by_sect[vg].a['requestVar'] ) for vg in rqvg ] )
 
-###The collector col1 here accumulates all the record uids, resulting in a single collection. These are request variables, to get a set of CMOR variables at priority <= pmax:
-        ##vars = set()
-        ##for l in list(col1):
-           ##if inx.uid[l].priority <= pmax:
-             ##vars.add(inx.uid[l].vid)
-##
-
 ### filter out cases where the request does not point to a CMOR variable.
     ##vars = {vid for vid in vars if inx.uid[vid][0] == u'CMORvar'}
       thisvars = set()
@@ -423,16 +438,43 @@ class dreqQuery(object):
 ## for each request item we have nymax, nenmax, nexmax.
 ##
     nym = {}
+
+##
+## if dataset count rather than volume is wanted, use item 3 from rqiExp tuple.
+    if adsCount:
+      irqi = 3
+    else:
+      irqi = 2
+
     for v in vars:
       s = set()
+      cc2 = collections.defaultdict( set )
       for i in l1p:
+##################
         if i.esid in exset and v in e[i.rlid]:
-          s.add( self.rqiExp[i.uid][2] )
+          ix = inx.uid[i.esid]
+          if exi._h.label == 'experiment':
+            if ex in self.rqiExp[i.uid][1]:
+              this = self.rqiExp[i.uid][1][ex]
+              cc2[i.esid].add( this[-1]*this[-2] )
+          elif ix._h.label == 'experiment':
+            cc2[i.esid].add( self.rqiExp[i.uid][irqi] )
+          else:
+            if 'experiment' in inx.iref_by_sect[i.esid].a:
+              for u in inx.iref_by_sect[i.esid].a['experiment']:
+                if u in self.rqiExp[i.uid][1]:
+                  this = self.rqiExp[i.uid][1][u]
+                  cc2[u].add( this[-1]*this[-2] )
+                ###cc2[u].add( self.rqiExp[i.uid][irqi] )
+            ##else:
+              ##print 'WARNING .... empty experiment set'
+          s.add( self.rqiExp[i.uid][irqi] )
       ##nym[v] = max( {self.rqiExp[i.uid][2] for i in l1p if i.esid == ex and v in e[i.rlid]} )
       if len(s) == 0:
-        nym[v] == 0
+        nym[v] = 0
       else:
-        nym[v] = max( s )
+        ##print 'debug2:: ',v,cc2
+        nym[v] = sum( [max( cc2[k] ) for k in cc2] )
 
     szv = {}
     ov = []
@@ -442,7 +484,12 @@ class dreqQuery(object):
     ee = self.listIndexDual( ov, 'mipTable', 'label', acount=None, alist=None, cdict=szv, cc=cc )
     ff = {}
     for v in vars:
-      ff[v] = self.sz[ inx.uid[v].stid ] * npy[inx.uid[v].frequency] * nym[v]
+      if adsCount:
+        ff[v] = 1
+      else:
+        ff[v] = self.sz[ inx.uid[v].stid ] * npy[inx.uid[v].frequency]
+        if inx.uid[v].frequency != 'monClim':
+          ff[v] = ff[v]*nym[v]
     self.ngptot = sum( [  ff[v]  for v in vars] )
     return (self.ngptot, ee, ff )
 
@@ -481,7 +528,7 @@ class dreqQuery(object):
       expts1 = []
       for i in expts:
         if self.dq.inx.uid[i]._h.label == 'experiment':
-          if self.dq.inx.uid[i].tier <= self.tierMax:
+          if self.dq.inx.uid[i].tier[0] <= self.tierMax:
             expts1.append( i )
         elif self.dq.inx.uid[i]._h.label == 'exptgroup':
           if self.dq.inx.uid[i].tierMin <= self.tierMax:
@@ -503,9 +550,9 @@ class dreqQuery(object):
   def requestItemExpAll( self ):
     self.rqiExp = {}
     for rqi in self.dq.coll['requestItem'].items:
-      a,b,c = self.requestItemExp( rqi )
+      a,b,c,d = self.requestItemExp( rqi )
       if a != None:
-        self.rqiExp[rqi.uid] = (a,b,c)
+        self.rqiExp[rqi.uid] = (a,b,c,d)
 
   def requestItemExp( self, rqi ):
     assert rqi._h.label == "requestItem", 'Argument to requestItemExp must be a requestItem'
@@ -521,24 +568,35 @@ class dreqQuery(object):
       # print ( 'WARNING: request link not associated with valid experiment group'  )
       ##rqi.__info__()
       ##raise
-      return (None, None, None)
+      return (None, None, None, None)
 
     if self.tierMax > 0:
-      expts = [i for i in expts if self.dq.inx.uid[i].tier <= self.tierMax]
+      expts = [i for i in expts if self.dq.inx.uid[i].tier[0] <= self.tierMax]
+
+    self.multiTierOnly = False
+    if self.multiTierOnly:
+      expts = [i for i in expts if len(self.dq.inx.uid[i].tier) > 1]
+      print ('Len expts: %s' % len(expts) )
 
     if len(expts) > 0:
       e = [self.dq.inx.uid[i] for i in expts]
       for i in e:
         if i._h.label != 'experiment':
           mlg.prnt ( 'ERROR: %s, %s, %s ' % ( u,i._h.label, i.label, i.title ) )
-      dat = [ (i.ntot, i.yps, i.ensz, i.nstart, filter1(i.yps,rqi.nymax), filter1(i.ensz,rqi.nenmax) ) for i in e]
-      nytot = sum( [x[-2]*x[-1] for x in dat ] )
+      ##dat = [ (i.ntot, i.yps, i.ensz, i.tier, i.nstart, filter1(i.yps,rqi.nymax), filter2(i.ensz,rqi.nenmax,i.tier,self.tierMax) ) for i in e]
+      dat2 = {}
+      for i in e:
+        dat2[i.uid] = (i.ntot, i.yps, i.ensz, i.tier, i.nstart, filter1(i.yps,rqi.nymax), filter2(i.ensz,rqi.nenmax,i.tier,self.tierMax) )
+      ### number of 
+      nytot = sum( [dat2[x][-2]*dat2[x][-3] for x in dat2 ] )
+      netot = sum( [dat2[x][-1] for x in dat2 ] )
+      ##print 'debug1:: ',dat, nytot, netot
     else:
-      dat = [ (0,0,0,0,0) ]
+      dat2 = {}
       nytot = 0
+      netot = 0
     
-    return (expts, dat, nytot )
-    
+    return (expts, dat2, nytot, netot )
 
   def setTierMax( self, tierMax ):
     """Set the maxium tier and recompute request sizes"""
@@ -568,15 +626,16 @@ class dreqQuery(object):
       raise baseException( 'rqiByMip: "mip" (1st explicit argument) should be type string or set: %s -- %s' % (mip, type(mip))   )
     return l1
       
-  def volByMip( self, mip, pmax=2, retainRedundantRank=False, intersection=False):
+  def volByMip( self, mip, pmax=2, retainRedundantRank=False, intersection=False, adsCount=False, exptid=None):
 
     l1 = self.rqiByMip( mip )
       
     #### The set of experiments/experiment groups:
-    exps = set()
-    for i in l1:
-      exps.add( i.esid )
-    exps = self.mips
+    if exptid == None:
+      exps = self.mips
+    else:
+      exps = set( [exptid,] )
+      ##print exptid, exps
     self.volByE = {}
     vtot = 0
     cc = collections.defaultdict( col_count )
@@ -584,7 +643,7 @@ class dreqQuery(object):
     for e in exps:
       expts = self.esid_to_exptList(e,deref=True,full=False)
       if expts != None:
-        self.volByE[e] = self.volByExpt( l1, e, pmax=pmax, cc=cc, retainRedundantRank=retainRedundantRank, intersection=intersection )
+        self.volByE[e] = self.volByExpt( l1, e, pmax=pmax, cc=cc, retainRedundantRank=retainRedundantRank, intersection=intersection, adsCount=adsCount )
         vtot += self.volByE[e][0]
         self.allVars = self.allVars.union( self.vars )
     self.indexedVol = cc
@@ -640,6 +699,7 @@ class dreqUI(object):
       --unitTest : run some simple tests;
       -m <mip>:  MIP of list of MIPs (comma separated);
       -h :       help: print help text;
+      -e <expt>: experiment;
       -t <tier> maxmum tier;
       -p <priority>  maximum priority;
       --printLinesMax <n>: Maximum number of lines to be printed
@@ -648,7 +708,7 @@ class dreqUI(object):
 """
   def __init__(self,args):
     self.adict = {}
-    self.knownargs = {'-m':('m',True), '-p':('p',True), '-t':('t',True), '-h':('h',False), '--printLinesMax':('plm',True), '--printVars':('vars',False), '--intersection':('intersection',False)} 
+    self.knownargs = {'-m':('m',True), '-p':('p',True), '-e':('e',True), '-t':('t',True), '-h':('h',False), '--printLinesMax':('plm',True), '--printVars':('vars',False), '--intersection':('intersection',False),'--count':('count',False)} 
     aa = args[:]
     while len(aa) > 0:
       a = aa.pop(0)
@@ -690,14 +750,24 @@ class dreqUI(object):
     for i in self.adict['m']:
         if i not in sc.mips:
           ok = False
-          mlg.prnt ( 'NOT FOUND: ',i )
-    assert ok,'Available MIPs: %s' % str(sc.mips)
+          mlg.prnt ( 'NOT FOUND: %s' % i )
 
-    tierMax = self.adict.get( 't', 2 )
+    eid = None
+    if self.adict.has_key('e'):
+      for i in self.dq.coll['experiment'].items:
+        if i.label == self.adict['e']:
+          eid = i.uid
+      assert eid != None, 'Experiment %s not found' % self.adict['e']
+    print ( 'eid=%s' % eid )
+    assert ok,'Available MIPs: %s' % str(sc.mips)
+    adsCount = self.adict.get( 'count', False )
+
+    tierMax = self.adict.get( 't', 1 )
     sc.setTierMax(  tierMax )
-    pmax = self.adict.get( 'p', 2 )
-    v0 = sc.volByMip( self.adict['m'], pmax=pmax, intersection=self.intersection )
-    mlg.prnt ( '%7.2fTb' % (v0*2.*1.e-12) )
+    pmax = self.adict.get( 'p', 1 )
+    v0 = sc.volByMip( self.adict['m'], pmax=pmax, intersection=self.intersection, adsCount=adsCount, exptid=eid )
+    #mlg.prnt ( '%7.2fTb' % (v0*2.*1.e-12) )
+    mlg.prnt ( '%s' % v0 )
     cc = collections.defaultdict( int )
     for e in sc.volByE:
       for v in sc.volByE[e][2]:
