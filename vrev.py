@@ -111,7 +111,8 @@ Class to analyse the usage of variables in the data request.
       mips = set()
       for e in esids:
         if e == '':
-          print 'WARNING: empty esid encountered'
+          ##print 'WARNING: empty esid encountered'
+          pass
         else:
           r = dq.inx.uid[e]
           if r._h.label == 'mip':
@@ -120,7 +121,8 @@ Class to analyse the usage of variables in the data request.
             if r._h.label == 'exptgroup':
               r = dq.inx.uid[  dq.inx.iref_by_sect[e].a['experiment'][0] ]
             if r._h.label == 'remarks':
-              print 'WARNING: link to remarks encountered'
+              ##print 'WARNING: link to remarks encountered'
+              pass
             else:
               assert r._h.label == 'experiment', 'LOGIC ERROR ... should have an experiment record here: %s' % r._h.label
               mips.add(r.mip)

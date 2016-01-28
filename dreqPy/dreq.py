@@ -7,7 +7,10 @@ import xml, string, collections
 import xml.dom
 import xml.dom.minidom
 import re, shelve
-from __init__ import DOC_DIR
+try:
+  from __init__ import DOC_DIR
+except:
+  from dreqPy.__init__ import DOC_DIR
 
 jsh='''<link type="text/css" href="/css/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />
  <script src="/js/2013/jquery.min.js" type="text/javascript"></script>
@@ -64,6 +67,7 @@ class dreqItemBase(object):
        _linkAttrStyle = {}
 
        def __init__(self,idict=None,xmlMiniDom=None,id='defaultId',etree=False):
+         self._strictRead = True
          dictMode = idict != None
          mdMode = xmlMiniDom != None
          self._htmlTtl = None
@@ -219,11 +223,18 @@ class dreqItemBase(object):
        def dictInit( self, idict ):
          __doc__ = """Initialise from a dictionary."""
          for a in self._a.keys():
+           vv = False
            if a in idict:
              val = idict[a]
+             vv = True
            else:
-             val = self._d.defaults.get( a, self._d.glob )
-           setattr( self, a, val )
+             if type( self.__class__.__dict__[a] ) not in (type( ''), type( u'' )) and (not self.__class__.__dict__[a].required):
+               delattr( self, a )
+             else:
+               val = self._d.defaults.get( a, self._d.glob )
+               vv = True
+           if vv:
+             setattr( self, a, val )
          self._contentInitialised = True
 
        def mdInit( self, el, etree=False ):
@@ -237,18 +248,27 @@ class dreqItemBase(object):
              if a in ks:
                aa = '%s%s' % (self.ns,a)
                tvtl.append( (a,True, str( el.get( a ) ) ) )
+             elif self._a[a].__dict__.get( 'required', True ) in [False,'false',u'false']:
+               tvtl.append( (a,True,None) )
              else:
                tvtl.append( (a,False,None) )
          else:
            for a in self._a.keys():
              if el.hasAttribute( a ):
                tvtl.append( (a,True, str( el.getAttribute( a ) ) ) )
-             else:
+##
+## attributes are treated as required unless they have a required attribute set to false
+##
+             elif self._a[a].__dict__.get( 'required', True ) not in [False,'false',u'false']:
                tvtl.append( (a,False,None) )
        
          for a,tv,v in tvtl:
            if tv:
-             if self._a[a].type == u'xs:float':
+             erase = False
+             if v == None:
+               pass
+               erase = True
+             elif self._a[a].type == u'xs:float':
                if v == '':
                  v = None
                else:
@@ -257,6 +277,15 @@ class dreqItemBase(object):
                  except:
                    print ( 'Failed to convert real number: %s,%s,%s' % (a,tv,v) )
                    raise
+             elif self._a[a].type in [u'aa:st__floatList', u'aa:st__floatListMonInc']:
+                 v = [float(x) for x in v.split()]
+             elif self._a[a].type in [u'aa:st__integerList', u'aa:st__integerListMonInc']:
+                 ##print a,self._a[a].type,str(v)
+                 v = [int(x) for x in v.split()]
+                 if self._a[a].type in [u'aa:st__integerListMonInc'] and self._strictRead:
+                   ##print a,self._a[a].type,str(v)
+                   for i in range(len(v)-1):
+                     assert v[i] < v[i+1], 'Attribute %s of type %s with non-monotonic value: %s' % (a,self._a[a].type,str(v))
              elif self._a[a].type == u'xs:integer':
                if self._rc.isIntStr( v ):
                  v = int(v)
@@ -277,7 +306,16 @@ class dreqItemBase(object):
                      deferredHandling=True
              elif self._a[a].type == u'xs:boolean':
                v = v in ['true','1']
-             self.__dict__[a] = v
+             elif self._a[a].type not in [u'xs:string']:
+               print ('ERROR: Type %s not recognised' % self._a[a].type )
+
+             if erase:
+               ### need to overwrite attribute (which is inherited from parent class) before deleting it.
+               ### this may not be needed in python3
+               self.__dict__[a] = '__tmp__'
+               delattr( self, a )
+             else:
+               self.__dict__[a] = v
            else:
              if a in ['uid',]:
                thissect = '%s [%s]' % (self._h.title,self._h.tag)
@@ -307,7 +345,7 @@ class config(object):
     self.vsamp = thisdoc
 
     self.nts = collections.namedtuple( 'sectdef', ['tag','label','title','id','itemLabelMode','level','maxOccurs','labUnique','uid'] )
-    self.nti = collections.namedtuple( 'itemdef', ['tag','label','title','type','useClass','techNote'] )
+    self.nti = collections.namedtuple( 'itemdef', ['tag','label','title','type','useClass','techNote','required'] )
     self.ntt = collections.namedtuple( 'sectinit', ['header','attributes','defaults'] )
     self.nt__default = collections.namedtuple( 'deflt', ['defaults','glob'] )
     self.ntf = collections.namedtuple( 'sect', ['header','attDefn','items'] )
@@ -500,14 +538,14 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
       if v in [ None,'__main__']:
         idict = {'description':'An extended description of the object', 'title':'Record Description', \
          'techNote':'', 'useClass':'__core__', 'superclass':'rdf:property',\
-         'type':'xs:string', 'uid':'__core__:description', 'label':'label' }
+         'type':'xs:string', 'uid':'__core__:description', 'label':'label', 'required':'required' }
         if v == None:
           vtt = self.nts( '__core__', 'CoreAttributes', 'X.1 Core Attributes', '00000000', 'def', '0', '0', 'false', '__core__' )
         else:
           vtt = self.nts( '__main__', 'DataRequestAttributes', 'X.2 Data Request Attributes', '00000001', 'def', '0', '0', 'false', '__main__' )
       elif v == '__sect__':
         idict = {'title':'Record Description', \
-         'uid':'__core__:description', 'label':'label', 'useClass':'text', 'id':'id', 'maxOccurs':'', 'itemLabelMode':'', 'level':'', 'labUnique':'' }
+         'uid':'__core__:description', 'label':'label', 'useClass':'text', 'id':'id', 'maxOccurs':'', 'itemLabelMode':'', 'level':'', 'labUnique':'', 'required':'' }
         vtt = self.nts( '__sect__', 'sectionAttributes', 'X.3 Section Attributes', '00000000', 'def', '0', '0', 'false', '__sect__' )
 ##<var label="var" uid="SECTION:var" useClass="vocab" title="MIP Variable" id="cmip.drv.001">
       else:
@@ -532,20 +570,25 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
       defs = {'type':"xs:string"}
       ll = []
       ee = {}
-      for k in ['label','title','type','useClass','techNote','description','uid']:
+      for k in ['label','title','type','useClass','techNote','description','uid','required']:
         if i.hasAttribute( k ):
           ll.append( i.getAttribute( k ) )
         else:
           ll.append( defs.get( k, None ) )
         ee[k] = ll[-1]
-      l, t, ty, cls, tn, desc, uid = ll
+      l, t, ty, cls, tn, desc, uid, rq = ll
       self.lastTitle = t
+      if rq in ['0', 'false']:
+        rq = False
+      else:
+        rq = True
+      ee['required'] = rq
 
       returnClass = True
       if returnClass:
         return self._tableClass0( idict=ee )
       else:
-        return self.nti( i.nodeName, l,t,ty,cls,tn )
+        return self.nti( i.nodeName, l,t,ty,cls,tn,rq )
 
 class container(object):
   """Simple container class, to hold a set of dictionaries of lists."""
@@ -714,7 +757,8 @@ class loadDreq(object):
 
 
   def _sectionSortHelper(self,title):
-    ab = string.split( string.split(title)[0], '.' )
+    ##ab = string.split( string.split(title)[0], '.' )
+    ab = title.split( '.' )[0].split()
     if len( ab ) == 2:
       a,b = ab
     ##sorter =  lambda x: [int(y) for y in string.split( string.split(x,':')[0], '.' )]
