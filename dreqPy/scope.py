@@ -788,4 +788,5 @@ class dreqUI(object):
         mx = len(vl)
 
       for v in vl[:mx]:
-        mlg.prnt ( self.dq.inx.uid[v].label, '%7.2fTb' % (cc[v]*2.*1.e-12) )
+        mlg.prnt ( '%s: %7.2fTb' % (self.dq.inx.uid[v].label, cc[v]*2.*1.e-12) )
+

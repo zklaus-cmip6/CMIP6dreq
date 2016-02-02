@@ -1,5 +1,5 @@
 from __init__ import DOC_DIR
-import string, os
+import string, os, sys
 
 try:
   import pkgutil
@@ -43,6 +43,7 @@ class checkbase(object):
   def __init__(self,lab):
     self.lab = lab
     self.ok = True
+    self.entryPoint = sys.argv[0].split( '/' )[-1]
 
 #document directory
     self.docdir = DOC_DIR
@@ -93,7 +94,13 @@ class check2(checkbase):
 
   def _ch04_checkCmd(self):
     import os
-    os.popen( 'python dreqCmdl.py -v  2> .simpleCheck_check2_err.txt 1>.simpleCheck_check2.txt' ).readlines()
+    if self.entryPoint == 'drq':
+       cmd = 'drq'
+    else:
+       cmd = 'python dreqCmdl.py'
+
+    os.popen( '%s -v  2> .simpleCheck_check2_err.txt 1>.simpleCheck_check2.txt' % cmd ).readlines()
+
     ii = open( '.simpleCheck_check2_err.txt' ).readlines()
     if len(ii) > 0:
       print ( 'WARNING[003]: failed to get version with command line call' )

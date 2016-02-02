@@ -8,6 +8,7 @@
 <xs:simpleType name="st__attLabel_und"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9_])+"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="st__attLabel_int"><xs:restriction base="xs:integer"/></xs:simpleType>
 <xs:simpleType name="st__attLabel_an"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9])+"/></xs:restriction></xs:simpleType>
+<xs:simpleType name="st__stringList"><xs:restriction base="aa:base__stringList"><xs:minLength value="0"/></xs:restriction></xs:simpleType><xs:simpleType name="base__stringList"><xs:list itemType="xs:string"/></xs:simpleType>
 <xs:simpleType name="st__integerList"><xs:restriction base="aa:base__integerList"><xs:minLength value="0"/></xs:restriction></xs:simpleType><xs:simpleType name="base__integerList"><xs:list itemType="xs:integer"/></xs:simpleType>
 <xs:simpleType name="st__integerListMonInc"><xs:restriction base="aa:st__integerList"/></xs:simpleType>
 <xs:simpleType name="st__floatList"><xs:restriction base="aa:base__floatList"><xs:minLength value="0"/></xs:restriction></xs:simpleType><xs:simpleType name="base__floatList"><xs:list itemType="xs:float"/></xs:simpleType>
@@ -580,7 +581,7 @@
    xs:stringUnitsdescription;
    xs:stringtitle;
    xs:stringLong nameprocnote;
-   xs:stringProcessing notesprocComment;
+   aa:st__stringListProcessing notesprocComment;
    xs:stringProcessing commentsprov;
    xs:stringProvenanceuid;
    xs:stringRecord identifierprovmip;
@@ -591,7 +592,7 @@
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="sn" type="xs:string"/>
 <xs:attribute name="units" type="xs:string"/>
 <xs:attribute name="description" type="xs:string"/>
-<xs:attribute name="procnote" type="xs:string"/>
+<xs:attribute name="procnote" type="aa:st__stringList"/>
 <xs:attribute name="procComment" type="xs:string"/>
 <xs:attribute name="prov" type="xs:string"/>
 <xs:attribute name="uid" type="xs:string"/>
