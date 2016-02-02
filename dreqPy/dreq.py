@@ -306,6 +306,11 @@ class dreqItemBase(object):
                      deferredHandling=True
              elif self._a[a].type == u'xs:boolean':
                v = v in ['true','1']
+             elif self._a[a].type == u'aa:st__stringList':
+               if v.find(' ') != -1:
+                 v = v.split()
+               else:
+                 v = [v,]
              elif self._a[a].type not in [u'xs:string']:
                print ('ERROR: Type %s not recognised' % self._a[a].type )
 
@@ -758,7 +763,7 @@ class loadDreq(object):
 
   def _sectionSortHelper(self,title):
     ##ab = string.split( string.split(title)[0], '.' )
-    ab = title.split( '.' )[0].split()
+    ab = title.split(  )[0].split('.')
     if len( ab ) == 2:
       a,b = ab
     ##sorter =  lambda x: [int(y) for y in string.split( string.split(x,':')[0], '.' )]
@@ -790,6 +795,8 @@ page for each item and also generating index pages.
       oo.close()
 
     msg0 = ['<h1>%s</h1>' % ttl0, '<ul>',]
+    msg0.append( '<li><a href="tab01_1_1.html">Overview: priority 1 variables, tier 1 experiments</a></li>' )
+    msg0.append( '<li><a href="tab01_3_3.html">Overview: all variables and experiments</a></li>' )
     ks = sorted( self.coll.keys() )
     ee = {}
     for k in ks:
