@@ -78,9 +78,30 @@ class check1(checkbase):
 
   def _ch02_importSample(self):
     import dreq
-    rq = dreq.loadDreq( dreqXML=self.sampleXml,configdoc=self.defnXml )
+    self.dq = dreq.loadDreq( dreqXML=self.sampleXml,configdoc=self.defnXml )
     print ( 'Dreq sample load checked' )
     self.ok = True
+
+  def _ch03_linkCheck(self):
+    nn = 0
+    import dreq
+    self.dq = dreq.loadDreq(  )
+    for section in self.dq.coll :
+      ks=[k for k in self.dq.coll[section].attDefn.keys() if self.dq.coll[section].attDefn[k].useClass == 'internalLink']
+      nerr = 0
+      for i in self.dq.coll[section].items:
+        for k in ks :
+          if k in i.__dict__:
+            if i.__dict__[k] not in self.dq.inx.uid:
+              nerr += 1
+              ##print section, k, i.__dict__[k]
+      if nerr > 0:
+           print ( 'Section %s: bad links: %s' % (section,nerr) )
+           nn += nerr
+      ##print section, ks, nerr
+    if nn == 0:
+      print ( 'Dreq links checked' )
+    self.ok = nn == 0
 
 class check2(checkbase):
 

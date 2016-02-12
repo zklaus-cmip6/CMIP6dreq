@@ -10,6 +10,7 @@ except:
   from dreqPy.utilities import cmvFilter 
 
 import collections, string, operator
+import makeTables
 import sys
 
 python2 = True
@@ -24,6 +25,10 @@ if sys.version_info[0] == 3:
 else:
   from utilP2 import mlog
   mlg = mlog()
+
+class c1(object):
+  def __init__(self):
+    self.a = collections.defaultdict( int )
 
 class baseException(Exception):
   """Basic exception for general use in code."""
@@ -625,6 +630,22 @@ class dreqQuery(object):
     else:
       raise baseException( 'rqiByMip: "mip" (1st explicit argument) should be type string or set: %s -- %s' % (mip, type(mip))   )
     return l1
+
+  def xlsByMipExpt(self,m,ex,pmax,odir='xls'):
+
+    mips = ['AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
+    tabs = makeTables.tables( self, mips, odir=odir )
+    cc = collections.defaultdict( c1 )
+    mlab = tabs.setMlab( m )
+    cc[mlab].dd = {}
+    cc[mlab].ee = {}
+    if m == 'TOTAL':
+        l1 = self.rqiByMip( set( mips ) )
+    else:
+        l1 = self.rqiByMip( m )
+
+    ###print 'len l1:',len(l1)
+    tabs.doTable(m,l1,ex,pmax,cc, mlab=mlab)
       
   def volByMip( self, mip, pmax=2, retainRedundantRank=False, intersection=False, adsCount=False, exptid=None):
 
@@ -708,7 +729,12 @@ class dreqUI(object):
 """
   def __init__(self,args):
     self.adict = {}
-    self.knownargs = {'-m':('m',True), '-p':('p',True), '-e':('e',True), '-t':('t',True), '-h':('h',False), '--printLinesMax':('plm',True), '--printVars':('vars',False), '--intersection':('intersection',False),'--count':('count',False)} 
+    self.knownargs = {'-m':('m',True), '-p':('p',True), '-e':('e',True), '-t':('t',True), \
+                      '-h':('h',False), '--printLinesMax':('plm',True), \
+                      '--printVars':('vars',False), '--intersection':('intersection',False), \
+                      '--count':('count',False), \
+                      '--xlsDir':('xlsdir',True), '--xls':('xls',False) \
+                       } 
     aa = args[:]
     while len(aa) > 0:
       a = aa.pop(0)
@@ -744,34 +770,48 @@ class dreqUI(object):
     else:
       self.dq = None
 
-    sc = dreqQuery( dq=self.dq )
+    self.sc = dreqQuery( dq=self.dq )
 
     ok = True
     for i in self.adict['m']:
-        if i not in sc.mips:
+        if i not in self.sc.mips:
           ok = False
           mlg.prnt ( 'NOT FOUND: %s' % i )
 
     eid = None
+    ex = None
     if self.adict.has_key('e'):
+      ex = self.adict['e']
       for i in self.dq.coll['experiment'].items:
         if i.label == self.adict['e']:
           eid = i.uid
       assert eid != None, 'Experiment %s not found' % self.adict['e']
-    print ( 'eid=%s' % eid )
-    assert ok,'Available MIPs: %s' % str(sc.mips)
+    ##print ( 'eid=%s' % eid )
+    assert ok,'Available MIPs: %s' % str(self.sc.mips)
     adsCount = self.adict.get( 'count', False )
 
     tierMax = self.adict.get( 't', 1 )
-    sc.setTierMax(  tierMax )
+    self.sc.setTierMax(  tierMax )
     pmax = self.adict.get( 'p', 1 )
-    v0 = sc.volByMip( self.adict['m'], pmax=pmax, intersection=self.intersection, adsCount=adsCount, exptid=eid )
+    self.getVolByMip(pmax,eid,adsCount)
+    makeXls = self.adict.get( 'xls', False )
+    if makeXls:
+      mips = self.adict['m']
+      odir = self.adict.get( 'xlsdir', 'xls' )
+      print 'odir:::::::::: ',odir
+      ##m = list( mips )[0]
+      self.sc.xlsByMipExpt(mips,eid,pmax,odir=odir)
+ 
+
+  def getVolByMip(self,pmax,eid,adsCount):
+
+    v0 = self.sc.volByMip( self.adict['m'], pmax=pmax, intersection=self.intersection, adsCount=adsCount, exptid=eid )
     #mlg.prnt ( '%7.2fTb' % (v0*2.*1.e-12) )
     mlg.prnt ( '%s' % v0 )
     cc = collections.defaultdict( int )
-    for e in sc.volByE:
-      for v in sc.volByE[e][2]:
-          cc[v] += sc.volByE[e][2][v]
+    for e in self.sc.volByE:
+      for v in self.sc.volByE[e][2]:
+          cc[v] += self.sc.volByE[e][2][v]
     x = 0
     for v in cc:
       x += cc[v]
