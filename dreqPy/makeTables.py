@@ -99,7 +99,7 @@ class makePurl(object):
       if c1.match( v.label ):
          oo.write( 'RewriteRule ^%s$ http://clipc-services.ceda.ac.uk/dreq/u/%s.html\n' % (v.label,v.uid) )
       else:
-         print 'Match failed: ', v.label
+         print ('Match failed: %s' % v.label )
     oo.close()
       
 class makeTab(object):
@@ -181,7 +181,7 @@ class makeTab(object):
           cv = dq.inx.uid[ v.vid ]
           strc = dq.inx.uid[ v.stid ]
           if strc._h.label == 'remarks':
-            print 'ERROR: structure not found for %s: %s .. %s (%s)' % (v.uid,v.label,v.title,v.mipTable)
+            print ( 'ERROR: structure not found for %s: %s .. %s (%s)' % (v.uid,v.label,v.title,v.mipTable) )
             ok = False
           else:
             sshp = dq.inx.uid[ strc.spid ]
@@ -191,7 +191,7 @@ class makeTab(object):
 
           if not ok:
             if (t,v.label) not in skipped:
-              print 'makeTables: skipping %s %s' % (t,v.label)
+              print ( 'makeTables: skipping %s %s' % (t,v.label) )
               skipped.add( (t,v.label) )
           else:
             dims = []
@@ -415,9 +415,9 @@ class tables(object):
             collector[kkc].a[i.mipTable] += xxx
         assert x[0] == xs, 'ERROR.0088: consistency problem %s  %s %s %s' % (m,m2,x[0],xs)
         if x[0] == 0:
-          print 'Zero size:',m,m2
+          print ( 'Zero size: %s, %s' % (m,m2) )
           if len( x[2].keys() ) > 0:
-             print 'ERROR:zero: ',m,m2,x[2].keys()
+             print ( 'ERROR:zero: %s, %s: %s' % (m,m2,str(x[2].keys()) ) )
 
         if acc:
           collector[mlab].a['TOTAL'] += x[0]

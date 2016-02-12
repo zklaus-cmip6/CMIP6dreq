@@ -723,6 +723,8 @@ class dreqUI(object):
       -e <expt>: experiment;
       -t <tier> maxmum tier;
       -p <priority>  maximum priority;
+      --xls : Create Excel file with requested variables;
+      --xlsDir <directory> : Directory in which to place variable listing [xls];
       --printLinesMax <n>: Maximum number of lines to be printed
       --printVars  : If present, a summary of the variables fitting the selection options will be printed
       --intersection : Analyse the intersection of requests rather than union.
@@ -798,7 +800,7 @@ class dreqUI(object):
     if makeXls:
       mips = self.adict['m']
       odir = self.adict.get( 'xlsdir', 'xls' )
-      print 'odir:::::::::: ',odir
+      ##print 'odir:::::::::: ',odir
       ##m = list( mips )[0]
       self.sc.xlsByMipExpt(mips,eid,pmax,odir=odir)
  

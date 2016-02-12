@@ -137,4 +137,4 @@ if __name__ == '__main__':
   dq = dreq.loadDreq()
   c = checkVar(dq)
   c.chk( 'tas' )
-  print c.inc, c.missing
+  print ( '%s, %s' % (c.inc, c.missing))
