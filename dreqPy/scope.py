@@ -29,6 +29,9 @@ else:
 class c1(object):
   def __init__(self):
     self.a = collections.defaultdict( int )
+class c1s(object):
+  def __init__(self):
+    self.a = collections.defaultdict( set )
 
 class baseException(Exception):
   """Basic exception for general use in code."""
@@ -103,6 +106,7 @@ class dreqQuery(object):
     self.tierMax = tierMax
 
     self.mips = set( [x.label for x in self.dq.coll['mip'].items ] )
+    self.experiments = set( [x.uid for x in self.dq.coll['experiment'].items ] )
     self.mipls = sorted( list( self.mips ) )
 
     self.default_mcfg = nt_mcfg._make( [259200,60,64800,40,20,5,100] )
@@ -113,8 +117,11 @@ class dreqQuery(object):
     self.requestItemExpAll(  )
 
   def szcfg(self):
+    szr = {'100km':64800, '1deg':64800, '2deg':16200 }
     self.szss = {}
     self.sz = {}
+    self.szg = collections.defaultdict( dict )
+    self.szgss = collections.defaultdict( dict )
     for i in self.dq.coll['spatialShape'].items:
       type = 'a'
       if i.levelFlag == False:
@@ -149,11 +156,15 @@ class dreqQuery(object):
         nh = 10
 
       self.szss[i.uid] = nh*nz
+      for k in szr:
+        self.szgss[k][i.uid] = szr[k]*nz
     for i in self.dq.coll['structure'].items:
-      s = self.szss[i.spid]
+      s = 1
       if i.odims != '':
         s = s*5
-      self.sz[i.uid] = s
+      self.sz[i.uid] = self.szss[i.spid]*s
+      for k in szr:
+        self.szg[k][i.uid] = self.szgss[k][i.spid]*s
 
   def getRequestLinkByMip( self, mipSel ):
     """Return the set of request links which are associated with specified MIP"""
@@ -309,6 +320,12 @@ class dreqQuery(object):
     ##imips = {i.mip for i in l1}
     
     rql, l1p, exset = self.rqlByExpt( l1, ex, pmax=pmax, expFullEx=expFullEx )
+    verbose = False
+    if verbose:
+      for i in rql:
+        r = inx.uid[i]
+        print r.label, r.title, r.uid
+
     dn = False
     if dn:
       exi = self.dq.inx.uid[ex]
@@ -434,15 +451,22 @@ class dreqQuery(object):
 ### for request variables which reference the variable group attached to the link, add the associate CMOR variables, subject to priority
       i = inx.uid[u]
       e[i.uid] = set()
+      si = collections.defaultdict( list )
       for x in inx.iref_by_sect[i.refid].a['requestVar']:
            if inx.uid[x].priority <= pmax:
               e[i.uid].add( inx.uid[x].vid )
+
+              if verbose:
+                cmv = inx.uid[inx.uid[x].vid]
+                if cmv._h.label == 'CMORvar':
+                  si[ cmv.mipTable ].append( inx.uid[x].label )
 #
 # for each variable, calculate the maximum number of years across all the request links which reference that variable.
 ##
 ## for each request item we have nymax, nenmax, nexmax.
 ##
     nym = {}
+    nymg = collections.defaultdict( dict )
 
 ##
 ## if dataset count rather than volume is wanted, use item 3 from rqiExp tuple.
@@ -451,35 +475,56 @@ class dreqQuery(object):
     else:
       irqi = 2
 
+    sgg = set()
     for v in vars:
       s = set()
+      sg = collections.defaultdict( set )
       cc2 = collections.defaultdict( set )
+      cc2s = collections.defaultdict( c1s )
       for i in l1p:
 ##################
         if i.esid in exset and v in e[i.rlid]:
           ix = inx.uid[i.esid]
+          rl = inx.uid[i.rlid]
+          sgg.add( rl.grid )
+          if rl.grid in ['100km','1deg','2deg']:
+            grd = rl.grid
+          else:
+            grd = 'native'
+
           if exi._h.label == 'experiment':
             if ex in self.rqiExp[i.uid][1]:
               this = self.rqiExp[i.uid][1][ex]
-              cc2[i.esid].add( this[-1]*this[-2] )
+              thisz = this[-1]*this[-2]
+            else:
+              thisz = None
           elif ix._h.label == 'experiment':
-            cc2[i.esid].add( self.rqiExp[i.uid][irqi] )
+            #cc2s[grd].a[i.esid].add( self.rqiExp[i.uid][irqi] )
+            thisz = self.rqiExp[i.uid][irqi]
           else:
+            thisz = None
             if 'experiment' in inx.iref_by_sect[i.esid].a:
               for u in inx.iref_by_sect[i.esid].a['experiment']:
                 if u in self.rqiExp[i.uid][1]:
                   this = self.rqiExp[i.uid][1][u]
-                  cc2[u].add( this[-1]*this[-2] )
-                ###cc2[u].add( self.rqiExp[i.uid][irqi] )
-            ##else:
-              ##print 'WARNING .... empty experiment set'
-          s.add( self.rqiExp[i.uid][irqi] )
-      ##nym[v] = max( {self.rqiExp[i.uid][2] for i in l1p if i.esid == ex and v in e[i.rlid]} )
+                  cc2s[grd].a[u].add( this[-1]*this[-2] )
+
+          if thisz != None:
+              cc2s[grd].a[i.esid].add( thisz )
+          ##if rl.grid in ['100km','1x1']:
+            ##sg[rl.grid].add( self.rqiExp[i.uid][irqi] )
+          ##else:
+          sg[grd].add( self.rqiExp[i.uid][irqi] )
+      
       if len(s) == 0:
         nym[v] = 0
       else:
-        ##print 'debug2:: ',v,cc2
+###
+### sum over experiments of maximum within eacj experiment
+###
         nym[v] = sum( [max( cc2[k] ) for k in cc2] )
+      for g in sg:
+        nymg[v][g] = sum( [max( cc2s[g].a[k] ) for k in cc2s[g].a] )
 
     szv = {}
     ov = []
@@ -487,14 +532,24 @@ class dreqQuery(object):
       szv[v] = self.sz[inx.uid[v].stid]*npy[inx.uid[v].frequency]
       ov.append( self.dq.inx.uid[v] )
     ee = self.listIndexDual( ov, 'mipTable', 'label', acount=None, alist=None, cdict=szv, cc=cc )
+
     ff = {}
     for v in vars:
       if adsCount:
         ff[v] = 1
       else:
-        ff[v] = self.sz[ inx.uid[v].stid ] * npy[inx.uid[v].frequency]
+        if 'native' in nymg[v]:
+          ff[v] = self.sz[ inx.uid[v].stid ] * npy[inx.uid[v].frequency]
+          ny = nymg[v]['native']
+        else:
+          if len( nymg[v] ) > 1:
+            print '########### Selecting first in list .............'
+          ks = nymg[v].keys()[0]
+          ny = nymg[v][ks]
+          ff[v] = self.szg[ks][ inx.uid[v].stid ] * npy[inx.uid[v].frequency]
+
         if inx.uid[v].frequency != 'monClim':
-          ff[v] = ff[v]*nym[v]
+          ff[v] = ff[v]*ny
     self.ngptot = sum( [  ff[v]  for v in vars] )
     return (self.ngptot, ee, ff )
 
@@ -653,7 +708,8 @@ class dreqQuery(object):
       
     #### The set of experiments/experiment groups:
     if exptid == None:
-      exps = self.mips
+      ##exps = self.mips
+      exps = self.experiments
     else:
       exps = set( [exptid,] )
       ##print exptid, exps
@@ -809,7 +865,7 @@ class dreqUI(object):
 
     v0 = self.sc.volByMip( self.adict['m'], pmax=pmax, intersection=self.intersection, adsCount=adsCount, exptid=eid )
     #mlg.prnt ( '%7.2fTb' % (v0*2.*1.e-12) )
-    mlg.prnt ( '%s' % v0 )
+    mlg.prnt ( '%s [%s]' % (v0,makeTables.vfmt(v0*2.)) )
     cc = collections.defaultdict( int )
     for e in self.sc.volByE:
       for v in self.sc.volByE[e][2]:
