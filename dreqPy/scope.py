@@ -107,6 +107,11 @@ class dreqQuery(object):
 
     self.mips = set( [x.label for x in self.dq.coll['mip'].items ] )
     self.experiments = set( [x.uid for x in self.dq.coll['experiment'].items ] )
+    self.exptByLabel = {}
+    for x in self.dq.coll['experiment'].items:
+      if x.label in self.exptByLabel:
+        print ( 'ERROR: experiment label duplicated: %s' % x.label )
+      self.exptByLabel[x.label] = x.uid
     self.mipls = sorted( list( self.mips ) )
 
     self.default_mcfg = nt_mcfg._make( [259200,60,64800,40,20,5,100] )
@@ -168,6 +173,10 @@ class dreqQuery(object):
 
   def getRequestLinkByMip( self, mipSel ):
     """Return the set of request links which are associated with specified MIP"""
+
+    if type(mipSel) == type( {} ):
+      return self.getRequestLinkByMipObjective(self,mipSel)
+
     if type(mipSel) == type(''):
       t1 = lambda x: x == mipSel
     elif type(mipSel) == type(set()):
@@ -180,6 +189,21 @@ class dreqQuery(object):
     ##self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
     self.rqs = list( s )
     return self.rqs
+
+  def getRequestLinkByMipObjective( self, mipSel ):
+    """Return the set of request links which are associated with specified MIP and its objectives"""
+
+    assert type(mipSel) == type( {} ),'Argument must be a dictionary, listing objectives for each MIP'
+
+    s = set()
+    for i in self.dq.coll['objectiveLink'].items:
+      if i.label in mipSel:
+        if len(mipSel[i]) == 0 or self.dq.inx.uid[i.oid].label in mipSel[i]:
+          s.add( self.dq.inx.uid[i.rid] )
+    ##self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
+    self.rqs = list( s )
+    return self.rqs
+
 
   def getRequestLinkByObjective( self, objSel ):
     """Return the set of request links which are associated with specified objectives"""
@@ -324,7 +348,7 @@ class dreqQuery(object):
     if verbose:
       for i in rql:
         r = inx.uid[i]
-        print r.label, r.title, r.uid
+        print ( '%s, %s, %s' % r.label, r.title, r.uid )
 
     dn = False
     if dn:
@@ -543,8 +567,8 @@ class dreqQuery(object):
           ny = nymg[v]['native']
         else:
           if len( nymg[v] ) > 1:
-            print '########### Selecting first in list .............'
-          ks = nymg[v].keys()[0]
+            print ( '########### Selecting first in list .............' )
+          ks = list( nymg[v].keys() )[0]
           ny = nymg[v][ks]
           ff[v] = self.szg[ks][ inx.uid[v].stid ] * npy[inx.uid[v].frequency]
 
@@ -682,8 +706,28 @@ class dreqQuery(object):
       if len(nf) > 0:
         raise baseException( 'rqiByMip: Name of mip(s) not recognised: %s' % str(nf) )
       l1 = [i for i in  self.dq.coll['requestItem'].items if i.mip in mip]
+    elif type(mip) == type( dict()):
+      nf = [ m for m in mip if m not in self.mips]
+      if len(nf) > 0:
+        raise baseException( 'rqiByMip: Name of mip(s) not recognised: %s' % str(nf) )
+      l1 = []
+      for i in  self.dq.coll['requestLink'].items:
+        if i.mip in mip:
+          ok = False
+          if len( mip[i.mip] ) == 0:
+            ok = True
+          else:
+            for ol in self.dq.inx.iref_by_sect[i.uid].a['objectiveLink']:
+              o = self.dq.inx.uid[ol]
+              if self.dq.inx.uid[o.oid].label in mip[i.mip]:
+                ok = True
+          if ok:
+              if 'requestItem' in self.dq.inx.iref_by_sect[i.uid].a:
+                for u in self.dq.inx.iref_by_sect[i.uid].a['requestItem']:
+                  l1.append( self.dq.inx.uid[u] )
     else:
       raise baseException( 'rqiByMip: "mip" (1st explicit argument) should be type string or set: %s -- %s' % (mip, type(mip))   )
+
     return l1
 
   def xlsByMipExpt(self,m,ex,pmax,odir='xls'):
@@ -805,7 +849,18 @@ class dreqUI(object):
           self.adict[b] = True
 
     if 'm' in self.adict:
-      self.adict['m'] = set(self.adict['m'].split(',') )
+      if self.adict['m'].find( ':' ) != -1:
+        ee = {}
+        for i in self.adict['m'].split(','):
+          bits =  i.split( ':' )
+          if len( bits ) == 1:
+             ee[bits[0]] = []
+          else:
+             assert len(bits) == 2, 'Cannot parse %s' % self.adict['m']
+             ee[bits[0]] = bits[1].split( '.' )
+        self.adict['m'] = ee
+      else:
+        self.adict['m'] = set(self.adict['m'].split(',') )
 
     integerArgs = set( ['p','t','plm'] )
     for i in integerArgs.intersection( self.adict ):
@@ -838,7 +893,7 @@ class dreqUI(object):
 
     eid = None
     ex = None
-    if self.adict.has_key('e'):
+    if 'e' in self.adict:
       ex = self.adict['e']
       for i in self.dq.coll['experiment'].items:
         if i.label == self.adict['e']:

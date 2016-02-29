@@ -283,7 +283,15 @@ class makeJs(object):
       ln = v.title
       u = v.units
       uid = v.uid
-      rr = rtmpl % locals()
+      d = locals()
+      for k in ['sn','ln','u','var']:
+    
+        if string.find( d[k], '"' ) != -1:
+          print ( "WARNING ... quote in %s .. %s [%s]" % (k,var,d[k]) )
+          d[k] = string.replace( d[k], '"', "'" )
+          print ( d[k] )
+        
+      rr = rtmpl % d
       rl.append( rr )
       n += 1
     oo = open( 'data2.js', 'w' )

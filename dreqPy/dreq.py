@@ -387,7 +387,7 @@ class config(object):
         self.contentDoc = xml.dom.minidom.parse( self.vsamp )
       self.ns = None
 
-    vl = doc.getElementsByTagName( 'table' )
+    vl = doc.getElementsByTagName( 'table' ) + doc.getElementsByTagName( 'annextable' )
     self.tables = {}
     tables = {}
     self.tableClasses = {}
@@ -664,17 +664,18 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
           n1 = 0
           n2 = 0
           for i in dreq[k].items:
-            id2 = i.__dict__.get( k2 )
-            if id2 != '__unset__':
-              sect = i._h.label
-## append attribute name and target  -- item i.uid, attribute k2 reference item id2
-              self.iref_by_uid[ id2 ].append( (k2,i.uid) )
-              self.iref_by_sect[ id2 ].a[sect].append( i.uid )
-              if id2 in self.uid:
-                n1 += 1
-              else:
-                n2 += 1
-                self.missingIds[id2].append( (k,k2,i.uid) )
+            if k2 in i.__dict__:
+              id2 = i.__dict__.get( k2 )
+              if id2 != '__unset__':
+                sect = i._h.label
+  ## append attribute name and target  -- item i.uid, attribute k2 reference item id2
+                self.iref_by_uid[ id2 ].append( (k2,i.uid) )
+                self.iref_by_sect[ id2 ].a[sect].append( i.uid )
+                if id2 in self.uid:
+                  n1 += 1
+                else:
+                  n2 += 1
+                  self.missingIds[id2].append( (k,k2,i.uid) )
           self.info(  'INFO:: %s, %s:  %s (%s)' % (k,k2,n1,n2) )
 
     for k in dreq.keys():
