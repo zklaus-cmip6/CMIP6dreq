@@ -14,7 +14,7 @@ DOC_DEFAULT_DIR = os.path.join(HERE, 'docs')
 DOC_DIR = os.environ.get('DRQ_CONFIG_DIR', DOC_DEFAULT_DIR)
 
 __versionComment__ = "Added annex, improved content, various bug fixes"
-__version__ = "01.beta.19"
+__version__ = "01.beta.24"
 __title__ = "dreqPy"
 __description__ = "CMIP6 Data Request Python API"
 __uri__ = "http://proj.badc.rl.ac.uk/svn/exarch/CMIP6dreq/tags/{0}".format(__version__)

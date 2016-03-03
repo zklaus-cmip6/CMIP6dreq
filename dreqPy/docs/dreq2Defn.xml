@@ -4,324 +4,342 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xmlns="urn:w3id.org:cmip6.dreq.framework:a"
 xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd">
 <table label="requestVarGroup" uid="SECTION:requestVarGroup" title="3.1 Request variable group: a collection of request variables" id="rqvg" itemLabelMode="def" level="3" maxOccurs="1" labUnique="Yes" description="A group of request variables, or a table, which can be referred to from a request link.">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="19073ae4-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="190785da-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1907d7ec-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="19082030-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="19086496-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="mip" type="xs:string" title="Endorsed MIP defining the variable group" useClass="internalLink" techNote="" description="The MIP which specified this collection of variables. The collection may be re-used by other MIPs through the requestLink records." uid="19086c34-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="ref" type="xs:string" title="Reference" useClass="" techNote="" description="Information about the origins of this group" uid="19086f22-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="refNote" type="xs:string" title="Reference Note" useClass="" techNote="" description="Further information about the origins of this group." uid="190871ca-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b6f653e-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b6fa058-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b6fdc62-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b701aec-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="1b70737a-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="mip" type="xs:string" title="Endorsed MIP defining the variable group" useClass="internalLink" techNote="" description="The MIP which specified this collection of variables. The collection may be re-used by other MIPs through the requestLink records." uid="1b707d84-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="ref" type="xs:string" title="Reference" useClass="" techNote="" description="Information about the origins of this group" uid="1b70807c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="refNote" type="xs:string" title="Reference Note" useClass="" techNote="" description="Further information about the origins of this group." uid="1b708306-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="requestItem" uid="SECTION:requestItem" title="3.2 Request Item: specifying the number of years for an experiment" id="rqi" itemLabelMode="def" level="5" maxOccurs="1" labUnique="No" description="The request item links a collection of variables with a specific experiment or group of experiments, and a temporal range for output. The 'esid' attribute links to an experiment, and experiment group or a MIP. In the latter case, the request applies to all experiments defined by that MIP.">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="19087c7e-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="19087e86-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="19088070-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="190882a0-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="190884da-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="mip" type="xs:string" title="The MIP making the request. " useClass="Redundant" techNote="" description="" uid="1908871e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="tab" type="xs:string" title="Redundant?" useClass="" techNote="" description="" uid="19088944-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="expt" type="xs:string" title="Name of experiment or group of experiments" useClass="" techNote="" description="" uid="19088b74-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="rlid" type="xs:string" title="Identifier of corresponding requestLink" useClass="internalLink" techNote="" description="" uid="19088dae-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="esid" type="xs:string" title="Identifier experiment(s): a link to an experiment, an experiment group or a MIP" useClass="internalLink" techNote="" description="" uid="19088ff2-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="esidComment" type="xs:string" title="Comment on experiment(s) linked to." useClass="" techNote="" description="" uid="1908924a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="preset" type="xs:integer" title="Option to override priority set in each variable group" useClass="" techNote="" description="If, for example, preset is set to 2, all priority one variables in the variable group associated with this request are treated as priority 2 variables." uid="1908948e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="treset" type="xs:integer" title="Option to override tier set for experiment(s)" useClass="" techNote="" description="If, for example, treset is set to 1, all tier 2 and 3 experiments associated with this request are treated as tier 1 variables." uid="190896e6-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="ny" type="xs:integer" title="Default number of years." useClass="" techNote="" description="Default number of years, only used if experiment specifications are incomplete: will be redundant in final request." uid="1908992a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="nexmax" type="xs:integer" title="Maximum number of experiments requested." useClass="Redundant" techNote="" description="Used to provide volume estimate before the links to experiment groups was fully functional." uid="19089b82-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="nenmax" type="xs:integer" title="Number of ensemble members requested." useClass="" techNote="" description="" uid="19089dee-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="nymax" type="xs:float" title="Number of years requested." useClass="" techNote="" description="Will be redundant when links to temporal slices are implemented." uid="1908a01e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="tslice" type="xs:string" title="Selection of years from experiment" useClass="internalLink" techNote="" description="Optional link to a time slice specifier which will define subset of the years from an experiment." uid="1908a258-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b708da6-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b708f90-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b709166-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b709378-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="1b70958a-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="mip" type="xs:string" title="The MIP making the request. " useClass="Redundant" techNote="" description="" uid="1b7097a6-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="tab" type="xs:string" title="Redundant?" useClass="" techNote="" description="" uid="1b7099a4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="expt" type="xs:string" title="Name of experiment or group of experiments" useClass="" techNote="" description="" uid="1b709bac-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="rlid" type="xs:string" title="Identifier of corresponding requestLink" useClass="internalLink" techNote="" description="" uid="1b709dd2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="esid" type="xs:string" title="Identifier experiment(s): a link to an experiment, an experiment group or a MIP" useClass="internalLink" techNote="" description="" uid="1b70a084-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="esidComment" type="xs:string" title="Comment on experiment(s) linked to." useClass="" techNote="" description="" uid="1b70a2d2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="preset" type="xs:integer" title="Option to override priority set in each variable group" useClass="" techNote="" description="If, for example, preset is set to 2, all priority one variables in the variable group associated with this request are treated as priority 2 variables." uid="1b70a516-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="treset" type="xs:integer" title="Option to override tier set for experiment(s)" useClass="" techNote="" description="If, for example, treset is set to 1, all tier 2 and 3 experiments associated with this request are treated as tier 1 variables." uid="1b70a782-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="ny" type="xs:integer" title="Default number of years." useClass="" techNote="" description="Default number of years, only used if experiment specifications are incomplete: will be redundant in final request." uid="1b70a9d0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="nexmax" type="xs:integer" title="Maximum number of experiments requested." useClass="Redundant" techNote="" description="Used to provide volume estimate before the links to experiment groups was fully functional." uid="1b70ac8c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="nenmax" type="xs:integer" title="Number of ensemble members requested." useClass="" techNote="" description="" uid="1b70aec6-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="nymax" type="xs:float" title="Number of years requested." useClass="" techNote="" description="Will be redundant when links to temporal slices are implemented." uid="1b70b0c4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="tslice" type="xs:string" title="Selection of years from experiment" useClass="internalLink" techNote="" description="Optional link to a time slice specifier which will define subset of the years from an experiment." uid="1b70b2ea-dc7c-11e5-ac14-5404a60d96b5" superclass="" required="false"/>
 </table>
 <table label="exptgroup" uid="SECTION:exptgroup" title="1.9 Experiment Group" id="exg" itemLabelMode="def" level="0" maxOccurs="1" labUnique="No" description="The experiment group defines a collection of experiments within a MIP which might be part of a collective data request.">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1908ab2c-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1908ad34-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1908af28-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1908b144-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="1908b392-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="tierMin" type="xs:integer" title="Minimum tier of experiments in group" useClass="" techNote="" description="Minimum tier of experiments associated with this group." uid="1908b5ae-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="ntot" type="xs:integer" title="Total number of years" useClass="" techNote="" description="Total number of simulation years associated with experiments in this group." uid="1908b7e8-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b70bba0-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b70bd58-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b70bf1a-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b70c122-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="1b70c42e-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="tierMin" type="xs:integer" title="Minimum tier of experiments in group" useClass="" techNote="" description="Minimum tier of experiments associated with this group." uid="1b70c654-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="ntot" type="xs:integer" title="Total number of years" useClass="" techNote="" description="Total number of simulation years associated with experiments in this group." uid="1b70c898-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="CMORvar" uid="SECTION:CMORvar" title="1.3 CMOR Variable" id="cmv" itemLabelMode="def" level="1" maxOccurs="1" labUnique="No" description="Each Output variable record corresponds to a MIP table variable specification. In a change from the August draft, this record does not contain the 'priority' attribute: the priority is now set in the 'Request Variable' record. The other change is that a collection of attributes specifying dimensions etc have been moved into the 'structure' record, and each CMOR Variable record links to one structure record. This will fa-cilitate provision of clear and consistent definitions of output formats.">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1908c0bc-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1908c2a6-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1908c468-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1908c67a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="1908c8e6-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Long name" useClass="" techNote="" description="The long name is used as the long_name variable attribute in the NetCDF files." uid="1908cb2a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="stid" type="xs:string" title="Link to a record specifying the structure of the variable (dimensions and associated variable attributes)." useClass="internalLink" techNote="structure" description="" uid="1908cd78-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="vid" type="xs:string" title="MIP Variable" useClass="internalLink" techNote="var" description="The MIP Variable specifies the physical quantity." uid="1908cfda-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="valid_min" type="xs:float" title="Minimum expected value for this variable." useClass="" techNote="" description="The minimum expected value will be used, if set, in quality control tests, and files containing data values below this value will be marked as containing errors." uid="1908d20a-c9b5-11e5-833e-5404a60d96b5" superclass="" required="false"/>
-  <rowAttribute label="valid_max" type="xs:float" title="Maximum expected value for this variable." useClass="" techNote="" description="The maximum expected value will be used, if set, in quality control tests, and files containing data values above this value will be marked as containing errors." uid="1908d430-c9b5-11e5-833e-5404a60d96b5" superclass="" required="false"/>
-  <rowAttribute label="ok_min_mean_abs" type="xs:float" title="Minimum expected value of the mean absolute value at each point in time" useClass="" techNote="" description="This value, if set, will be used  in quality control tests, and files containing data values above this value will be marked as containing errors." uid="1908d64c-c9b5-11e5-833e-5404a60d96b5" superclass="" required="false"/>
-  <rowAttribute label="ok_max_mean_abs" type="xs:float" title="Maximum expected value of the mean absolute value at each point in time" useClass="" techNote="" description="This value, if set, will be used  in quality control tests, and files containing data values above this value will be marked as containing errors." uid="1908d868-c9b5-11e5-833e-5404a60d96b5" superclass="" required="false"/>
-  <rowAttribute label="deflate" type="xs:string" title="Deflate: NetCDF compression parameter" useClass="" techNote="" description="" uid="1908da7a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="deflate_level" type="xs:string" title="Deflate Level: NetCDF compression parameter" useClass="" techNote="" description="" uid="1908dc96-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="shuffle" type="xs:string" title="Shuffle: NetCDF compression parameter" useClass="" techNote="" description="" uid="1908de94-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="defaultPriority" type="xs:integer" title="Indicative priority for this parameter, which is over-ruled by the requestVar priority setting, but provides a reference for organisation of the CMORvariables" useClass="" techNote="" description="" uid="1908e0a6-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="type" type="xs:string" title="Data value type, e.g. float or double" useClass="" techNote="" description="" uid="1908e2ae-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="modeling_realm" type="xs:string" title="Modeling Realm" useClass="drsVocab" techNote="" description="" uid="1908e600-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="positive" type="xs:string" title="CMOR Directive Positive" useClass="CMORdirective" techNote="" description="" uid="1908e81c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="mipTableSection" type="xs:string" title="Section of a table" useClass="subsubsection" techNote="" description="" uid="1908ea24-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="mipTable" type="xs:string" title="The MIP table: each table identifies a collection of variables" useClass="subsection" techNote="" description="" uid="1908ec22-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="prov" type="xs:string" title="Provenance" useClass="" techNote="" description="" uid="1908ee20-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="provNote" type="xs:string" title="Provenance Note" useClass="" techNote="" description="" uid="1908f028-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="frequency" type="xs:string" title="Frequency of time steps to be archived." useClass="drsVocab" techNote="" description="" uid="1908f21c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="rowIndex" type="xs:integer" title="Row index of entry in source sheet" useClass="" techNote="" description="" uid="1908f410-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="description" type="xs:string" title="Description" useClass="" techNote="" description="" uid="1908f60e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b70d180-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b70d342-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b70d518-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b70d70c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="1b70d914-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Long name" useClass="" techNote="" description="The long name is used as the long_name variable attribute in the NetCDF files." uid="1b70dafe-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="stid" type="xs:string" title="Link to a record specifying the structure of the variable (dimensions and associated variable attributes)." useClass="internalLink" techNote="structure" description="" uid="1b70dd24-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="vid" type="xs:string" title="MIP Variable" useClass="internalLink" techNote="var" description="The MIP Variable specifies the physical quantity." uid="1b70df5e-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="valid_min" type="xs:float" title="Minimum expected value for this variable." useClass="" techNote="" description="The minimum expected value will be used, if set, in quality control tests, and files containing data values below this value will be marked as containing errors." uid="1b70e166-dc7c-11e5-ac14-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="valid_max" type="xs:float" title="Maximum expected value for this variable." useClass="" techNote="" description="The maximum expected value will be used, if set, in quality control tests, and files containing data values above this value will be marked as containing errors." uid="1b70e382-dc7c-11e5-ac14-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="ok_min_mean_abs" type="xs:float" title="Minimum expected value of the mean absolute value at each point in time" useClass="" techNote="" description="This value, if set, will be used  in quality control tests, and files containing data values above this value will be marked as containing errors." uid="1b70e59e-dc7c-11e5-ac14-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="ok_max_mean_abs" type="xs:float" title="Maximum expected value of the mean absolute value at each point in time" useClass="" techNote="" description="This value, if set, will be used  in quality control tests, and files containing data values above this value will be marked as containing errors." uid="1b70e7b0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="deflate" type="xs:string" title="Deflate: NetCDF compression parameter" useClass="" techNote="" description="" uid="1b70e9c2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="deflate_level" type="xs:string" title="Deflate Level: NetCDF compression parameter" useClass="" techNote="" description="" uid="1b70ebde-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="shuffle" type="xs:string" title="Shuffle: NetCDF compression parameter" useClass="" techNote="" description="" uid="1b70eddc-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="defaultPriority" type="xs:integer" title="Indicative priority for this parameter, which is over-ruled by the requestVar priority setting, but provides a reference for organisation of the CMORvariables" useClass="" techNote="" description="" uid="1b70efe4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="type" type="xs:string" title="Data value type, e.g. float or double" useClass="" techNote="" description="" uid="1b70f1e2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="modeling_realm" type="xs:string" title="Modeling Realm" useClass="drsVocab" techNote="" description="" uid="1b70f3ea-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="positive" type="xs:string" title="CMOR Directive Positive" useClass="CMORdirective" techNote="" description="" uid="1b70f5de-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="mipTableSection" type="xs:string" title="Section of a table" useClass="subsubsection" techNote="" description="" uid="1b70f7e6-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="mipTable" type="xs:string" title="The MIP table: each table identifies a collection of variables" useClass="subsection" techNote="" description="" uid="1b70f9e4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="prov" type="xs:string" title="Provenance" useClass="" techNote="" description="" uid="1b70fbd8-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="provNote" type="xs:string" title="Provenance Note" useClass="" techNote="" description="" uid="1b70fdea-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="frequency" type="xs:string" title="Frequency of time steps to be archived." useClass="drsVocab" techNote="" description="" uid="1b70fff2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="rowIndex" type="xs:integer" title="Row index of entry in source sheet" useClass="" techNote="" description="" uid="1b7101e6-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="description" type="xs:string" title="Description" useClass="" techNote="" description="" uid="1b7103e4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="objective" uid="SECTION:objective" title="1.6 Scientific objectives" id="obj" itemLabelMode="def" level="0" maxOccurs="1" labUnique="No" description="The objectives defined by each MIP can be used to select data requirements. ">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="19090036-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="19090216-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1909040a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="19090608-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="19090810-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="description" type="xs:string" title="Description" useClass="freeText" techNote="" description="" uid="19090a0e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="mip" type="xs:string" title="Endorsed MIP" useClass="internalLink" techNote="" description="" uid="19090c02-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b710cf4-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b710f1a-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b7110f0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b7112e4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="1b7114f6-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="description" type="xs:string" title="Description" useClass="freeText" techNote="" description="" uid="1b7116ea-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="mip" type="xs:string" title="Endorsed MIP" useClass="internalLink" techNote="" description="" uid="1b7118de-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="spatialShape" uid="SECTION:spatialShape" title="2.1 Spatial dimensions" id="ss" itemLabelMode="def" level="3" maxOccurs="1" labUnique="Yes" description="The spatial shape record contains the spatial dimensions of the field, and also, for convenience, an integer specifying the number of levels if that number is specified. A boolean level flag is set to 'true' if the number of vertical levels is specified.">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="190911de-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1909138c-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="A string of the form 'hh-vv' where 'hh' and 'vv' are short mnemonics for the horizontal and vertical structure respectively, each set to 'na', for 'not applicable', if there are no relevant dimensions. " uid="19091544-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="19091756-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="19091940-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="dimensions" type="xs:string" title="List of spatial dimensions" useClass="" techNote="" description="" uid="19091b2a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="shape" type="xs:string" title="Shape - as used in input " useClass="" techNote="" description="" uid="19091d14-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="levels" type="xs:integer" title="Number of vertical levels (ignored if levelFlag=false)" useClass="" techNote="" description="The number of vertical levels, if fixed." uid="19091efe-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="levelFlag" type="xs:boolean" title="Flag set to *false* if number of levels is optional (e.g. determined by the model)" useClass="" techNote="" description="True is there is a fixed number of levels specified by the 'levels' attribute." uid="19092106-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b711e7e-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b712036-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="A string of the form 'hh-vv' where 'hh' and 'vv' are short mnemonics for the horizontal and vertical structure respectively, each set to 'na', for 'not applicable', if there are no relevant dimensions. " uid="1b7121f8-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b712400-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="1b7125ea-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="dimensions" type="xs:string" title="List of spatial dimensions" useClass="" techNote="" description="" uid="1b7127de-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="shape" type="xs:string" title="Shape - as used in input " useClass="" techNote="" description="" uid="1b7129c8-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="levels" type="xs:integer" title="Number of vertical levels (ignored if levelFlag=false)" useClass="" techNote="" description="The number of vertical levels, if fixed." uid="1b712bb2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="levelFlag" type="xs:boolean" title="Flag set to *false* if number of levels is optional (e.g. determined by the model)" useClass="" techNote="" description="True is there is a fixed number of levels specified by the 'levels' attribute." uid="1b712dba-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="requestLink" uid="SECTION:requestLink" title="3.3 Request link: linking a set of variables and a set of experiments" id="rql" itemLabelMode="def" level="4" maxOccurs="1" labUnique="No" description="The request link records specify some additional information about variable groups, concerning shared output requirements and objectives.">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="190927aa-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="19092976-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="19092b38-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="19092d2c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="19092f8e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="mip" type="xs:string" title="Endorsed MIP requesting the data" useClass="internalLink" techNote="" description="" uid="1909320e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="tab" type="xs:string" title="" useClass="" techNote="" description="" uid="190933ee-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="objective" type="xs:string" title="Science objectives associated with this request" useClass="" techNote="" description="Every request for model ouput is linked to one or more objectives. The XML link is made via objectiveLink records, each of which associates one requestLink with one objective record." uid="190936be-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="grid" type="xs:string" title="" useClass="" techNote="" description="" uid="190938ee-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="gridreq" type="xs:string" title="" useClass="" techNote="" description="" uid="19093b28-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="comment" type="xs:string" title="" useClass="" techNote="" description="" uid="19093cfe-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="ref" type="xs:string" title="" useClass="" techNote="" description="" uid="19093ed4-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="refNote" type="xs:string" title="" useClass="" techNote="" description="" uid="190940b4-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="refid" type="xs:string" title="reference to a request Variable Group" useClass="internalLink" techNote="" description="" uid="190942a8-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="opt" type="xs:string" title="option for selecting a subset of variables" useClass="" techNote="" description="" uid="19094488-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="opar" type="xs:string" title="parameter associated with *opt*" useClass="" techNote="" description="" uid="19094672-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b713486-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b713634-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b7137f6-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b7139e0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="1b713bca-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="mip" type="xs:string" title="Endorsed MIP requesting the data" useClass="internalLink" techNote="" description="" uid="1b713de6-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="tab" type="xs:string" title="" useClass="" techNote="" description="" uid="1b713fc6-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="objective" type="xs:string" title="Science objectives associated with this request" useClass="" techNote="" description="Every request for model ouput is linked to one or more objectives. The XML link is made via objectiveLink records, each of which associates one requestLink with one objective record." uid="1b7141ce-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="grid" type="xs:string" title="" useClass="" techNote="" description="" uid="1b7143cc-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="gridreq" type="xs:string" title="" useClass="" techNote="" description="" uid="1b7145c0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="comment" type="xs:string" title="" useClass="" techNote="" description="" uid="1b7147a0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="ref" type="xs:string" title="" useClass="" techNote="" description="" uid="1b714980-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="refNote" type="xs:string" title="" useClass="" techNote="" description="" uid="1b714b56-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="refid" type="xs:string" title="reference to a request Variable Group" useClass="internalLink" techNote="" description="" uid="1b714d54-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="opt" type="xs:string" title="option for selecting a subset of variables" useClass="" techNote="" description="" uid="1b714f34-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="opar" type="xs:string" title="parameter associated with *opt*" useClass="" techNote="" description="" uid="1b71511e-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="tableSection" uid="SECTION:tableSection" title="3.4 CMOR Table Sections" id="tbs" itemLabelMode="def" level="1" maxOccurs="1" labUnique="No" description="">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="19094cbc-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="19094e74-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="19095040-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1909522a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="19095414-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="gpid" type="xs:string" title="Identifier for CMOR Tables" useClass="internalLink" techNote="requestVarGroup" description="" uid="1909561c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="mip" type="xs:string" title="Project" useClass="" techNote="" description="" uid="19095806-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="ref" type="xs:string" title="" useClass="" techNote="" description="" uid="190959dc-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="refNote" type="xs:string" title="" useClass="" techNote="" description="" uid="19095bbc-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b715768-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b715920-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b715ad8-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b715cd6-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="1b715ec0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="gpid" type="xs:string" title="Identifier for CMOR Tables" useClass="internalLink" techNote="requestVarGroup" description="" uid="1b7160c8-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="mip" type="xs:string" title="Project" useClass="" techNote="" description="" uid="1b7162b2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="ref" type="xs:string" title="" useClass="" techNote="" description="" uid="1b716492-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="refNote" type="xs:string" title="" useClass="" techNote="" description="" uid="1b716668-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="modelConfig" uid="SECTION:modelConfig" title="3.5 Model configuration options" id="mcfg" itemLabelMode="an" level="0" maxOccurs="1" labUnique="Yes" description="">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="19096102-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="190962a6-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1909645e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="19096648-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="19096846-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="19096a26-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="MIPs" type="xs:string" title="" useClass="" techNote="" description="" uid="19096c06-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="usage" type="xs:string" title="" useClass="" techNote="" description="" uid="19096ddc-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="type" type="xs:string" title="" useClass="" techNote="" description="" uid="19096fb2-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="range" type="xs:string" title="Range of valid values, e.g. xs:boolean" useClass="" techNote="" description="" uid="1909719c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b716b9a-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b716d52-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b716f0a-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b7170f4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="1b7172f2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="1b7174c8-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="MIPs" type="xs:string" title="" useClass="" techNote="" description="" uid="1b7176b2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="usage" type="xs:string" title="" useClass="" techNote="" description="" uid="1b717892-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="type" type="xs:string" title="" useClass="" techNote="" description="" uid="1b717a68-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="range" type="xs:string" title="Range of valid values, e.g. xs:boolean" useClass="" techNote="" description="" uid="1b717c5c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="varChoiceLinkC" uid="SECTION:varChoiceLinkC" title="3.6 Links a variable to a choice element" id="vclc" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes" description="">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="19097728-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="190978fe-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="19097ab6-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="19097ca0-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="19097e9e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="vid" type="xs:string" title="Variable" useClass="internalLink" techNote="" description="" uid="1909818c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="cfgid" type="xs:string" title="Configuration Option" useClass="internalLink" techNote="" description="" uid="1909842a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="cfg" type="xs:boolean" title="Configuration Value" useClass="" techNote="" description="" uid="19098650-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="cid" type="xs:string" title="Choice -- can provide a link to related variables" useClass="internalLink" techNote="" description="" uid="190988b2-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b718242-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b7183f0-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b7185bc-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b7187b0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="1b7189ae-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="vid" type="xs:string" title="Variable" useClass="internalLink" techNote="" description="" uid="1b718ba2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="cfgid" type="xs:string" title="Configuration Option" useClass="internalLink" techNote="" description="" uid="1b718db4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="cfg" type="xs:boolean" title="Configuration Value" useClass="" techNote="" description="" uid="1b718f9e-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="cid" type="xs:string" title="Choice -- can provide a link to related variables" useClass="internalLink" techNote="" description="" uid="1b71919c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="objectiveLink" uid="SECTION:objectiveLink" title="3.7 Link between scientific objectives and requests" id="objl" itemLabelMode="def" level="0" maxOccurs="1" labUnique="No" description="Each objective link record joins one objective to one request link. Some requests are linked to multiple objectives and most objectives are linked to multiple requests. ">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="19098dda-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="19098f88-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1909914a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="19099334-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="19099528-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="oid" type="xs:string" title="Identifier for a scientific objective" useClass="internalLink" techNote="objective" description="" uid="19099726-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="rid" type="xs:string" title="Identifier for a request link" useClass="internalLink" techNote="requestLink" description="" uid="19099924-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b719692-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b719836-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b719a98-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b719dcc-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="1b71a04c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="oid" type="xs:string" title="Identifier for a scientific objective" useClass="internalLink" techNote="objective" description="" uid="1b71a290-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="rid" type="xs:string" title="Identifier for a request link" useClass="internalLink" techNote="requestLink" description="" uid="1b71a4de-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="remarks" uid="SECTION:remarks" title="3.8 Remarks about other items" id="rmk" itemLabelMode="def" level="10" maxOccurs="1" labUnique="No" description="The remarks section contains additional comments about other records. It can be used to add detail without adding to the complexity of the other sections.">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="19099f78-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1909a126-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1909a2de-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1909a4c8-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="1909a6b2-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="tid" type="xs:string" title="Target identifier: the record ID of the item this refers to." useClass="internalLink" techNote="" description="" uid="1909a8b0-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="tattr" type="xs:string" title="Target attribute: an attribute of the target item, or 'ALL'" useClass="" techNote="" description="" uid="1909aa90-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="description" type="xs:string" title="Free text remarks -- unless there are specific restrictions associated with the class attribute of this remark" useClass="" techNote="" description="" uid="1909ac84-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="class" type="xs:string" title="Different classes of remark support a range of specialised usages: free (a free text comment), modelTypeReq (a model type requirement), modelTypeExcl (a model type exclusion), varAlt (an alternative variable that my be used instead of this one), varSup (an alternative variable which, if selected makes this one redundant), attChange (a change in the value of an attribute -- old value provided in 'techNote')." useClass="" techNote="" description="" uid="1909ae78-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="qid" type="xs:string" title="Identifier required for classes modelTypeReq, modelTypeExcl, varAlt, varSup. For the first two classes, the identifier points to a model type specification, for the last two it points to an output variable specification." useClass="" techNote="" description="" uid="1909b06c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="techNote" type="xs:string" title="Optional additional machine readable content (though not restricted by the schema)" useClass="" techNote="" description="" uid="1909b260-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="prov" type="xs:string" title="Provenance" useClass="" techNote="" description="" uid="1909b44a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b71ae52-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b71b06e-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b71b26c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b71b488-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="1b71b6f4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="tid" type="xs:string" title="Target identifier: the record ID of the item this refers to." useClass="internalLink" techNote="" description="" uid="1b71b906-dc7c-11e5-ac14-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="tattr" type="xs:string" title="Target attribute: an attribute of the target item, or 'ALL'" useClass="" techNote="" description="" uid="1b71baf0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="description" type="xs:string" title="Free text remarks -- unless there are specific restrictions associated with the class attribute of this remark" useClass="" techNote="" description="" uid="1b71bce4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="class" type="xs:string" title="Different classes of remark support a range of specialised usages: free (a free text comment), modelTypeReq (a model type requirement), modelTypeExcl (a model type exclusion), varAlt (an alternative variable that my be used instead of this one), varSup (an alternative variable which, if selected makes this one redundant), attChange (a change in the value of an attribute -- old value provided in 'techNote')." useClass="" techNote="" description="" uid="1b71bee2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="qid" type="xs:string" title="Identifier required for classes modelTypeReq, modelTypeExcl, varAlt, varSup. For the first two classes, the identifier points to a model type specification, for the last two it points to an output variable specification." useClass="" techNote="" description="" uid="1b71c0e0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="techNote" type="xs:string" title="Optional additional machine readable content (though not restricted by the schema)" useClass="" techNote="" description="" uid="1b71c2d4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="prov" type="xs:string" title="Provenance" useClass="" techNote="" description="" uid="1b71c4be-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="experiment" uid="SECTION:experiment" title="1.5 Experiments" id="exp" itemLabelMode="def" level="0" maxOccurs="1" labUnique="No" description="The experiment record contains the key information from the 'Experiment' sheet of the request template, including the tier of the experiment, the duration and start and end dates.">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1909bb34-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1909bd00-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1909beb8-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1909c0a2-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="1909c296-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="description" type="xs:string" title="Description" useClass="freeText" techNote="" description="" uid="1909c48a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="egid" type="xs:string" title="Identifier for experiment group" useClass="internalLink" techNote="" description="" uid="1909c67e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="mip" type="xs:string" title="MIP defining experiment" useClass="internalLink" techNote="" description="" uid="1909c872-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="mcfg" type="xs:string" title="Model category" useClass="" techNote="" description="" uid="1909ca5c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="tier" type="aa:st__integerListMonInc" title="Tier of experiment" useClass="" techNote="" description="Experiments are assigned a tier by the MIP specifying the tier, tier 1 experiments being the most important." uid="1909cc64-c9b5-11e5-833e-5404a60d96b5" superclass="" usage="Must be a list of the same length as ensz." required=""/>
-  <rowAttribute label="nstart" type="xs:integer" title="Number of start dates" useClass="" techNote="" description="" uid="1909ce62-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="starty" type="xs:string" title="" useClass="" techNote="" description="" uid="1909d042-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="endy" type="xs:string" title="" useClass="" techNote="" description="" uid="1909d218-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="yps" type="xs:integer" title="Years per simulation" useClass="" techNote="" description="" uid="1909d402-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="ensz" type="aa:st__integerListMonInc" title="Ensemble size" useClass="" techNote="" description="" uid="1909d5ec-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="ntot" type="xs:integer" title="Total number of years" useClass="" techNote="" description="" uid="1909d7d6-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="comment" type="xs:string" title="Comment" useClass="" techNote="" description="" uid="1909d9b6-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b71cc16-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b71cdce-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b71cf86-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b71d170-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="1b71d364-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="description" type="xs:string" title="Description" useClass="freeText" techNote="" description="" uid="1b71d562-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="egid" type="xs:string" title="Identifier for experiment group" useClass="internalLink" techNote="" description="" uid="1b71d756-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="mip" type="xs:string" title="MIP defining experiment" useClass="internalLink" techNote="" description="" uid="1b71d94a-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="mcfg" type="xs:string" title="Model category" useClass="" techNote="" description="" uid="1b71db34-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="tier" type="aa:st__integerListMonInc" title="Tier of experiment" useClass="" techNote="" description="Experiments are assigned a tier by the MIP specifying the tier, tier 1 experiments being the most important." uid="1b71dd3c-dc7c-11e5-ac14-5404a60d96b5" superclass="" usage="Must be a list of the same length as ensz." required=""/>
+  <rowAttribute label="nstart" type="xs:integer" title="Number of start dates" useClass="" techNote="" description="" uid="1b71df4e-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="starty" type="xs:string" title="" useClass="" techNote="" description="" uid="1b71e138-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="endy" type="xs:string" title="" useClass="" techNote="" description="" uid="1b71e322-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="yps" type="xs:integer" title="Years per simulation" useClass="" techNote="" description="" uid="1b71e50c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="ensz" type="aa:st__integerListMonInc" title="Ensemble size" useClass="" techNote="" description="" uid="1b71e6f6-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="ntot" type="xs:integer" title="Total number of years" useClass="" techNote="" description="" uid="1b71e8ea-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="comment" type="xs:string" title="Comment" useClass="" techNote="" description="" uid="1b71eaca-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="requestVar" uid="SECTION:requestVar" title="1.4 Request variable (carrying priority and link to group)" id="rqv" itemLabelMode="def" level="3" maxOccurs="1" labUnique="No" description="The request variable is now a short record which combines a CMOR variable with a priority and assigns it to a request group.">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1909e028-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1909e1e0-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1909e398-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1909e58c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="1909e776-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="priority" type="xs:integer" title="Variable priority" useClass="" techNote="" description="" uid="1909e960-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="vid" type="xs:string" title="Identifier for MIP Output Variable" useClass="internalLink" techNote="ovar" description="" uid="1909eb5e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="vgid" type="xs:string" title="Identifier for Variable Group" useClass="internalLink" techNote="requestVarGroup" description="" uid="1909ed5c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="mip" type="xs:string" title="" useClass="" techNote="" description="" uid="1909ef3c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b71f18c-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b71f344-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b71f4fc-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b71f6f0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="1b71f8e4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="priority" type="xs:integer" title="Variable priority" useClass="" techNote="" description="" uid="1b71fad8-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="vid" type="xs:string" title="Identifier for MIP Output Variable" useClass="internalLink" techNote="ovar" description="" uid="1b71fce0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="vgid" type="xs:string" title="Identifier for Variable Group" useClass="internalLink" techNote="requestVarGroup" description="" uid="1b71fede-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="mip" type="xs:string" title="" useClass="" techNote="" description="" uid="1b7200be-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="standardname" uid="SECTION:standardname" title="1.8 CF Standard Names" id="sn" itemLabelMode="an" level="0" maxOccurs="1" labUnique="Yes" description="">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1909f504-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1909f6d0-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1909f888-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1909fa72-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="CF Standard Name" useClass="recordId" techNote="" description="" uid="1909fc70-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="description" type="xs:string" title="" useClass="" techNote="" description="" uid="1909fe50-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="190a0026-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="label" type="xs:string" title="" useClass="" techNote="" description="" uid="190a01fc-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="units" type="xs:string" title="Canonical Units" useClass="" techNote="" description="" uid="190a03dc-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b72069a-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b720848-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b720a0a-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b720bf4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="CF Standard Name" useClass="recordId" techNote="" description="" uid="1b720de8-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="description" type="xs:string" title="" useClass="" techNote="" description="" uid="1b720fc8-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="1b7211a8-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="" useClass="" techNote="" description="" uid="1b72137e-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="units" type="xs:string" title="Canonical Units" useClass="" techNote="" description="" uid="1b72155e-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="varChoiceLinkR" uid="SECTION:varChoiceLinkR" title="3.9 Links a variable to a choice element" id="vclr" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes" description="">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="190a08f0-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="190a0a94-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="190a0c4c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="190a0e36-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="190a102a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="vid" type="xs:string" title="Variable" useClass="internalLink" techNote="" description="" uid="190a1214-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="cid" type="xs:string" title="Choice" useClass="internalLink" techNote="" description="" uid="190a1408-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="rank" type="xs:integer" title="For ranked choices, the rank of this variable (higher rank makes lower ranks redundant)" useClass="" techNote="" description="" uid="190a15e8-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b721a5e-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b721c02-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b721dc4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b721fae-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="1b7221ac-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="vid" type="xs:string" title="Variable" useClass="internalLink" techNote="" description="" uid="1b7223a0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="cid" type="xs:string" title="Choice" useClass="internalLink" techNote="" description="" uid="1b72259e-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="rank" type="xs:integer" title="For ranked choices, the rank of this variable (higher rank makes lower ranks redundant)" useClass="" techNote="" description="" uid="1b722788-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="var" uid="SECTION:var" title="1.2 MIP Variable" id="var" itemLabelMode="def" level="0" maxOccurs="1" labUnique="No" description="Each MIP variable record defines a MIP variable name, associated with a CF Standard Name.">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="190a1c14-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="190a1e12-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Variable Name" useClass="" techNote="" description="" uid="190a1fde-c9b5-11e5-833e-5404a60d96b5" superclass="skos:prefLabel" usage="A short name for the variable, consistent, where possible, with names of related variables." required=""/>
-  <rowAttribute label="sn" type="xs:string" title="CF Standard Name" useClass="internalLink" techNote="" description="The CF Standard Name is part of an extensive vocabulary maintained within the CF Convention." uid="190a2204-c9b5-11e5-833e-5404a60d96b5" superclass="" usage="The CF Standard Name must be approved and published in the CF Convention" required=""/>
-  <rowAttribute label="units" type="xs:string" title="Units" useClass="" techNote="" description="" uid="190a2420-c9b5-11e5-833e-5404a60d96b5" superclass="" usage="Units " required=""/>
-  <rowAttribute label="description" type="xs:string" title="" useClass="" techNote="" description="" uid="190a2600-c9b5-11e5-833e-5404a60d96b5" superclass="dc:description" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Long name" useClass="" techNote="" description="The long name is used as the long_name variable attribute in the NetCDF files." uid="190a2812-c9b5-11e5-833e-5404a60d96b5" superclass="dc:title" usage="A short phrase to be used in the long_name NetCDF variable attribute" required=""/>
-  <rowAttribute label="procnote" type="aa:st__stringList" title="Processing notes" useClass="list" techNote="" description="" uid="190a2a2e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="procComment" type="xs:string" title="Processing comments" useClass="freeText" techNote="" description="" uid="190a2c2c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="prov" type="xs:string" title="Provenance" useClass="freeText" techNote="" description="" uid="190a2e2a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="190a301e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="provmip" type="xs:string" title="MIP defining this variables" useClass="internalLink" techNote="" description="The MIP responsible for the original definition of this quantity" uid="190a3208-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b722da0-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b722f44-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Variable Name" useClass="" techNote="" description="" uid="1b72311a-dc7c-11e5-ac14-5404a60d96b5" superclass="skos:prefLabel" usage="A short name for the variable, consistent, where possible, with names of related variables." required=""/>
+  <rowAttribute label="sn" type="xs:string" title="CF Standard Name" useClass="internalLink" techNote="" description="The CF Standard Name is part of an extensive vocabulary maintained within the CF Convention." uid="1b723340-dc7c-11e5-ac14-5404a60d96b5" superclass="" usage="The CF Standard Name must be approved and published in the CF Convention" required=""/>
+  <rowAttribute label="units" type="xs:string" title="Units" useClass="" techNote="" description="" uid="1b72355c-dc7c-11e5-ac14-5404a60d96b5" superclass="" usage="Units " required=""/>
+  <rowAttribute label="description" type="xs:string" title="" useClass="" techNote="" description="" uid="1b72373c-dc7c-11e5-ac14-5404a60d96b5" superclass="dc:description" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Long name" useClass="" techNote="" description="The long name is used as the long_name variable attribute in the NetCDF files." uid="1b72394e-dc7c-11e5-ac14-5404a60d96b5" superclass="dc:title" usage="A short phrase to be used in the long_name NetCDF variable attribute" required=""/>
+  <rowAttribute label="procnote" type="aa:st__stringList" title="Processing notes" useClass="list" techNote="" description="" uid="1b723b6a-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="procComment" type="xs:string" title="Processing comments" useClass="freeText" techNote="" description="" uid="1b723d68-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="prov" type="xs:string" title="Provenance" useClass="freeText" techNote="" description="" uid="1b723f66-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="1b72415a-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="provmip" type="xs:string" title="MIP defining this variables" useClass="internalLink" techNote="" description="The MIP responsible for the original definition of this quantity" uid="1b72434e-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="mip" uid="SECTION:mip" title="1.1 Model Intercomparison Project" id="mip" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes" description="">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="190a378a-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="190a394c-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="190a3b04-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="190a3cee-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="190a3ee2-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="description" type="xs:string" title="" useClass="" techNote="" description="" uid="190a40c2-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="url" type="xs:string" title="Project Home Page" useClass="externalUrl" techNote="" description="Link to external site" uid="190a42b6-c9b5-11e5-833e-5404a60d96b5" superclass="xlink:href" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b724966-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b724b1e-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b724ce0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b724ec0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="1b7250be-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="description" type="xs:string" title="" useClass="" techNote="" description="" uid="1b72529e-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="url" type="xs:string" title="Project Home Page" useClass="externalUrl" techNote="" description="Link to external site" uid="1b725492-dc7c-11e5-ac14-5404a60d96b5" superclass="xlink:href" required=""/>
 </table>
-<table label="varChoice" uid="SECTION:varChoice" title="3.10 Indicates variables for which a there is a range of potential CMOR Varibles" id="vc" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes" description="There are several instances where variables defined in the tables are mutually exclusive options of which only one should be requested. The varChoice section is designed to hold this information, but is not yet complete. Examples are between ocean cell volume on a fixed grid for some models and monthly means for others, or between 6 hourly pressure level data on 8 levels vs. 4 levels for different objectives in the HighResMIP request. ">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="190a48b0-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="190a4a5e-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="190a4c16-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="190a4e00-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="190a4ff4-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="class" type="xs:string" title="Class of choice: heirarchy|cfg" useClass="" techNote="" description="" uid="190a51de-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="190a53b4-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="description" type="xs:string" title="" useClass="" techNote="" description="" uid="190a558a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="varList" type="xs:string" title="A colon separated list of variable names" useClass="" techNote="" description="" uid="190a577e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="optionList" type="xs:string" title="A list of options, one for each variable" useClass="" techNote="" description="" uid="190a5968-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+<table label="varChoice" uid="SECTION:varChoice" title="3.10 Indicates variables for which a there is a range of potential CMOR Variables" id="vc" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes" description="There are several instances where variables defined in the tables are mutually exclusive options of which only one should be requested. The varChoice section is designed to hold this information, but is not yet complete. Examples are between ocean cell volume on a fixed grid for some models and monthly means for others, or between 6 hourly pressure level data on 8 levels vs. 4 levels for different objectives in the HighResMIP request. ">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b725a64-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b725c08-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b725dc0-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b725faa-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="1b7261b2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="class" type="xs:string" title="Class of choice: heirarchy|cfg" useClass="" techNote="" description="" uid="1b72639c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="1b72657c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="description" type="xs:string" title="" useClass="" techNote="" description="" uid="1b726752-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="varList" type="xs:string" title="A colon separated list of variable names" useClass="" techNote="" description="" uid="1b72693c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="optionList" type="xs:string" title="A list of options, one for each variable" useClass="" techNote="" description="" uid="1b726b26-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="temporalShape" uid="SECTION:temporalShape" title="2.2 Temporal dimension" id="ts" itemLabelMode="def" level="3" maxOccurs="1" labUnique="Yes" description="The temporal shape record contains the temporal dimensions.">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="190a5e7c-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="190a602a-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="190a61e2-c9b5-11e5-833e-5404a60d96b5" superclass="skos:prefLabel" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="190a63d6-c9b5-11e5-833e-5404a60d96b5" superclass="dc:title" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="190a65ca-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="dimensions" type="xs:string" title="Dimensions" useClass="" techNote="" description="" uid="190a67b4-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="description" type="xs:string" title="Description" useClass="" techNote="" description="" uid="190a699e-c9b5-11e5-833e-5404a60d96b5" superclass="dc:description" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b72704e-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b7271f2-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b7273aa-dc7c-11e5-ac14-5404a60d96b5" superclass="skos:prefLabel" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b7275a8-dc7c-11e5-ac14-5404a60d96b5" superclass="dc:title" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="1b72779c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="dimensions" type="xs:string" title="Dimensions" useClass="" techNote="" description="" uid="1b727990-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="description" type="xs:string" title="Description" useClass="" techNote="" description="" uid="1b727b70-dc7c-11e5-ac14-5404a60d96b5" superclass="dc:description" required=""/>
 </table>
 <table label="structure" uid="SECTION:structure" title="2.3 Dimensions and related information" id="str" itemLabelMode="def" level="3" maxOccurs="1" labUnique="Yes" description="The structure record combines specification of dimensions, cell_measures and cell_methods attributes. Spatial and temporal dimensions are specified through links to 'spatialshape' and 'temporalshape' records.">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="190a704c-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="190a7222-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="190a73e4-c9b5-11e5-833e-5404a60d96b5" superclass="skos:prefLabel" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="190a75e2-c9b5-11e5-833e-5404a60d96b5" superclass="dc:title" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="190a77d6-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="spid" type="xs:string" title="Spatial Shape" useClass="internalLink" techNote="spatialShape" description="" uid="190a79e8-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="tmid" type="xs:string" title="Temporal Shape" useClass="internalLink" techNote="temporalShape" description="" uid="190a7be6-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="odims" type="xs:string" title="Other Dimensions" useClass="" techNote="" description="Dimensions other than temporal and spatial dimensions." uid="190a7dc6-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="coords" type="xs:string" title="Coordinates" useClass="" techNote="" description="" uid="190a7fba-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="cell_methods" type="xs:string" title="Cell Methods" useClass="" techNote="" description="Text for the NetCDF cell_methods attribute: describes processing used to generate the data values." uid="190a81a4-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="cell_measures" type="xs:string" title="Cell Measures" useClass="" techNote="" description="" uid="190a8398-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="flag_values" type="xs:string" title="Flag Values" useClass="" techNote="" description="" uid="190a8582-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="flag_meanings" type="xs:string" title="FLag Meanings" useClass="" techNote="" description="" uid="190a8762-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="description" type="xs:string" title="Description" useClass="" techNote="" description="" uid="190a8942-c9b5-11e5-833e-5404a60d96b5" superclass="dc:description" required=""/>
-  <rowAttribute label="procNote" type="xs:string" title="Processing Note" useClass="" techNote="" description="" uid="190a8b36-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="prov" type="xs:string" title="Provenance" useClass="" techNote="" description="" uid="190a8d20-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b728228-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b7283d6-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="1b72858e-dc7c-11e5-ac14-5404a60d96b5" superclass="skos:prefLabel" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="1b72878c-dc7c-11e5-ac14-5404a60d96b5" superclass="dc:title" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="1b728980-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="spid" type="xs:string" title="Spatial Shape" useClass="internalLink" techNote="spatialShape" description="" uid="1b728b88-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="tmid" type="xs:string" title="Temporal Shape" useClass="internalLink" techNote="temporalShape" description="" uid="1b728d86-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="odims" type="xs:string" title="Other Dimensions" useClass="" techNote="" description="Dimensions other than temporal and spatial dimensions." uid="1b728f70-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="coords" type="xs:string" title="Coordinates" useClass="" techNote="" description="" uid="1b729164-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="cell_methods" type="xs:string" title="Cell Methods" useClass="" techNote="" description="Text for the NetCDF cell_methods attribute: describes processing used to generate the data values." uid="1b72934e-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="cell_measures" type="xs:string" title="Cell Measures" useClass="" techNote="" description="" uid="1b729542-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="flag_values" type="xs:string" title="Flag Values" useClass="" techNote="" description="" uid="1b72972c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="flag_meanings" type="xs:string" title="FLag Meanings" useClass="" techNote="" description="" uid="1b729916-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="description" type="xs:string" title="Description" useClass="" techNote="" description="" uid="1b729b00-dc7c-11e5-ac14-5404a60d96b5" superclass="dc:description" required=""/>
+  <rowAttribute label="procNote" type="xs:string" title="Processing Note" useClass="" techNote="" description="" uid="1b729cf4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="prov" type="xs:string" title="Provenance" useClass="" techNote="" description="" uid="1b729ede-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="grids" uid="SECTION:grids" title="1.7 Specification of dimensions" id="grd" itemLabelMode="def" level="4" maxOccurs="1" labUnique="Yes" description="">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="190a952c-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="190a96f8-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="tables" type="xs:string" title="CMOR table(s)" useClass="" techNote="" description="List of tables which make use of this dimension" uid="190a98ba-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="Identifier" useClass="recordId" techNote="" description="" uid="190a9ac2-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="label" type="xs:string" title="CMOR dimension" useClass="" techNote="" description="Unique label" uid="190a9cb6-c9b5-11e5-833e-5404a60d96b5" superclass="skos:prefLabel" required=""/>
-  <rowAttribute label="altLabel" type="xs:string" title="output dimension name" useClass="" techNote="" description="Name used for the dimension in NetCDF files" uid="190a9eb4-c9b5-11e5-833e-5404a60d96b5" superclass="skos:altLabel" required=""/>
-  <rowAttribute label="description" type="xs:string" title="description" useClass="" techNote="" description="" uid="190aa0b2-c9b5-11e5-833e-5404a60d96b5" superclass="dc:description" required=""/>
-  <rowAttribute label="standardName" type="xs:string" title="standard name" useClass="internalLink" techNote="" description="CF Standard Name" uid="190aa2ba-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="long name" useClass="" techNote="" description="Used for the variable long_name attribute" uid="190aa4ae-c9b5-11e5-833e-5404a60d96b5" superclass="dc:title" required=""/>
-  <rowAttribute label="axis" type="xs:string" title="axis" useClass="" techNote="" description="For spatial or temporal dimensions, set to X, Y, Z or T." uid="190aa6b6-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="units" type="xs:string" title="units" useClass="" techNote="" description="" uid="190aa8b4-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="isIndex" type="xs:string" title="index axis?" useClass="" techNote="" description="" uid="190aaa94-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="coords" type="xs:string" title="coords_attrib" useClass="" techNote="" description="" uid="190aac74-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="bounds" type="xs:string" title="bounds?" useClass="" techNote="" description="" uid="190aae5e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="direction" type="xs:string" title="stored direction" useClass="" techNote="" description="" uid="190ab03e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="valid_min" type="xs:float" title="valid_min" useClass="" techNote="" description="" uid="190ab21e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="valid_max" type="xs:float" title="valid_max" useClass="" techNote="" description="" uid="190ab408-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="type" type="xs:string" title="type" useClass="" techNote="" description="" uid="190ab5e8-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="positive" type="xs:string" title="positive" useClass="" techNote="" description="" uid="190ab7dc-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="value" type="xs:string" title="value" useClass="" techNote="" description="" uid="190aba0c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="boundsValues" type="xs:string" title="bounds _values" useClass="" techNote="" description="" uid="190abc00-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="requested" type="xs:string" title="requested" useClass="" techNote="" description="" uid="190abde0-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="boundsRequested" type="aa:st__floatList" title="bounds_ requested" useClass="" techNote="" description="" uid="190abfc0-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="tolRequested" type="xs:string" title="tol_on_requests: variance from requested values that is tolerated" useClass="" techNote="" description="" uid="190ac1a0-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="isGrid" type="xs:string" title="grid?" useClass="" techNote="" description="" uid="190ac38a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b72a76c-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b72a91a-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="tables" type="xs:string" title="CMOR table(s)" useClass="" techNote="" description="List of tables which make use of this dimension" uid="1b72aad2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Identifier" useClass="recordId" techNote="" description="" uid="1b72ace4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="CMOR dimension" useClass="" techNote="" description="Unique label" uid="1b72aece-dc7c-11e5-ac14-5404a60d96b5" superclass="skos:prefLabel" required=""/>
+  <rowAttribute label="altLabel" type="xs:string" title="output dimension name" useClass="" techNote="" description="Name used for the dimension in NetCDF files" uid="1b72b0cc-dc7c-11e5-ac14-5404a60d96b5" superclass="skos:altLabel" required=""/>
+  <rowAttribute label="description" type="xs:string" title="description" useClass="" techNote="" description="" uid="1b72b2d4-dc7c-11e5-ac14-5404a60d96b5" superclass="dc:description" required=""/>
+  <rowAttribute label="standardName" type="xs:string" title="standard name" useClass="internalLink" techNote="" description="CF Standard Name" uid="1b72b4d2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="long name" useClass="" techNote="" description="Used for the variable long_name attribute" uid="1b72b6c6-dc7c-11e5-ac14-5404a60d96b5" superclass="dc:title" required=""/>
+  <rowAttribute label="axis" type="xs:string" title="axis" useClass="" techNote="" description="For spatial or temporal dimensions, set to X, Y, Z or T." uid="1b72b8ce-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="units" type="xs:string" title="units" useClass="" techNote="" description="" uid="1b72bac2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="isIndex" type="xs:string" title="index axis?" useClass="" techNote="" description="" uid="1b72bcac-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="coords" type="xs:string" title="coords_attrib" useClass="" techNote="" description="" uid="1b72be8c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="bounds" type="xs:string" title="bounds?" useClass="" techNote="" description="" uid="1b72c076-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="direction" type="xs:string" title="stored direction" useClass="" techNote="" description="" uid="1b72c260-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="valid_min" type="xs:float" title="valid_min" useClass="" techNote="" description="" uid="1b72c440-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="valid_max" type="xs:float" title="valid_max" useClass="" techNote="" description="" uid="1b72c620-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="type" type="xs:string" title="type" useClass="" techNote="" description="" uid="1b72c814-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="positive" type="xs:string" title="positive" useClass="" techNote="" description="" uid="1b72ca08-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="value" type="xs:string" title="value" useClass="" techNote="" description="" uid="1b72cbe8-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="boundsValues" type="xs:string" title="bounds _values" useClass="" techNote="" description="" uid="1b72cdc8-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="requested" type="xs:string" title="requested" useClass="" techNote="" description="" uid="1b72cfa8-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="boundsRequested" type="aa:st__floatList" title="bounds_ requested" useClass="" techNote="" description="" uid="1b72d188-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="tolRequested" type="xs:string" title="tol_on_requests: variance from requested values that is tolerated" useClass="" techNote="" description="" uid="1b72d368-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="isGrid" type="xs:string" title="grid?" useClass="" techNote="" description="" uid="1b72d548-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <table label="timeSlice" uid="SECTION:timeSlice" title="3.11 Time Slices for Output Requests" id="tsl" itemLabelMode="def" level="4" maxOccurs="1" labUnique="Yes" description="">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="190acaba-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="190acc72-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="type" type="xs:string" title="Type of time slice" useClass="" techNote="" description="This is a string indicating how the year selection is described: 'simpleRange' is a single span of years indicated by a start and duration; 'yearList' is a collection of single years indicated by a start, number of years and a step; 'sliceList' is a list of multi-year time slices, indicated by a start year, a slice length, a total number of years (which must be an integer multiple of the slice length) and a step between slice starts." uid="190ace34-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="start" type="xs:integer" title="Start year" useClass="" techNote="" description="" uid="190ad03c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="end" type="xs:integer" title="End year" useClass="" techNote="" description="" uid="190ad23a-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="step" type="xs:float" title="Step (years)" useClass="" techNote="" description="" uid="190ad424-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="sliceLen" type="xs:integer" title="Length of slice" useClass="" techNote="" description="" uid="190ad60e-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="nyears" type="xs:float" title="Total number of years" useClass="" techNote="" description="" uid="190ad7f8-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="Unique identifier" useClass="" techNote="" description="" uid="190ad9e2-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b72dc5a-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b72de12-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="type" type="xs:string" title="Type of time slice" useClass="" techNote="" description="This is a string indicating how the year selection is described: 'simpleRange' is a single span of years indicated by a start and duration; 'yearList' is a collection of single years indicated by a start, number of years and a step; 'sliceList' is a list of multi-year time slices, indicated by a start year, a slice length, a total number of years (which must be an integer multiple of the slice length) and a step between slice starts." uid="1b72dfd4-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="start" type="xs:integer" title="Start year" useClass="" techNote="" description="" uid="1b72e1e6-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="end" type="xs:integer" title="End year" useClass="" techNote="" description="" uid="1b72e42a-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="step" type="xs:float" title="Step (years)" useClass="" techNote="" description="" uid="1b72e614-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="sliceLen" type="xs:integer" title="Length of slice" useClass="" techNote="" description="" uid="1b72e808-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="nyears" type="xs:float" title="Total number of years" useClass="" techNote="" description="" uid="1b72e9f2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Unique identifier" useClass="" techNote="" description="" uid="1b72ebdc-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </table>
 <annextable label="tags" uid="SECTION:_tags" title="6.1 Tags" id="tag" itemLabelMode="def" level="6" maxOccurs="1" labUnique="Yes" description="">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="190adee2-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="190ae090-c9b5-11e5-833e-5404a60d96b5" required="True"/>
-  <rowAttribute label="label" type="xs:string" title="Label" useClass="" techNote="" description="" uid="190ae252-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="Title" useClass="" techNote="" description="" uid="190ae43c-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="description" type="xs:string" title="Description" useClass="" techNote="" description="" uid="190ae626-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
-  <rowAttribute label="uid" type="xs:string" title="Identifier" useClass="" techNote="" description="" uid="190ae810-c9b5-11e5-833e-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b72f0dc-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b72f280-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Label" useClass="" techNote="" description="" uid="1b72f442-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Title" useClass="" techNote="" description="" uid="1b72f640-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="description" type="xs:string" title="Description" useClass="" techNote="" description="" uid="1b72f834-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Identifier" useClass="" techNote="" description="" uid="1b72fa1e-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+</annextable>
+<annextable label="varRelations" uid="SECTION:_varRelations" title="6.2 Relationships between CMOR variables" id="vrln" itemLabelMode="und" level="6" maxOccurs="1" labUnique="Yes" description="Defines relationships between variables which have a common short name (label).">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b72fec4-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b730072-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Label" useClass="" techNote="" description="" uid="1b730234-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Title" useClass="" techNote="" description="" uid="1b730428-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="description" type="xs:string" title="Description" useClass="" techNote="" description="" uid="1b73061c-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Identifier" useClass="" techNote="" description="" uid="1b7307fc-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="relation" type="xs:string" title="Relationship" useClass="" techNote="" description="Keyword identifying the relationship (e.g. 'masking', 'vertical', 'time-mean')" uid="1b7309e6-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+</annextable>
+<annextable label="varRelLnk" uid="SECTION:_varRelLnk" title="6.3 CMOR Variable Relation Links" id="vrln" itemLabelMode="und" level="6" maxOccurs="1" labUnique="Yes" description="Makes the link between CMOR Variable Relations and the variable records.">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="1b730f54-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="1b73110c-dc7c-11e5-ac14-5404a60d96b5" required="True"/>
+  <rowAttribute label="label" type="xs:string" title="Label" useClass="" techNote="" description="" uid="1b7312ce-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="Title" useClass="" techNote="" description="" uid="1b7314c2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="uid" type="xs:string" title="Identifier" useClass="" techNote="" description="" uid="1b7316b6-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="rlid" type="xs:string" title="Relationship" useClass="internalLink" techNote="" description="Link to a record defining a relationship" uid="1b7318aa-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="rid" type="xs:string" title="Record" useClass="internalLink" techNote="" description="Link to one of the records associated with the rlid relationship." uid="1b731ab2-dc7c-11e5-ac14-5404a60d96b5" superclass="" required=""/>
 </annextable>
 </defDoc>

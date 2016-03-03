@@ -18,6 +18,21 @@ class xlsx(object):
   def close(self):
     self.wb.close()
 
+def vfmt( x ):
+            if x < 1.e9:
+              s = '%sM' % int( x*1.e-6 )
+            elif x < 1.e12:
+              s = '%sG' % int( x*1.e-9 )
+            elif x < 1.e13:
+              s = '%3.1fT' % ( x*1.e-12 )
+            elif x < 1.e15:
+              s = '%3iT' % int( x*1.e-12 )
+            elif x < 1.e18:
+              s = '%3iP' % int( x*1.e-15 )
+            else:
+              s = '{:,.2f}'.format( x*1.e-9 )
+            return s
+
 #priority	long name	units 	comment 	questions & notes	output variable name 	standard name	unconfirmed or proposed standard name	unformatted units	cell_methods	valid min	valid max	mean absolute min	mean absolute max	positive	type	CMOR dimensions	CMOR variable name	realm	frequency	cell_measures	flag_values	flag_meanings
 
 strkeys = [u'procNote', u'uid', u'odims', u'flag_meanings', u'prov', u'title', u'tmid', u'label', u'cell_methods', u'coords', u'cell_measures', u'spid', u'flag_values', u'description']
@@ -84,11 +99,11 @@ class makePurl(object):
       if c1.match( v.label ):
          oo.write( 'RewriteRule ^%s$ http://clipc-services.ceda.ac.uk/dreq/u/%s.html\n' % (v.label,v.uid) )
       else:
-         print 'Match failed: ', v.label
+         print ('Match failed: %s' % v.label )
     oo.close()
       
 class makeTab(object):
-  def __init__(self, subset=None, dest='tables/test.xlsx', skipped=set()):
+  def __init__(self, dq, subset=None, dest='tables/test.xlsx', skipped=set(), collected=None):
     if subset != None:
       cmv = [x for x in dq.coll['CMORvar'].items if x.uid in subset]
     else:
@@ -103,25 +118,38 @@ class makeTab(object):
 
     hdr_cell_format = wb.wb.add_format({'text_wrap': True, 'font_size': 14, 'font_color':'#0000ff', 'bold':1, 'fg_color':'#aaaacc'})
     hdr_cell_format.set_text_wrap()
+    sect_cell_format = wb.wb.add_format({'text_wrap': True, 'font_size': 14, 'font_color':'#0000ff', 'bold':1, 'fg_color':'#ccccbb'})
+    sect_cell_format.set_text_wrap()
     cell_format = wb.wb.add_format({'text_wrap': True, 'font_size': 11})
     cell_format.set_text_wrap()
 
     mode = 'c'
     sht = wb.newSheet( 'Notes' )
-    tableNotes = [('MIPs (...)','The last two columns in each row list MIPs associated with each variable. The first column in this pair lists the MIPs which are requesting the variable in one or more experiments. The second column lists the MIPs proposing experiments in which this variable is requested. E.g. If a variable is requested in a DECK experiment by HighResMIP, then HighResMIP appears in the forst column and DECK in the second')]
-    sht.set_row(0,40)
+    tableNotes = [('MIPs (...)','The last two columns in each row list MIPs associated with each variable. The first column in this pair lists the MIPs which are requesting the variable in one or more experiments. The second column lists the MIPs proposing experiments in which this variable is requested. E.g. If a variable is requested in a DECK experiment by HighResMIP, then HighResMIP appears in the first column and DECK in the second')]
+    sht.write( 0,0, '', hdr_cell_format )
     sht.write( 0,1, 'Notes on tables', hdr_cell_format )
     ri = 0
-    sht.set_column(0,0,40)
-    sht.set_column(0,1,200)
+    sht.set_column(0,0,30)
+    sht.set_column(1,1,60)
     for t in tableNotes:
       ri += 1
       for i in range(2):
           sht.write( ri,i, t[i], cell_format )
 
+    if collected != None:
+      ri += 2
+      sht.write( ri, 0, 'Table', sect_cell_format )
+      sht.write( ri, 1, 'Reference Volume (1 deg. atmosphere, 0.5 deg. ocean)', sect_cell_format )
+      for k in sorted( collected.keys() ):
+        ri += 1
+        sht.write( ri, 0, k )
+        sht.write( ri, 1, vfmt( collected[k]*2. ) )
+
     ncga = 'NetCDF Global Attribute'
+    withoo = False
     for t in tables:
-      oo = open( 'tables/test_%s.csv' % t, 'w' )
+      if withoo:
+        oo = open( 'tables/test_%s.csv' % t, 'w' )
       sht = wb.newSheet( t )
       j = 0
       if mode == 'c':
@@ -141,7 +169,7 @@ class makeTab(object):
         hrec.append( 'MIPs (requesting)' )
         hrec.append( 'MIPs (by experiment)' )
 
-      sht.set_row(0,40)
+      ##sht.set_row(0,40)
       for i in range(len(hrec)):
           sht.write( j,i, hrec[i], hdr_cell_format )
           if hcmt[i] != '':
@@ -153,7 +181,7 @@ class makeTab(object):
           cv = dq.inx.uid[ v.vid ]
           strc = dq.inx.uid[ v.stid ]
           if strc._h.label == 'remarks':
-            print 'ERROR: structure not found for %s: %s .. %s (%s)' % (v.uid,v.label,v.title,v.mipTable)
+            print ( 'ERROR: structure not found for %s: %s .. %s (%s)' % (v.uid,v.label,v.title,v.mipTable) )
             ok = False
           else:
             sshp = dq.inx.uid[ strc.spid ]
@@ -163,7 +191,7 @@ class makeTab(object):
 
           if not ok:
             if (t,v.label) not in skipped:
-              print 'makeTables: skipping %s %s' % (t,v.label)
+              print ( 'makeTables: skipping %s %s' % (t,v.label) )
               skipped.add( (t,v.label) )
           else:
             dims = []
@@ -182,11 +210,13 @@ class makeTab(object):
               orec.append( string.join( sorted( list( thismips) ),',') )
               orec.append( string.join( sorted( list( thismips2) ),',') )
 
-            oo.write( string.join(orec, '\t' ) + '\n' )
+            if withoo:
+              oo.write( string.join(orec, '\t' ) + '\n' )
             j+=1
             for i in range(len(orec)):
               sht.write( j,i, orec[i], cell_format )
-      oo.close()
+      if withoo:
+        oo.close()
     wb.close()
 
 hdr = """
@@ -253,7 +283,15 @@ class makeJs(object):
       ln = v.title
       u = v.units
       uid = v.uid
-      rr = rtmpl % locals()
+      d = locals()
+      for k in ['sn','ln','u','var']:
+    
+        if string.find( d[k], '"' ) != -1:
+          print ( "WARNING ... quote in %s .. %s [%s]" % (k,var,d[k]) )
+          d[k] = string.replace( d[k], '"', "'" )
+          print ( d[k] )
+        
+      rr = rtmpl % d
       rl.append( rr )
       n += 1
     oo = open( 'data2.js', 'w' )
@@ -316,7 +354,8 @@ class styles(object):
       return '<li>%s: %s</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.title )
 
   def cmvLink(self,targ,frm='',ann=''):
-    return '<li>%s {%s}: %s [%s]</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.mipTable, targ.title, targ.frequency )
+    t2 = targ._inx.uid[targ.stid]
+    return '<li>%s {%s}: %s [%s: %s]</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.mipTable, targ.title, targ.frequency, t2.title )
 
   def objLink(self,targ,frm='',ann=''):
     return '<li>%s: %s</li>' % (  targ.label, targ.__href__(odir='../u/', label=targ.title,title=targ.description) )
@@ -343,36 +382,54 @@ class styles(object):
     return '<li>%s {%s}: %s variables, %s request links</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.mip, gpsz, nlnk )
 
 class tables(object):
-  def __init__(self,sc, mips):
+  def __init__(self,sc, mips, odir='xls'):
       self.sc = sc
       self.dq = sc.dq
       self.mips = mips
+      self.odir = odir
 
-  def doTable(self,m,l1,m2,pmax,collector,acc=True):
-      """acc allows accumulation of values to be switched off when called in single expt mode"""
+  def setMlab( self, m ):
+      if type(m) == type(''):
+        mlab = m
+      else:
+        ll = sorted( list(m) )
+        if len(ll) == 1:
+          mlab = list(m)[0]
+        else:
+          mlab=string.join( [ x[:2].lower() for x in m ], '.' )
+      return mlab
+
+  def doTable(self,m,l1,m2,pmax,collector,acc=True, mlab=None):
+      """*acc* allows accumulation of values to be switched off when called in single expt mode"""
+
+      if mlab == None:
+        mlab = self.setMlab( m )
         
+
       x = self.sc.volByExpt( l1, m2, expFullEx=(m2 in self.mips), pmax=pmax )
       if x[0] > 0:
-        collector[m].a[m2] += x[0]
         im2 = self.dq.inx.uid[m2]
+        collector[mlab].a[im2.label] += x[0]
 #
 # create sum for each table
 #
         xs = 0
+        kkc = '_%s_%s' % (mlab,im2.label)
         for k in x[2].keys():
           i = self.dq.inx.uid[k]
           xxx =  x[2][k]
           xs += xxx
           if xxx > 0:
-            collector['_%s_%s' % (m,m2)].a[i.mipTable] += xxx
+            collector[kkc].a[i.mipTable] += xxx
         assert x[0] == xs, 'ERROR.0088: consistency problem %s  %s %s %s' % (m,m2,x[0],xs)
         if x[0] == 0:
-          print 'Zero size:',m,m2
+          print ( 'Zero size: %s, %s' % (m,m2) )
           if len( x[2].keys() ) > 0:
-             print 'ERROR:zero: ',m,m2,x[2].keys()
+             print ( 'ERROR:zero: %s, %s: %s' % (m,m2,str(x[2].keys()) ) )
 
         if acc:
-          collector[m].a['TOTAL'] += x[0]
+          collector[mlab].a['TOTAL'] += x[0]
+
         dd = collections.defaultdict( list )
         lll = set()
         for v in x[2].keys():
@@ -382,21 +439,16 @@ class tables(object):
             lll.add(u)
             dd[t].append( (f,t,l,tt,d,u) )
         if len( dd.keys() ) > 0:
-          collector[m].dd[m2] = dd
+          collector[mlab].dd[im2.label] = dd
           if im2._h.label == 'experiment':
             dothis = self.sc.tierMax >= im2.tier
 ###
 ### BUT ... there is a treset in the request item .... it may be that some variables are excluded ...
 ###         need the variable list itself .....
 ###
-          makeTab( subset=lll, dest='tab2/%s-%s_%s_%s.xlsx' % (m,m2,self.sc.tierMax,pmax) )
+          makeTab( self.sc.dq, subset=lll, dest='%s/%s-%s_%s_%s.xlsx' % (self.odir,mlab,im2.label,self.sc.tierMax,pmax), collected=collector[kkc].a )
 
 styls = styles()
-
-assert os.path.isdir( 'html' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml'
-assert os.path.isdir( 'html/u' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml, and refernces to "u" in style lines below'
-assert os.path.isdir( 'html/index' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml, and refernces to "u" in style lines below'
-assert os.path.isdir( 'tables' ), 'Before running this script you need to create a "tables" sub-directory, or edit the makeTab class'
 
 htmlStyle = {}
 htmlStyle['CMORvar'] = {'getIrefs':['requestVar']}
@@ -414,31 +466,37 @@ htmlStyle['spatialShape'] = {'getIrefs':['__all__']}
 htmlStyle['temporalShape'] = {'getIrefs':['__all__']}
 htmlStyle['structure'] = {'getIrefs':['__all__']}
 htmlStyle['standardname'] = {'getIrefs':['__all__']}
-dq = dreq.loadDreq( htmlStyles=htmlStyle)
+
+if __name__ == "__main__":
+  assert os.path.isdir( 'html' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml'
+  assert os.path.isdir( 'html/u' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml, and refernces to "u" in style lines below'
+  assert os.path.isdir( 'html/index' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml, and refernces to "u" in style lines below'
+  assert os.path.isdir( 'tables' ), 'Before running this script you need to create a "tables" sub-directory, or edit the makeTab class'
+
+  dq = dreq.loadDreq( htmlStyles=htmlStyle)
 ##
 ## add special styles to dq object "itemStyle" dictionary.
 ##
 
-dq.itemStyles['standardname'] = styls.snLink
-dq.itemStyles['var'] = styls.varLink
-dq.itemStyles['mip'] = styls.mipLink
-dq.itemStyles['CMORvar'] = styls.cmvLink
-dq.itemStyles['objective'] = styls.objLink
-dq.itemStyles['structure'] = styls.strLink
-dq.itemStyles['objectiveLink'] = styls.objLnkLink
-dq.itemStyles['requestVarGroup'] = styls.vgrpLink
-dq.itemStyles['requestLink'] = styls.rqlLink02
-dq.itemStyles['spatialShape'] = styls.labTtl
-dq.coll['var'].items[0].__class__._linkAttrStyle['sn'] = styls.snLink01
+  dq.itemStyles['standardname'] = styls.snLink
+  dq.itemStyles['var'] = styls.varLink
+  dq.itemStyles['mip'] = styls.mipLink
+  dq.itemStyles['CMORvar'] = styls.cmvLink
+  dq.itemStyles['objective'] = styls.objLink
+  dq.itemStyles['structure'] = styls.strLink
+  dq.itemStyles['objectiveLink'] = styls.objLnkLink
+  dq.itemStyles['requestVarGroup'] = styls.vgrpLink
+  dq.itemStyles['requestLink'] = styls.rqlLink02
+  dq.itemStyles['spatialShape'] = styls.labTtl
+  dq.coll['var'].items[0].__class__._linkAttrStyle['sn'] = styls.snLink01
 ##dq.coll['requestVarGroup'].items[0].__class__._linkAttrStyle['requestVar'] = styls.rqvLink01
-dq.itemStyles['requestVar'] = styls.rqvLink01
+  dq.itemStyles['requestVar'] = styls.rqvLink01
 
-if __name__ == "__main__":
   ht = htmlTrees(dq)
   dq.makeHtml( annotations={'var':ht.anno} )
   try:
     import xlsxwriter
-    mt = makeTab()
+    mt = makeTab( dq)
   except:
     print ('Could not make tables ...')
     raise

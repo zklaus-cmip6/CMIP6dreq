@@ -10,6 +10,7 @@ except:
   from dreqPy.utilities import cmvFilter 
 
 import collections, string, operator
+import makeTables
 import sys
 
 python2 = True
@@ -24,6 +25,13 @@ if sys.version_info[0] == 3:
 else:
   from utilP2 import mlog
   mlg = mlog()
+
+class c1(object):
+  def __init__(self):
+    self.a = collections.defaultdict( int )
+class c1s(object):
+  def __init__(self):
+    self.a = collections.defaultdict( set )
 
 class baseException(Exception):
   """Basic exception for general use in code."""
@@ -98,6 +106,12 @@ class dreqQuery(object):
     self.tierMax = tierMax
 
     self.mips = set( [x.label for x in self.dq.coll['mip'].items ] )
+    self.experiments = set( [x.uid for x in self.dq.coll['experiment'].items ] )
+    self.exptByLabel = {}
+    for x in self.dq.coll['experiment'].items:
+      if x.label in self.exptByLabel:
+        print ( 'ERROR: experiment label duplicated: %s' % x.label )
+      self.exptByLabel[x.label] = x.uid
     self.mipls = sorted( list( self.mips ) )
 
     self.default_mcfg = nt_mcfg._make( [259200,60,64800,40,20,5,100] )
@@ -108,8 +122,11 @@ class dreqQuery(object):
     self.requestItemExpAll(  )
 
   def szcfg(self):
+    szr = {'100km':64800, '1deg':64800, '2deg':16200 }
     self.szss = {}
     self.sz = {}
+    self.szg = collections.defaultdict( dict )
+    self.szgss = collections.defaultdict( dict )
     for i in self.dq.coll['spatialShape'].items:
       type = 'a'
       if i.levelFlag == False:
@@ -144,14 +161,22 @@ class dreqQuery(object):
         nh = 10
 
       self.szss[i.uid] = nh*nz
+      for k in szr:
+        self.szgss[k][i.uid] = szr[k]*nz
     for i in self.dq.coll['structure'].items:
-      s = self.szss[i.spid]
+      s = 1
       if i.odims != '':
         s = s*5
-      self.sz[i.uid] = s
+      self.sz[i.uid] = self.szss[i.spid]*s
+      for k in szr:
+        self.szg[k][i.uid] = self.szgss[k][i.spid]*s
 
   def getRequestLinkByMip( self, mipSel ):
     """Return the set of request links which are associated with specified MIP"""
+
+    if type(mipSel) == type( {} ):
+      return self.getRequestLinkByMipObjective(self,mipSel)
+
     if type(mipSel) == type(''):
       t1 = lambda x: x == mipSel
     elif type(mipSel) == type(set()):
@@ -164,6 +189,21 @@ class dreqQuery(object):
     ##self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
     self.rqs = list( s )
     return self.rqs
+
+  def getRequestLinkByMipObjective( self, mipSel ):
+    """Return the set of request links which are associated with specified MIP and its objectives"""
+
+    assert type(mipSel) == type( {} ),'Argument must be a dictionary, listing objectives for each MIP'
+
+    s = set()
+    for i in self.dq.coll['objectiveLink'].items:
+      if i.label in mipSel:
+        if len(mipSel[i]) == 0 or self.dq.inx.uid[i.oid].label in mipSel[i]:
+          s.add( self.dq.inx.uid[i.rid] )
+    ##self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
+    self.rqs = list( s )
+    return self.rqs
+
 
   def getRequestLinkByObjective( self, objSel ):
     """Return the set of request links which are associated with specified objectives"""
@@ -304,6 +344,12 @@ class dreqQuery(object):
     ##imips = {i.mip for i in l1}
     
     rql, l1p, exset = self.rqlByExpt( l1, ex, pmax=pmax, expFullEx=expFullEx )
+    verbose = False
+    if verbose:
+      for i in rql:
+        r = inx.uid[i]
+        print ( '%s, %s, %s' % r.label, r.title, r.uid )
+
     dn = False
     if dn:
       exi = self.dq.inx.uid[ex]
@@ -429,15 +475,22 @@ class dreqQuery(object):
 ### for request variables which reference the variable group attached to the link, add the associate CMOR variables, subject to priority
       i = inx.uid[u]
       e[i.uid] = set()
+      si = collections.defaultdict( list )
       for x in inx.iref_by_sect[i.refid].a['requestVar']:
            if inx.uid[x].priority <= pmax:
               e[i.uid].add( inx.uid[x].vid )
+
+              if verbose:
+                cmv = inx.uid[inx.uid[x].vid]
+                if cmv._h.label == 'CMORvar':
+                  si[ cmv.mipTable ].append( inx.uid[x].label )
 #
 # for each variable, calculate the maximum number of years across all the request links which reference that variable.
 ##
 ## for each request item we have nymax, nenmax, nexmax.
 ##
     nym = {}
+    nymg = collections.defaultdict( dict )
 
 ##
 ## if dataset count rather than volume is wanted, use item 3 from rqiExp tuple.
@@ -446,35 +499,56 @@ class dreqQuery(object):
     else:
       irqi = 2
 
+    sgg = set()
     for v in vars:
       s = set()
+      sg = collections.defaultdict( set )
       cc2 = collections.defaultdict( set )
+      cc2s = collections.defaultdict( c1s )
       for i in l1p:
 ##################
         if i.esid in exset and v in e[i.rlid]:
           ix = inx.uid[i.esid]
+          rl = inx.uid[i.rlid]
+          sgg.add( rl.grid )
+          if rl.grid in ['100km','1deg','2deg']:
+            grd = rl.grid
+          else:
+            grd = 'native'
+
           if exi._h.label == 'experiment':
             if ex in self.rqiExp[i.uid][1]:
               this = self.rqiExp[i.uid][1][ex]
-              cc2[i.esid].add( this[-1]*this[-2] )
+              thisz = this[-1]*this[-2]
+            else:
+              thisz = None
           elif ix._h.label == 'experiment':
-            cc2[i.esid].add( self.rqiExp[i.uid][irqi] )
+            #cc2s[grd].a[i.esid].add( self.rqiExp[i.uid][irqi] )
+            thisz = self.rqiExp[i.uid][irqi]
           else:
+            thisz = None
             if 'experiment' in inx.iref_by_sect[i.esid].a:
               for u in inx.iref_by_sect[i.esid].a['experiment']:
                 if u in self.rqiExp[i.uid][1]:
                   this = self.rqiExp[i.uid][1][u]
-                  cc2[u].add( this[-1]*this[-2] )
-                ###cc2[u].add( self.rqiExp[i.uid][irqi] )
-            ##else:
-              ##print 'WARNING .... empty experiment set'
-          s.add( self.rqiExp[i.uid][irqi] )
-      ##nym[v] = max( {self.rqiExp[i.uid][2] for i in l1p if i.esid == ex and v in e[i.rlid]} )
+                  cc2s[grd].a[u].add( this[-1]*this[-2] )
+
+          if thisz != None:
+              cc2s[grd].a[i.esid].add( thisz )
+          ##if rl.grid in ['100km','1x1']:
+            ##sg[rl.grid].add( self.rqiExp[i.uid][irqi] )
+          ##else:
+          sg[grd].add( self.rqiExp[i.uid][irqi] )
+      
       if len(s) == 0:
         nym[v] = 0
       else:
-        ##print 'debug2:: ',v,cc2
+###
+### sum over experiments of maximum within eacj experiment
+###
         nym[v] = sum( [max( cc2[k] ) for k in cc2] )
+      for g in sg:
+        nymg[v][g] = sum( [max( cc2s[g].a[k] ) for k in cc2s[g].a] )
 
     szv = {}
     ov = []
@@ -482,14 +556,24 @@ class dreqQuery(object):
       szv[v] = self.sz[inx.uid[v].stid]*npy[inx.uid[v].frequency]
       ov.append( self.dq.inx.uid[v] )
     ee = self.listIndexDual( ov, 'mipTable', 'label', acount=None, alist=None, cdict=szv, cc=cc )
+
     ff = {}
     for v in vars:
       if adsCount:
         ff[v] = 1
       else:
-        ff[v] = self.sz[ inx.uid[v].stid ] * npy[inx.uid[v].frequency]
+        if 'native' in nymg[v]:
+          ff[v] = self.sz[ inx.uid[v].stid ] * npy[inx.uid[v].frequency]
+          ny = nymg[v]['native']
+        else:
+          if len( nymg[v] ) > 1:
+            print ( '########### Selecting first in list .............' )
+          ks = list( nymg[v].keys() )[0]
+          ny = nymg[v][ks]
+          ff[v] = self.szg[ks][ inx.uid[v].stid ] * npy[inx.uid[v].frequency]
+
         if inx.uid[v].frequency != 'monClim':
-          ff[v] = ff[v]*nym[v]
+          ff[v] = ff[v]*ny
     self.ngptot = sum( [  ff[v]  for v in vars] )
     return (self.ngptot, ee, ff )
 
@@ -622,9 +706,45 @@ class dreqQuery(object):
       if len(nf) > 0:
         raise baseException( 'rqiByMip: Name of mip(s) not recognised: %s' % str(nf) )
       l1 = [i for i in  self.dq.coll['requestItem'].items if i.mip in mip]
+    elif type(mip) == type( dict()):
+      nf = [ m for m in mip if m not in self.mips]
+      if len(nf) > 0:
+        raise baseException( 'rqiByMip: Name of mip(s) not recognised: %s' % str(nf) )
+      l1 = []
+      for i in  self.dq.coll['requestLink'].items:
+        if i.mip in mip:
+          ok = False
+          if len( mip[i.mip] ) == 0:
+            ok = True
+          else:
+            for ol in self.dq.inx.iref_by_sect[i.uid].a['objectiveLink']:
+              o = self.dq.inx.uid[ol]
+              if self.dq.inx.uid[o.oid].label in mip[i.mip]:
+                ok = True
+          if ok:
+              if 'requestItem' in self.dq.inx.iref_by_sect[i.uid].a:
+                for u in self.dq.inx.iref_by_sect[i.uid].a['requestItem']:
+                  l1.append( self.dq.inx.uid[u] )
     else:
       raise baseException( 'rqiByMip: "mip" (1st explicit argument) should be type string or set: %s -- %s' % (mip, type(mip))   )
+
     return l1
+
+  def xlsByMipExpt(self,m,ex,pmax,odir='xls'):
+
+    mips = ['AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
+    tabs = makeTables.tables( self, mips, odir=odir )
+    cc = collections.defaultdict( c1 )
+    mlab = tabs.setMlab( m )
+    cc[mlab].dd = {}
+    cc[mlab].ee = {}
+    if m == 'TOTAL':
+        l1 = self.rqiByMip( set( mips ) )
+    else:
+        l1 = self.rqiByMip( m )
+
+    ###print 'len l1:',len(l1)
+    tabs.doTable(m,l1,ex,pmax,cc, mlab=mlab)
       
   def volByMip( self, mip, pmax=2, retainRedundantRank=False, intersection=False, adsCount=False, exptid=None):
 
@@ -632,7 +752,8 @@ class dreqQuery(object):
       
     #### The set of experiments/experiment groups:
     if exptid == None:
-      exps = self.mips
+      ##exps = self.mips
+      exps = self.experiments
     else:
       exps = set( [exptid,] )
       ##print exptid, exps
@@ -702,13 +823,20 @@ class dreqUI(object):
       -e <expt>: experiment;
       -t <tier> maxmum tier;
       -p <priority>  maximum priority;
+      --xls : Create Excel file with requested variables;
+      --xlsDir <directory> : Directory in which to place variable listing [xls];
       --printLinesMax <n>: Maximum number of lines to be printed
       --printVars  : If present, a summary of the variables fitting the selection options will be printed
       --intersection : Analyse the intersection of requests rather than union.
 """
   def __init__(self,args):
     self.adict = {}
-    self.knownargs = {'-m':('m',True), '-p':('p',True), '-e':('e',True), '-t':('t',True), '-h':('h',False), '--printLinesMax':('plm',True), '--printVars':('vars',False), '--intersection':('intersection',False),'--count':('count',False)} 
+    self.knownargs = {'-m':('m',True), '-p':('p',True), '-e':('e',True), '-t':('t',True), \
+                      '-h':('h',False), '--printLinesMax':('plm',True), \
+                      '--printVars':('vars',False), '--intersection':('intersection',False), \
+                      '--count':('count',False), \
+                      '--xlsDir':('xlsdir',True), '--xls':('xls',False) \
+                       } 
     aa = args[:]
     while len(aa) > 0:
       a = aa.pop(0)
@@ -721,7 +849,18 @@ class dreqUI(object):
           self.adict[b] = True
 
     if 'm' in self.adict:
-      self.adict['m'] = set(self.adict['m'].split(',') )
+      if self.adict['m'].find( ':' ) != -1:
+        ee = {}
+        for i in self.adict['m'].split(','):
+          bits =  i.split( ':' )
+          if len( bits ) == 1:
+             ee[bits[0]] = []
+          else:
+             assert len(bits) == 2, 'Cannot parse %s' % self.adict['m']
+             ee[bits[0]] = bits[1].split( '.' )
+        self.adict['m'] = ee
+      else:
+        self.adict['m'] = set(self.adict['m'].split(',') )
 
     integerArgs = set( ['p','t','plm'] )
     for i in integerArgs.intersection( self.adict ):
@@ -744,34 +883,48 @@ class dreqUI(object):
     else:
       self.dq = None
 
-    sc = dreqQuery( dq=self.dq )
+    self.sc = dreqQuery( dq=self.dq )
 
     ok = True
     for i in self.adict['m']:
-        if i not in sc.mips:
+        if i not in self.sc.mips:
           ok = False
           mlg.prnt ( 'NOT FOUND: %s' % i )
 
     eid = None
-    if self.adict.has_key('e'):
+    ex = None
+    if 'e' in self.adict:
+      ex = self.adict['e']
       for i in self.dq.coll['experiment'].items:
         if i.label == self.adict['e']:
           eid = i.uid
       assert eid != None, 'Experiment %s not found' % self.adict['e']
-    print ( 'eid=%s' % eid )
-    assert ok,'Available MIPs: %s' % str(sc.mips)
+    ##print ( 'eid=%s' % eid )
+    assert ok,'Available MIPs: %s' % str(self.sc.mips)
     adsCount = self.adict.get( 'count', False )
 
     tierMax = self.adict.get( 't', 1 )
-    sc.setTierMax(  tierMax )
+    self.sc.setTierMax(  tierMax )
     pmax = self.adict.get( 'p', 1 )
-    v0 = sc.volByMip( self.adict['m'], pmax=pmax, intersection=self.intersection, adsCount=adsCount, exptid=eid )
+    self.getVolByMip(pmax,eid,adsCount)
+    makeXls = self.adict.get( 'xls', False )
+    if makeXls:
+      mips = self.adict['m']
+      odir = self.adict.get( 'xlsdir', 'xls' )
+      ##print 'odir:::::::::: ',odir
+      ##m = list( mips )[0]
+      self.sc.xlsByMipExpt(mips,eid,pmax,odir=odir)
+ 
+
+  def getVolByMip(self,pmax,eid,adsCount):
+
+    v0 = self.sc.volByMip( self.adict['m'], pmax=pmax, intersection=self.intersection, adsCount=adsCount, exptid=eid )
     #mlg.prnt ( '%7.2fTb' % (v0*2.*1.e-12) )
-    mlg.prnt ( '%s' % v0 )
+    mlg.prnt ( '%s [%s]' % (v0,makeTables.vfmt(v0*2.)) )
     cc = collections.defaultdict( int )
-    for e in sc.volByE:
-      for v in sc.volByE[e][2]:
-          cc[v] += sc.volByE[e][2][v]
+    for e in self.sc.volByE:
+      for v in self.sc.volByE[e][2]:
+          cc[v] += self.sc.volByE[e][2][v]
     x = 0
     for v in cc:
       x += cc[v]

@@ -387,7 +387,7 @@ class config(object):
         self.contentDoc = xml.dom.minidom.parse( self.vsamp )
       self.ns = None
 
-    vl = doc.getElementsByTagName( 'table' )
+    vl = doc.getElementsByTagName( 'table' ) + doc.getElementsByTagName( 'annextable' )
     self.tables = {}
     tables = {}
     self.tableClasses = {}
@@ -420,6 +420,11 @@ class config(object):
 ## experimental addition of __core__ to coll dictionary ..
 ##
     self.coll['__core__'] = self.ntf( self._t0.header, self._t0.attributes, [self.tt0[k] for k in self.tt0] )
+
+    ec = {}
+    for i in self.coll['__core__'].items:
+      ec[i.label] = i
+
       ##self.coll[k] = self.ntf( self.recordAttributeDefn[k].header, self.recordAttributeDefn[k].attributes, self.tableItems[k] )
 
     self.tt1 = {}
@@ -438,6 +443,11 @@ class config(object):
     self.coll['__main__'] = self.ntf( self._t2.header, self._t2.attributes, self.ttl2 )
 
     self.coll['__sect__'] = self.ntf( self._t1.header, self._t1.attributes, [self.tt1[k] for k in self.tt1] )
+
+    for sct in ['__core__','__main__','__sect__']:
+      for k in self.coll[sct].attDefn.keys():
+        assert k in ec, 'Key %s [%s] not found' % (k,sct)
+        self.coll[sct].attDefn[k] = ec[k]
 
     self.recordAttributeDefn = tables
     for k in tables.keys():
@@ -654,17 +664,18 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
           n1 = 0
           n2 = 0
           for i in dreq[k].items:
-            id2 = i.__dict__.get( k2 )
-            if id2 != '__unset__':
-              sect = i._h.label
-## append attribute name and target  -- item i.uid, attribute k2 reference item id2
-              self.iref_by_uid[ id2 ].append( (k2,i.uid) )
-              self.iref_by_sect[ id2 ].a[sect].append( i.uid )
-              if id2 in self.uid:
-                n1 += 1
-              else:
-                n2 += 1
-                self.missingIds[id2].append( (k,k2,i.uid) )
+            if k2 in i.__dict__:
+              id2 = i.__dict__.get( k2 )
+              if id2 != '__unset__':
+                sect = i._h.label
+  ## append attribute name and target  -- item i.uid, attribute k2 reference item id2
+                self.iref_by_uid[ id2 ].append( (k2,i.uid) )
+                self.iref_by_sect[ id2 ].a[sect].append( i.uid )
+                if id2 in self.uid:
+                  n1 += 1
+                else:
+                  n2 += 1
+                  self.missingIds[id2].append( (k,k2,i.uid) )
           self.info(  'INFO:: %s, %s:  %s (%s)' % (k,k2,n1,n2) )
 
     for k in dreq.keys():
