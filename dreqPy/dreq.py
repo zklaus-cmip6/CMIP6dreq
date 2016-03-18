@@ -6,7 +6,7 @@ After ingesting the XML documents (configuration and request) the module generat
 import xml, string, collections
 import xml.dom
 import xml.dom.minidom
-import re, shelve
+import re, shelve, os
 try:
   from __init__ import DOC_DIR
 except:
@@ -343,11 +343,10 @@ class dreqItemBase(object):
 class config(object):
   """Read in a vocabulary collection configuration document and a vocabulary document"""
 
-  def __init__(self, configdoc='out/dreqDefn.xml', thisdoc='../workbook/trial_20150724.xml', useShelve=False, strings=False):
+  def __init__(self, configdoc='out/dreqDefn.xml', thisdoc='../workbook/trial_20150724.xml', manifest=None, useShelve=False, strings=False):
     self.rc = rechecks()
     self.silent = True
-    self.vdef = configdoc
-    self.vsamp = thisdoc
+    self.coll = {}
 
     self.nts = collections.namedtuple( 'sectdef', ['tag','label','title','id','itemLabelMode','level','maxOccurs','labUnique','uid'] )
     self.nti = collections.namedtuple( 'itemdef', ['tag','label','title','type','useClass','techNote','required'] )
@@ -355,9 +354,31 @@ class config(object):
     self.nt__default = collections.namedtuple( 'deflt', ['defaults','glob'] )
     self.ntf = collections.namedtuple( 'sect', ['header','attDefn','items'] )
     self.bscc = loadBS(blockSchemaFile)
+    self.strings = strings
 
-    self.coll = {}
-    if strings:
+    self.tt0 = {}
+    self.tt1 = {}
+
+    if manifest != None:
+      assert os.path.isfile( manifest ), 'Manifest file not found: %s' % manifest
+      ii = open(manifest).readlines() 
+      docl = []
+      for l in ii[1:]:
+        bits = string.split( string.strip(l) )
+        assert len( bits ) > 1, 'Failed to parse line in manifest %s: \n%s' % (manifest,l)
+        for b in bits[:2]:
+          assert os.path.isfile( b ), 'File %s not found (listed in %s)' % (b,manifest )
+        docl.append( tuple( bits[:2] ) )
+      for d,c in docl:
+        self.__read__(d, c)
+    else:
+      self.__read__(thisdoc, configdoc)
+
+  def __read__(self, thisdoc, configdoc):
+    self.vdef = configdoc
+    self.vsamp = thisdoc
+
+    if self.strings:
       doc = xml.dom.minidom.parseString( self.vdef  )
     else:
       doc = xml.dom.minidom.parse( self.vdef  )
@@ -369,7 +390,7 @@ class config(object):
     if self.etree:
       import xml.etree.cElementTree as cel
 
-      if not strings:
+      if not self.strings:
         self.contentDoc = cel.parse( self.vsamp )
         root = self.contentDoc.getroot()
       else:
@@ -381,7 +402,7 @@ class config(object):
       else:
         self.ns = None
     else:
-      if strings:
+      if self.strings:
         self.contentDoc = xml.dom.minidom.parseString( self.vsamp  )
       else:
         self.contentDoc = xml.dom.minidom.parse( self.vsamp )
@@ -404,7 +425,6 @@ class config(object):
     self._t2 = self.parsevcfg('__main__')
     self._sectClass0 = self.itemClassFact( self._t1, ns=self.ns )
 
-    self.tt0 = {}
     for k in self.bscc:
       self.tt0[k] = self._tableClass0(idict=self.bscc[k])
       if k in self._t0.attributes:
@@ -417,7 +437,7 @@ class config(object):
 ##
     self._recAtDef = {'__core__':self._t0, '__sect__':self._t1}
 ##
-## experimental addition of __core__ to coll dictionary ..
+## addition of __core__ to coll dictionary ..
 ##
     self.coll['__core__'] = self.ntf( self._t0.header, self._t0.attributes, [self.tt0[k] for k in self.tt0] )
 
@@ -427,7 +447,6 @@ class config(object):
 
       ##self.coll[k] = self.ntf( self.recordAttributeDefn[k].header, self.recordAttributeDefn[k].attributes, self.tableItems[k] )
 
-    self.tt1 = {}
     self.ttl2 = []
     for v in vl:
       t = self.parsevcfg(v)
@@ -729,8 +748,8 @@ class loadDreq(object):
   htmlStyles: dictionary of styling directives which influence structure of html page generates by the "makeHtml" method
 """
 
-  def __init__(self,dreqXML=defaultDreqPath, configdoc=defaultConfigPath, useShelve=False, htmlStyles=None, strings=False ):
-    self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve,strings=strings)
+  def __init__(self,dreqXML=defaultDreqPath, configdoc=defaultConfigPath, useShelve=False, htmlStyles=None, strings=False, manifest=None ):
+    self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve,strings=strings,manifest=manifest)
     self.coll = self.c.coll
     self.inx = index(self.coll)
     self.itemStyles = {}
