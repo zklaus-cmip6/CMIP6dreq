@@ -151,7 +151,8 @@
    xs:stringProvenance Notefrequency;
    xs:stringFrequency of time steps to be archived.rowIndex;
    xs:integerRow index of entry in source sheetdescription;
-   xs:stringDescription</xs:documentation></xs:annotation>
+   xs:stringDescriptionsubGroup;
+   xs:stringSub-group of variables in a table</xs:documentation></xs:annotation>
 <xs:complexType name="ct__CMORvar_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -176,6 +177,7 @@
 <xs:attribute name="frequency" type="xs:string"/>
 <xs:attribute name="rowIndex" type="xs:integer"/>
 <xs:attribute name="description" type="xs:string"/>
+<xs:attribute name="subGroup" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">objective: Complex Type declaration

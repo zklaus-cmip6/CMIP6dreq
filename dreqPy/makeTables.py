@@ -201,9 +201,9 @@ class makeTab(object):
             dims += string.split( strc.coords, '|' )
             dims = string.join( dims )
             if mode == 'c':
-              orec = [str(v.defaultPriority),cv.title, cv.units, cv.description, v.description, cv.label, cv.sn, strc.cell_methods, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, v.prov,v.provNote,str(v.rowIndex)]
+              orec = [str(v.defaultPriority),cv.title, cv.units, cv.description, v.description, cv.label, cv.sn, strc.cell_methods, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, v.prov,v.provNote,str(v.rowIndex),cv.uid]
             else:
-              orec = ['',cv.title, cv.units, v.description, '', cv.label, cv.sn, '','', strc.cell_methods, v.valid_min, v.valid_max, v.ok_min_mean_abs, v.ok_max_mean_abs, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, strc.flag_values, strc.flag_meanings,v.prov,v.provNote,str(v.rowIndex)]
+              orec = ['',cv.title, cv.units, v.description, '', cv.label, cv.sn, '','', strc.cell_methods, v.valid_min, v.valid_max, v.ok_min_mean_abs, v.ok_max_mean_abs, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, strc.flag_values, strc.flag_meanings,v.prov,v.provNote,str(v.rowIndex),cv.uid]
             if addMips:
               thismips = c.chkCmv( v.uid )
               thismips2 = c.chkCmv( v.uid, byExpt=True )
@@ -226,7 +226,9 @@ cols: function() {
               {id:1, name:'Standard name', field:1, width: 210 },
               {id:2, name:'Long name', field:2, width: 180},
               {id:3, name:'Units', field:3, width: 180},
-              {id:4, name:'uid', field:4, width: 180}];
+              {id:4, name:'Description', field:4, width: 180},
+              {id:5, name:'uid', field:5, width: 180}];
+              #{id:4, name:'uid', field:4, width: 180}];
  return columns;
 },
 data: function() {
@@ -236,7 +238,8 @@ ftr = """return data;
 }
 };
 """
-rtmpl = 'data[%(n)s] = { "id":%(n)s, 0:"%(var)s",  1:"%(sn)s", 2:"%(ln)s", 3:"%(u)s", 4:"%(uid)s" };'
+##rtmpl = 'data[%(n)s] = { "id":%(n)s, 0:"%(var)s",  1:"%(sn)s", 2:"%(ln)s", 3:"%(u)s", 4:"%(uid)s" };'
+rtmpl = 'data[%(n)s] = { "id":%(n)s, 0:"%(var)s",  1:"%(sn)s", 2:"%(ln)s", 3:"%(u)s", 4:"%(d)s", 5:"%(uid)s" };'
 
 class htmlTrees(object):
   def __init__(self,dq,odir='html/t/'):
@@ -282,9 +285,10 @@ class makeJs(object):
       sn = v.sn
       ln = v.title
       u = v.units
+      d = v.description
       uid = v.uid
       d = locals()
-      for k in ['sn','ln','u','var']:
+      for k in ['sn','ln','u','var','d']:
     
         if string.find( d[k], '"' ) != -1:
           print ( "WARNING ... quote in %s .. %s [%s]" % (k,var,d[k]) )
@@ -294,7 +298,7 @@ class makeJs(object):
       rr = rtmpl % d
       rl.append( rr )
       n += 1
-    oo = open( 'data2.js', 'w' )
+    oo = open( 'data3.js', 'w' )
     oo.write( hdr )
     for r in rl:
       oo.write( r + '\n' )

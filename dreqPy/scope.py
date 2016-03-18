@@ -818,7 +818,7 @@ class dreqUI(object):
 -------------------------
       -v : print version and exit;
       --unitTest : run some simple tests;
-      -m <mip>:  MIP of list of MIPs (comma separated);
+      -m <mip>:  MIP of list of MIPs (comma separated; for objective selection see note [1] below);
       -h :       help: print help text;
       -e <expt>: experiment;
       -t <tier> maxmum tier;
@@ -828,6 +828,14 @@ class dreqUI(object):
       --printLinesMax <n>: Maximum number of lines to be printed
       --printVars  : If present, a summary of the variables fitting the selection options will be printed
       --intersection : Analyse the intersection of requests rather than union.
+
+NOTES
+-----
+[1] A set of objectives within a MIP can be specified in the command line. The extended syntax of the "-m" argument is:
+-m <mip>[:objective[.obj2[.obj3 ...]]][,<mip2]...]
+
+e.g.
+drq -m HighResMIP:Ocean.DiurnalCycle
 """
   def __init__(self,args):
     self.adict = {}
