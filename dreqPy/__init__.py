@@ -2,5 +2,5 @@
 try:
   from packageConfig import *
 except:
-  from dreqPy.packageConfig import *
-
+  from dreqPy import packageConfig
+  from packageConfig import *

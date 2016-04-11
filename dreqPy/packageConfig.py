@@ -22,3 +22,5 @@ __author__ = "Martin Juckes"
 __email__ = "martin.juckes@stfc.ac.uk"
 __license__ = "BSD"
 __copyright__ = "Copyright (c) 2015 Science & Technology Facilities Council (STFC)"
+
+version = __version__

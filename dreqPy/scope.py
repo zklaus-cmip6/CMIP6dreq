@@ -11,7 +11,7 @@ except:
 
 import collections, string, operator
 import makeTables
-import sys
+import sys, os
 
 python2 = True
 if sys.version_info[0] == 3:
@@ -235,20 +235,26 @@ class dreqQuery(object):
     """rqlByExpt: return a set of request links for an experiment"""
 ##
     inx = self.dq.inx
+
+    if ex != None:
     
-    exi = self.dq.inx.uid[ex]
-    if exi._h.label == 'experiment':
-      exset = set( [ex,exi.egid,exi.mip] )
-    else:
-      exset = set( self.esid_to_exptList(ex,deref=False,full=expFullEx) )
+      exi = self.dq.inx.uid[ex]
+      if exi._h.label == 'experiment':
+        exset = set( [ex,exi.egid,exi.mip] )
+      else:
+        exset = set( self.esid_to_exptList(ex,deref=False,full=expFullEx) )
 ##
 ## rql is the set of all request links which are associated with a request item for this experiment set
 ##
-    l1p = set()
-    for i in l1:
-      if i.preset < 0 or i.preset <= pmax:
-        if i.esid in exset:
-          l1p.add(i)
+   
+      l1p = set()
+      for i in l1:
+        if i.preset < 0 or i.preset <= pmax:
+          if i.esid in exset:
+            l1p.add(i)
+    else:
+      exset = None
+      l1p = l1
 
     rql0 = set()
     for i in l1p:
@@ -380,7 +386,8 @@ class dreqQuery(object):
       for u in rql0:
          if inx.uid[u]._h.label != 'remarks':
            rql.add( u ) 
-    else:
+    elif ex != None:
+      
       exi = self.dq.inx.uid[ex]
       if exi._h.label == 'experiment':
         exset = set( [ex,exi.egid,exi.mip] )
@@ -507,7 +514,7 @@ class dreqQuery(object):
       cc2s = collections.defaultdict( c1s )
       for i in l1p:
 ##################
-        if i.esid in exset and v in e[i.rlid]:
+        if (exset == None or i.esid in exset) and v in e[i.rlid]:
           ix = inx.uid[i.esid]
           rl = inx.uid[i.rlid]
           sgg.add( rl.grid )
@@ -516,7 +523,9 @@ class dreqQuery(object):
           else:
             grd = 'native'
 
-          if exi._h.label == 'experiment':
+          if exset == None:
+            thisz = 100
+          elif exi._h.label == 'experiment':
             if ex in self.rqiExp[i.uid][1]:
               this = self.rqiExp[i.uid][1][ex]
               thisz = this[-1]*this[-2]
@@ -535,9 +544,7 @@ class dreqQuery(object):
 
           if thisz != None:
               cc2s[grd].a[i.esid].add( thisz )
-          ##if rl.grid in ['100km','1x1']:
-            ##sg[rl.grid].add( self.rqiExp[i.uid][irqi] )
-          ##else:
+          
           sg[grd].add( self.rqiExp[i.uid][irqi] )
       
       if len(s) == 0:
@@ -846,6 +853,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
                       '--xlsDir':('xlsdir',True), '--xls':('xls',False) \
                        } 
     aa = args[:]
+    notKnownArgs = []
     while len(aa) > 0:
       a = aa.pop(0)
       if a in self.knownargs:
@@ -855,6 +863,10 @@ drq -m HighResMIP:Ocean.DiurnalCycle
           self.adict[b] = v
         else:
           self.adict[b] = True
+      else:
+        notKnownArgs.append(a)
+
+    assert self.checkArgs( notKnownArgs ), 'FATAL ERROR 001: Arguments not recognised: %s' % (str(notKnownArgs) )
 
     if 'm' in self.adict:
       if self.adict['m'].find( ':' ) != -1:
@@ -876,6 +888,25 @@ drq -m HighResMIP:Ocean.DiurnalCycle
 
     self.intersection = self.adict.get( 'intersection', False )
 
+  
+  def checkArgs( self, notKnownArgs ):
+    if len( notKnownArgs ) == 0:
+      return True
+    print ('--------------------------------------')
+    print ('------------  %s Arguments Not Recognised ------------' % len(notKnownArgs) )
+    k = 0
+    for x in notKnownArgs:
+      k += 1
+      if x[1:] in self.knownargs:
+        print '%s PERHAPS %s instead of %s' % (k, x[1:],x)
+      elif '-%s' % x in self.knownargs:
+        print '%s PERHAPS -%s instead of %s' % (k, x,x)
+      elif x[0] == '\xe2':
+        print '%s POSSIBLY -- (double hyphen) instead of long dash in %s' % (k, x)
+    print ('--------------------------------------')
+
+    return len( notKnownArgs ) == 0
+      
   def run(self, dq=None):
     if 'h' in self.adict:
       mlg.prnt ( self.__doc__ )
@@ -921,6 +952,15 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       odir = self.adict.get( 'xlsdir', 'xls' )
       ##print 'odir:::::::::: ',odir
       ##m = list( mips )[0]
+      if not os.path.isdir( odir ):
+         try:
+            os.mkdir( odir )
+         except:
+            print ('\n\nFailed to make directory "%s" for xls files: make necessary subdirectories or run where you have write access' % odir )
+            print ( '\n\n' )
+            raise
+         print ('Created directory %s for xls file(s)' % odir )
+
       self.sc.xlsByMipExpt(mips,eid,pmax,odir=odir)
  
 

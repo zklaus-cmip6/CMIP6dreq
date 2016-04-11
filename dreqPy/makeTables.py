@@ -345,6 +345,18 @@ class styles(object):
       gpsz = len(t2._inx.iref_by_sect[t2.uid].a['requestVar'])
       return '<li>%s: Link to group: %s [%s]</li>' % ( targ.__href__(odir='../u/', label='%s:%s' % (targ.mip,targ.title)), t2.__href__(odir='../u/', label=t2.title), gpsz  )
 
+  def rqiLink02(self,targ,frm='',ann=''):
+    t2 = targ._inx.uid[targ.rlid]
+    if t2._h.label == 'remarks':
+      return '<li>%s: %s</li>' % ( targ.__href__(odir='../u/', label=targ.title), "Link to request link broken"  )
+    else:
+      t3 = t2._inx.uid[t2.refid]
+      if t3._h.label == 'remarks':
+        return '<li>%s [%s]: %s</li>' % ( targ.__href__(odir='../u/', label=targ.title), t2.__href__(odir='../u/', label=t2.title),"Link to request group broken"  )
+      else:
+        nv = len( t3._inx.iref_by_sect[t3.uid].a['requestVar'] )
+        return '<li>%s [%s]: %s (%s variables)</li>' % ( targ.__href__(odir='../u/', label=targ.title), t2.__href__(odir='../u/', label=t2.title), t3.__href__(odir='../u/', label=t3.title), nv )
+
   def snLink(self,targ,frm='',ann=''):
     return '<li>%s [%s]: %s</li>' % ( targ.title, targ.units, targ.__href__(odir='../u/') )
 
@@ -412,13 +424,17 @@ class tables(object):
 
       x = self.sc.volByExpt( l1, m2, expFullEx=(m2 in self.mips), pmax=pmax )
       if x[0] > 0:
-        im2 = self.dq.inx.uid[m2]
-        collector[mlab].a[im2.label] += x[0]
+        if m2 != None:
+          im2 = self.dq.inx.uid[m2]
+          mlab2 = im2.label
+        else:
+          mlab2 = 'all'
+        collector[mlab].a[mlab2] += x[0]
 #
 # create sum for each table
 #
         xs = 0
-        kkc = '_%s_%s' % (mlab,im2.label)
+        kkc = '_%s_%s' % (mlab,mlab2)
         for k in x[2].keys():
           i = self.dq.inx.uid[k]
           xxx =  x[2][k]
@@ -443,14 +459,15 @@ class tables(object):
             lll.add(u)
             dd[t].append( (f,t,l,tt,d,u) )
         if len( dd.keys() ) > 0:
-          collector[mlab].dd[im2.label] = dd
-          if im2._h.label == 'experiment':
-            dothis = self.sc.tierMax >= im2.tier
+          collector[mlab].dd[mlab2] = dd
+          if m2 != None:
+            if im2._h.label == 'experiment':
+              dothis = self.sc.tierMax >= im2.tier
 ###
 ### BUT ... there is a treset in the request item .... it may be that some variables are excluded ...
 ###         need the variable list itself .....
 ###
-          makeTab( self.sc.dq, subset=lll, dest='%s/%s-%s_%s_%s.xlsx' % (self.odir,mlab,im2.label,self.sc.tierMax,pmax), collected=collector[kkc].a )
+          makeTab( self.sc.dq, subset=lll, dest='%s/%s-%s_%s_%s.xlsx' % (self.odir,mlab,mlab2,self.sc.tierMax,pmax), collected=collector[kkc].a )
 
 styls = styles()
 
@@ -491,6 +508,7 @@ if __name__ == "__main__":
   dq.itemStyles['objectiveLink'] = styls.objLnkLink
   dq.itemStyles['requestVarGroup'] = styls.vgrpLink
   dq.itemStyles['requestLink'] = styls.rqlLink02
+  dq.itemStyles['requestItem'] = styls.rqiLink02
   dq.itemStyles['spatialShape'] = styls.labTtl
   dq.coll['var'].items[0].__class__._linkAttrStyle['sn'] = styls.snLink01
 ##dq.coll['requestVarGroup'].items[0].__class__._linkAttrStyle['requestVar'] = styls.rqvLink01
