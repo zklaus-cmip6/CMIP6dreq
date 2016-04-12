@@ -8,9 +8,9 @@ import xml.dom
 import xml.dom.minidom
 import re, shelve, os
 try:
-  from __init__ import DOC_DIR
+  from __init__ import DOC_DIR, version
 except:
-  from dreqPy.__init__ import DOC_DIR
+  from dreqPy.__init__ import DOC_DIR, version
 
 jsh='''<link type="text/css" href="/css/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />
  <script src="/js/2013/jquery.min.js" type="text/javascript"></script>
