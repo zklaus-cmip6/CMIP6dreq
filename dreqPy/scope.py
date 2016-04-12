@@ -358,34 +358,8 @@ class dreqQuery(object):
 
     dn = False
     if dn:
-      exi = self.dq.inx.uid[ex]
-      if exi._h.label == 'experiment':
-        exset = set( [ex,exi.egid,exi.mip] )
-      else:
-        exset = set( self.esid_to_exptList(ex,deref=False,full=expFullEx) )
-##
-## rql is the set of all request links which are associated with a request item for this experiment set
-##
-      l1p = set()
-      for i in l1:
-        if i.preset < 0 or i.preset <= pmax:
-          if i.esid in exset:
-            l1p.add(i)
-  
-      rql0 = set()
-      for i in l1p:
-         rql0.add(i.rlid)
-  
-      rqlInv = set()
-      for u in rql0:
-        if inx.uid[u]._h.label == 'remarks':
-          rqlInv.add( u )
-      if len(rqlInv) != 0:
-        mlg.prnt ( 'WARNING.001.00002: %s invalid request links from request items ...' % len(rqlInv) )
-      rql = set()
-      for u in rql0:
-         if inx.uid[u]._h.label != 'remarks':
-           rql.add( u ) 
+## obsolete code deleted here
+      pass
     elif ex != None:
       
       exi = self.dq.inx.uid[ex]
@@ -401,71 +375,9 @@ class dreqQuery(object):
     vars = self.varsByRql( rql, pmax=pmax, intersection=intersection) 
     tm = 3
     if tm == 0:
-      s = set()
-      for i in rql:
-        s.add( inx.uid[i].refid )
-      rqvg = list( s )
+      pass
     elif tm == 1:
-      cc1 = collections.defaultdict( set )
-      for i in rql:
-        o = inx.uid[i]
-        if o.opt == 'priority':
-          p = int( float( o.opar ) )
-          assert p in [1,2,3], 'Priority incorrectly set .. %s, %s, %s' % (o.label,o.title, o.uid)
-          cc1[inx.uid[i].mip].add( (inx.uid[i].refid,p) )
-        else:
-          cc1[inx.uid[i].mip].add( inx.uid[i].refid )
-
-      if intersection:
-        ccv = {}
-#
-# set of request variables for each MIP
-#
-        for k in cc1:
-          thisc = reduce( operator.or_, [set( inx.iref_by_sect[vg].a['requestVar'] ) for vg in cc1[k] ] )
-          rqvgs = collections.defaultdict( set )
-          for x in cc1[k]:
-            if type(x) == type( () ):
-              rqvgs[x[0]].add( x[1] )
-            else:
-              rqvgs[x].add( 3 )
-          
-          s = set()
-          for vg in rqvgs:
-            for l in inx.iref_by_sect[vg].a['requestVar']:
-              if inx.uid[l].priority <= min(pmax,max(rqvgs[vg])):
-                s.add( inx.uid[l].vid )
-          ccv[k] = s
-
-        if len( ccv.keys() ) < len( list(imips) ):
-          vars = set()
-        else:
-          vars =  reduce( operator.and_, [ccv[k] for k in ccv] )
-      else:
-        rqvgs = collections.defaultdict( set )
-        for k in cc1:
-          for x in cc1[k]:
-            if type(x) == type( () ):
-              rqvgs[x[0]].add( x[1] )
-            else:
-              rqvgs[x].add( 3 )
-          
-###To obtain a set of variables associated with this collection of variable groups:
-
-        vars = set()
-        for vg in rqvgs:
-          for l in inx.iref_by_sect[vg].a['requestVar']:
-            if inx.uid[l].priority <= min(pmax,max(rqvgs[vg])):
-               vars.add(inx.uid[l].vid)
-        ##col1 = reduce( operator.or_, [set( inx.iref_by_sect[vg].a['requestVar'] ) for vg in rqvg ] )
-
-### filter out cases where the request does not point to a CMOR variable.
-    ##vars = {vid for vid in vars if inx.uid[vid][0] == u'CMORvar'}
-      thisvars = set()
-      for vid in vars:
-         if inx.uid[vid]._h.label == u'CMORvar':
-             thisvars.add(vid)
-      vars = thisvars
+      pass
 ##
 ## filter by configuration option and rank
 ##
@@ -545,13 +457,14 @@ class dreqQuery(object):
           if thisz != None:
               cc2s[grd].a[i.esid].add( thisz )
           
-          sg[grd].add( self.rqiExp[i.uid][irqi] )
+          if exset != None:
+            sg[grd].add( self.rqiExp[i.uid][irqi] )
       
       if len(s) == 0:
         nym[v] = 0
       else:
 ###
-### sum over experiments of maximum within eacj experiment
+### sum over experiments of maximum within each experiment
 ###
         nym[v] = sum( [max( cc2[k] ) for k in cc2] )
       for g in sg:
@@ -575,9 +488,15 @@ class dreqQuery(object):
         else:
           if len( nymg[v] ) > 1:
             print ( '########### Selecting first in list .............' )
-          ks = list( nymg[v].keys() )[0]
-          ny = nymg[v][ks]
-          ff[v] = self.szg[ks][ inx.uid[v].stid ] * npy[inx.uid[v].frequency]
+          ks0 = nymg[v].keys()
+          if len(ks0) == 0:
+            ##print 'WARN: no nymg entry for %s [%s]' % (v,ex)
+            ff[v] = 0.
+            ny = 0.
+          else:
+            ks = list( nymg[v].keys() )[0]
+            ny = nymg[v][ks]
+            ff[v] = self.szg[ks][ inx.uid[v].stid ] * npy[inx.uid[v].frequency]
 
         if inx.uid[v].frequency != 'monClim':
           ff[v] = ff[v]*ny
@@ -737,6 +656,17 @@ class dreqQuery(object):
 
     return l1
 
+  def checkDir(self,odir,msg):
+      if not os.path.isdir( odir ):
+         try:
+            os.mkdir( odir )
+         except:
+            print ('\n\nFailed to make directory "%s" for: %s: make necessary subdirectories or run where you have write access' % (odir,msg) )
+            print ( '\n\n' )
+            raise
+         print ('Created directory %s for: %s' % (odir,msg) )
+
+
   def xlsByMipExpt(self,m,ex,pmax,odir='xls'):
 
     mips = ['AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
@@ -751,6 +681,12 @@ class dreqQuery(object):
         l1 = self.rqiByMip( m )
 
     ###print 'len l1:',len(l1)
+    self.checkDir( odir, 'xls files' )
+    if ex == None:
+      for m2 in mips:
+        l12 = self.rqiByMip( m2 )
+        tabs.doTable(m,l12,m2,pmax,cc, mlab=mlab, acc=True)
+         
     tabs.doTable(m,l1,ex,pmax,cc, mlab=mlab)
       
   def volByMip( self, mip, pmax=2, retainRedundantRank=False, intersection=False, adsCount=False, exptid=None):
@@ -952,14 +888,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       odir = self.adict.get( 'xlsdir', 'xls' )
       ##print 'odir:::::::::: ',odir
       ##m = list( mips )[0]
-      if not os.path.isdir( odir ):
-         try:
-            os.mkdir( odir )
-         except:
-            print ('\n\nFailed to make directory "%s" for xls files: make necessary subdirectories or run where you have write access' % odir )
-            print ( '\n\n' )
-            raise
-         print ('Created directory %s for xls file(s)' % odir )
+      self.checkDir( odir, 'xls files' )
 
       self.sc.xlsByMipExpt(mips,eid,pmax,odir=odir)
  

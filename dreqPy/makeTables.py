@@ -403,6 +403,7 @@ class tables(object):
       self.dq = sc.dq
       self.mips = mips
       self.odir = odir
+      self.accReset()
 
   def setMlab( self, m ):
       if type(m) == type(''):
@@ -415,21 +416,34 @@ class tables(object):
           mlab=string.join( [ x[:2].lower() for x in m ], '.' )
       return mlab
 
+  def accReset(self):
+    self.acc = [0.,collections.defaultdict(int),collections.defaultdict( float ) ]
+
+  def accAdd(self,x):
+    self.acc[0] += x[0]
+    for k in x[2]:
+       self.acc[2][k] += x[2][k]
+
   def doTable(self,m,l1,m2,pmax,collector,acc=True, mlab=None):
       """*acc* allows accumulation of values to be switched off when called in single expt mode"""
-
+      
       if mlab == None:
         mlab = self.setMlab( m )
-        
 
-      x = self.sc.volByExpt( l1, m2, expFullEx=(m2 in self.mips), pmax=pmax )
+      if m2 in [None, 'TOTAL']:
+        x = self.acc
+      else:
+        x = self.sc.volByExpt( l1, m2, expFullEx=(m2 in self.mips), pmax=pmax )
+        if acc:
+          self.accAdd(x)
+
       if x[0] > 0:
-        if m2 != None:
+        if m2 not in [ None, 'TOTAL']:
           im2 = self.dq.inx.uid[m2]
           mlab2 = im2.label
+          collector[mlab].a[mlab2] += x[0]
         else:
-          mlab2 = 'all'
-        collector[mlab].a[mlab2] += x[0]
+          mlab2 = 'TOTAL'
 #
 # create sum for each table
 #
@@ -447,7 +461,7 @@ class tables(object):
           if len( x[2].keys() ) > 0:
              print ( 'ERROR:zero: %s, %s: %s' % (m,m2,str(x[2].keys()) ) )
 
-        if acc:
+        if acc and m2 not in [ None, 'TOTAL']:
           collector[mlab].a['TOTAL'] += x[0]
 
         dd = collections.defaultdict( list )
@@ -460,7 +474,7 @@ class tables(object):
             dd[t].append( (f,t,l,tt,d,u) )
         if len( dd.keys() ) > 0:
           collector[mlab].dd[mlab2] = dd
-          if m2 != None:
+          if m2 not in [ None, 'TOTAL']:
             if im2._h.label == 'experiment':
               dothis = self.sc.tierMax >= im2.tier
 ###
@@ -515,7 +529,7 @@ if __name__ == "__main__":
   dq.itemStyles['requestVar'] = styls.rqvLink01
 
   ht = htmlTrees(dq)
-  dq.makeHtml( annotations={'var':ht.anno} )
+  dq.makeHtml( annotations={'var':ht.anno}, ttl0='Data Request [%s]' % dreq.version )
   try:
     import xlsxwriter
     mt = makeTab( dq)
