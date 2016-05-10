@@ -1,0 +1,3 @@
+## Manifest for data request
+out/annotated_20150731.xml out/dreq2Defn.xml
+out/supplement_20150731.xml out/dreqSuppDefn.xml

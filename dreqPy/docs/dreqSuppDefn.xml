@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<defDoc 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="urn:w3id.org:cmip6.dreq.framework:a"
+xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd">
+<table label="qcranges" uid="SECTION:qcranges" title="Quality Control Ranges" id="" itemLabelMode="def" level="9" maxOccurs="1" labUnique="Yes" description="Data ranges for use in quality control">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="cbb1e398-eab6-11e5-9423-67448c113ce4" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="cbb21dd6-eab6-11e5-9423-67448c113ce4" required="True"/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="cbb258be-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="" useClass="" techNote="" description="" uid="cbb2973e-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="cbb2d514-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
+  <rowAttribute label="vid" type="xs:string" title="Variable" useClass="internalLink" techNote="" description="Link to variable record" uid="cbb2dc76-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
+  <rowAttribute label="valid_min" type="xs:float" title="Minimum expected value for this variable." useClass="" techNote="" description="The minimum expected value will be used, if set, in quality control tests, and files containing data values below this value will be marked as containing errors." uid="cbb2df50-eab6-11e5-9423-67448c113ce4" superclass="" required="false"/>
+  <rowAttribute label="valid_max" type="xs:float" title="Maximum expected value for this variable." useClass="" techNote="" description="The maximum expected value will be used, if set, in quality control tests, and files containing data values above this value will be marked as containing errors." uid="cbb2e1c6-eab6-11e5-9423-67448c113ce4" superclass="" required="false"/>
+  <rowAttribute label="ok_min_mean_abs" type="xs:float" title="Minimum expected value of the mean absolute value at each point in time" useClass="" techNote="" description="This value, if set, will be used  in quality control tests, and files containing data values above this value will be marked as containing errors." uid="cbb2e432-eab6-11e5-9423-67448c113ce4" superclass="" required="false"/>
+  <rowAttribute label="ok_max_mean_abs" type="xs:float" title="Maximum expected value of the mean absolute value at each point in time" useClass="" techNote="" description="This value, if set, will be used  in quality control tests, and files containing data values above this value will be marked as containing errors." uid="cbb2e69e-eab6-11e5-9423-67448c113ce4" superclass="" required="false"/>
+  <rowAttribute label="valid_min_status" type="xs:string" title="Status of valid_min" useClass="" techNote="" description="Indicates the degree of confidence in the valid_min value provided." uid="cbb2e8ec-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
+  <rowAttribute label="valid_max_status" type="xs:string" title="Status of valid_max" useClass="" techNote="" description="" uid="cbb2eb26-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
+  <rowAttribute label="ok_min_mean_abs_status" type="xs:string" title="Status of ok_min_mean_abs" useClass="" techNote="" description="" uid="cbb2ed2e-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
+  <rowAttribute label="ok_max_mean_abs_status" type="xs:string" title="Status of ok_mx_mean_abs" useClass="" techNote="" description="" uid="cbb2ef36-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
+</table>
+</defDoc>

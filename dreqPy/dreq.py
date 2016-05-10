@@ -123,7 +123,9 @@ class dreqItemBase(object):
            title=self._htmlTtl
          if label == None:
              label = self.uid
-
+         if odir == '':
+           odir = './'
+             
          return '<span title="%s"><a href="%s%s.html">%s</a></span>' % (title,odir,self.uid,label)
 
        def getHtmlLinkAttrStyle(self,a):
@@ -866,5 +868,5 @@ page for each item and also generating index pages.
     oo.close()
     
 if __name__ == '__main__':
-  dreq = loadDreq( )
+  dreq = loadDreq(manifest='out/dreqManifest.txt' )
 
