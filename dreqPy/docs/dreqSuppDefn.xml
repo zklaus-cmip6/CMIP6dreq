@@ -4,19 +4,46 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xmlns="urn:w3id.org:cmip6.dreq.framework:a"
 xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd">
 <table label="qcranges" uid="SECTION:qcranges" title="Quality Control Ranges" id="" itemLabelMode="def" level="9" maxOccurs="1" labUnique="Yes" description="Data ranges for use in quality control">
-  <rowAttribute label="label" type="xs:string" title="Record Label" uid="cbb1e398-eab6-11e5-9423-67448c113ce4" required="True"/>
-  <rowAttribute label="title" type="xs:string" title="Record Title" uid="cbb21dd6-eab6-11e5-9423-67448c113ce4" required="True"/>
-  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="cbb258be-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
-  <rowAttribute label="label" type="xs:string" title="" useClass="" techNote="" description="" uid="cbb2973e-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
-  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="cbb2d514-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
-  <rowAttribute label="vid" type="xs:string" title="Variable" useClass="internalLink" techNote="" description="Link to variable record" uid="cbb2dc76-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
-  <rowAttribute label="valid_min" type="xs:float" title="Minimum expected value for this variable." useClass="" techNote="" description="The minimum expected value will be used, if set, in quality control tests, and files containing data values below this value will be marked as containing errors." uid="cbb2df50-eab6-11e5-9423-67448c113ce4" superclass="" required="false"/>
-  <rowAttribute label="valid_max" type="xs:float" title="Maximum expected value for this variable." useClass="" techNote="" description="The maximum expected value will be used, if set, in quality control tests, and files containing data values above this value will be marked as containing errors." uid="cbb2e1c6-eab6-11e5-9423-67448c113ce4" superclass="" required="false"/>
-  <rowAttribute label="ok_min_mean_abs" type="xs:float" title="Minimum expected value of the mean absolute value at each point in time" useClass="" techNote="" description="This value, if set, will be used  in quality control tests, and files containing data values above this value will be marked as containing errors." uid="cbb2e432-eab6-11e5-9423-67448c113ce4" superclass="" required="false"/>
-  <rowAttribute label="ok_max_mean_abs" type="xs:float" title="Maximum expected value of the mean absolute value at each point in time" useClass="" techNote="" description="This value, if set, will be used  in quality control tests, and files containing data values above this value will be marked as containing errors." uid="cbb2e69e-eab6-11e5-9423-67448c113ce4" superclass="" required="false"/>
-  <rowAttribute label="valid_min_status" type="xs:string" title="Status of valid_min" useClass="" techNote="" description="Indicates the degree of confidence in the valid_min value provided." uid="cbb2e8ec-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
-  <rowAttribute label="valid_max_status" type="xs:string" title="Status of valid_max" useClass="" techNote="" description="" uid="cbb2eb26-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
-  <rowAttribute label="ok_min_mean_abs_status" type="xs:string" title="Status of ok_min_mean_abs" useClass="" techNote="" description="" uid="cbb2ed2e-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
-  <rowAttribute label="ok_max_mean_abs_status" type="xs:string" title="Status of ok_mx_mean_abs" useClass="" techNote="" description="" uid="cbb2ef36-eab6-11e5-9423-67448c113ce4" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="c056c7e6-175e-11e6-be8a-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="c0570530-175e-11e6-be8a-5404a60d96b5" required="True"/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="c057428e-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="" useClass="" techNote="" description="" uid="c05787ee-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="c057d2b2-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="url" type="xs:string" title="Link to review page" useClass="" techNote="" description="Link to a web page providing background information." uid="c057db40-175e-11e6-be8a-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="comment" type="xs:string" title="" useClass="" techNote="" description="" uid="c057ddac-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="prov" type="xs:string" title="" useClass="" techNote="" description="" uid="c057e022-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="vid" type="xs:string" title="Variable" useClass="internalLink" techNote="" description="Link to variable record" uid="c057e270-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="valid_min" type="xs:float" title="Minimum expected value for this variable." useClass="" techNote="" description="The minimum expected value will be used, if set, in quality control tests, and files containing data values below this value will be marked as containing errors." uid="c057e4be-175e-11e6-be8a-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="valid_max" type="xs:float" title="Maximum expected value for this variable." useClass="" techNote="" description="The maximum expected value will be used, if set, in quality control tests, and files containing data values above this value will be marked as containing errors." uid="c057e734-175e-11e6-be8a-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="ok_min_mean_abs" type="xs:float" title="Minimum expected value of the mean absolute value at each point in time" useClass="" techNote="" description="This value, if set, will be used  in quality control tests, and files containing data values above this value will be marked as containing errors." uid="c057e96e-175e-11e6-be8a-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="ok_max_mean_abs" type="xs:float" title="Maximum expected value of the mean absolute value at each point in time" useClass="" techNote="" description="This value, if set, will be used  in quality control tests, and files containing data values above this value will be marked as containing errors." uid="c057ebe4-175e-11e6-be8a-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="valid_min_status" type="xs:string" title="Status of valid_min" useClass="" techNote="" description="Indicates the degree of confidence in the valid_min value provided." uid="c057ee0a-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="valid_max_status" type="xs:string" title="Status of valid_max" useClass="" techNote="" description="" uid="c057f044-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="ok_min_mean_abs_status" type="xs:string" title="Status of ok_min_mean_abs" useClass="" techNote="" description="" uid="c057f256-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="ok_max_mean_abs_status" type="xs:string" title="Status of ok_mx_mean_abs" useClass="" techNote="" description="" uid="c057f472-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+</table>
+<table label="places" uid="SECTION:places" title="Places, States or Reservoirs" id="" itemLabelMode="def" level="10" maxOccurs="1" labUnique="Yes" description="An abstract entity defining an extensive quantity of something, e.g. liquid water, suspended carbon.">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="c0580282-175e-11e6-be8a-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="c058046c-175e-11e6-be8a-5404a60d96b5" required="True"/>
+  <rowAttribute label="uid" type="" title="" useClass="" techNote="" description="" uid="c058061a-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="" title="" useClass="" techNote="" description="" uid="c05807f0-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="" title="" useClass="" techNote="" description="" uid="c05809da-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="matter" type="" title="Substance " useClass="internalLink" techNote="" description="" uid="c0580bd8-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="mip" type="" title="" useClass="internalLink" techNote="" description="" uid="c0580dcc-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="vid" type="" title="" useClass="internalLink" techNote="" description="" uid="c0580fc0-175e-11e6-be8a-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="pid" type="" title="Parent Entity" useClass="internalLink" techNote="" description="A place, state or reservoir containing this one." uid="c05811d2-175e-11e6-be8a-5404a60d96b5" superclass="" required="false"/>
+</table>
+<table label="transfers" uid="SECTION:transfers" title="Transfers of Material" id="" itemLabelMode="def" level="11" maxOccurs="1" labUnique="Yes" description="Quantities expressing the transfer of material from one 'place' to another.">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="c05817c2-175e-11e6-be8a-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="c058197a-175e-11e6-be8a-5404a60d96b5" required="True"/>
+  <rowAttribute label="uid" type="" title="" useClass="" techNote="" description="" uid="c0581b28-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="" title="" useClass="" techNote="" description="" uid="c0581d12-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="" title="" useClass="" techNote="" description="" uid="c0581ed4-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="frid" type="" title="" useClass="internalLink" techNote="" description="Identifier of the 'place' that the flux is from." uid="c05820c8-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="toid" type="" title="" useClass="internalLink" techNote="" description="Identifier of the 'place' that the flux is to." uid="c05822d0-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="isOneWay" type="" title="" useClass="" techNote="" description="Set true if the flux is associated with a physical process which only transfers mass in one direction. E.g. " uid="c05824d8-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="signInverted" type="" title="" useClass="" techNote="" description="Sign Inverted should be set True for one way fluxes if the variable is defined to be negative definite. The competing constraints of CF Standard Name protocols and domain usage can cuase problems with the sign convention." uid="c05826d6-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="mip" type="" title="" useClass="internalLink" techNote="" description="" uid="c05828e8-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="vid" type="" title="" useClass="internalLink" techNote="" description="Identifier of the 'CMORvar' associated with the flux." uid="c0582adc-175e-11e6-be8a-5404a60d96b5" superclass="" required=""/>
 </table>
 </defDoc>

@@ -514,6 +514,8 @@ htmlStyle['spatialShape'] = {'getIrefs':['__all__']}
 htmlStyle['temporalShape'] = {'getIrefs':['__all__']}
 htmlStyle['structure'] = {'getIrefs':['__all__']}
 htmlStyle['standardname'] = {'getIrefs':['__all__']}
+htmlStyle['varRelations'] = {'getIrefs':['__all__']}
+htmlStyle['varRelLnk'] = {'getIrefs':['__all__']}
 
 if __name__ == "__main__":
   assert os.path.isdir( 'html' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml'
