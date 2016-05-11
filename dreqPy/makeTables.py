@@ -153,8 +153,8 @@ class makeTab(object):
       sht = wb.newSheet( t )
       j = 0
       if mode == 'c':
-        hrec = ['Priority','Long name', 'units', 'description', 'comment', 'Variable Name', 'CF Standard Name', 'cell_methods', 'positive', 'type', 'dimensions', 'CMOR Name', 'modeling_realm', 'frequency', 'cell_measures', 'prov', 'provNote','rowIndex']
-        hcmt = ['Default priority (generally overridden by settings in "requestVar" record)',ncga,'','','Name of variable in file','','','CMOR directive','','','CMOR name, unique within table','','','','','','','','','']
+        hrec = ['Priority','Long name', 'units', 'description', 'comment', 'Variable Name', 'CF Standard Name', 'cell_methods', 'positive', 'type', 'dimensions', 'CMOR Name', 'modeling_realm', 'frequency', 'cell_measures', 'prov', 'provNote','rowIndex','UID']
+        hcmt = ['Default priority (generally overridden by settings in "requestVar" record)',ncga,'','','Name of variable in file','','','CMOR directive','','','CMOR name, unique within table','','','','','','','','','','']
         sht.set_column(1,1,40)
         sht.set_column(1,3,50)
         sht.set_column(1,4,30)
@@ -164,7 +164,7 @@ class makeTab(object):
         sht.set_column(1,18,40)
         sht.set_column(1,19,40)
       else:
-        hrec = ['','Long name', 'units', 'description', '', 'Variable Name', 'CF Standard Name', '','', 'cell_methods', 'valid_min', 'valid_max', 'ok_min_mean_abs', 'ok_max_mean_abs', 'positive', 'type', 'dimensions', 'CMOR name', 'modeling_realm', 'frequency', 'cell_measures', 'flag_values', 'flag_meanings', 'prov', 'provNote','rowIndex']
+        hrec = ['','Long name', 'units', 'description', '', 'Variable Name', 'CF Standard Name', '','', 'cell_methods', 'valid_min', 'valid_max', 'ok_min_mean_abs', 'ok_max_mean_abs', 'positive', 'type', 'dimensions', 'CMOR name', 'modeling_realm', 'frequency', 'cell_measures', 'flag_values', 'flag_meanings', 'prov', 'provNote','rowIndex','UID']
       if addMips:
         hrec.append( 'MIPs (requesting)' )
         hrec.append( 'MIPs (by experiment)' )
@@ -220,17 +220,29 @@ class makeTab(object):
     wb.close()
 
 hdr = """
+function f000(value) { return (value + "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") };
+
+function formatter00(row, cell, value, columnDef, dataContext) {
+        var vv = value.split(" ");
+        return '<b><a href="u/' + vv[1] + '.html">' + (vv[0] + " ").replace(/&/g,"&amp;") + '</a></b>, ';
+    };
+function formatter01(row, cell, value, columnDef, dataContext) { return '<i>' + f000(value) + '</i> ' };
+function formatter02(row, cell, value, columnDef, dataContext) { return '[' + f000(value) + '] ' };
+function formatter03(row, cell, value, columnDef, dataContext) { if (value != "'unset'"  ) { return '(' + f000(value) + ') ' } else {return ''} };
+function formatter04(row, cell, value, columnDef, dataContext) { return '{' + f000(value) + '} ' };
+function formatter05(row, cell, value, columnDef, dataContext) { return '&lt;' + f000(value) + '&gt; ' };
+
 var getData  = {
 cols: function() {
-  var columns = [ {id:0, name:'Variable', field:0, width: 100},
-              {id:1, name:'Standard name', field:1, width: 210 },
-              {id:2, name:'Long name', field:2, width: 180},
-              {id:3, name:'Units', field:3, width: 180},
-              {id:4, name:'Description', field:4, width: 180},
-              {id:5, name:'uid', field:5, width: 180}];
-              #{id:4, name:'uid', field:4, width: 180}];
+  var columns = [ {id:0, name:'Variable', field:0, width: 100, formatter:formatter00 },
+              {id:1, name:'Standard name', field:1, width: 210, formatter:formatter01 },
+              {id:2, name:'Long name', field:2, width: 180, formatter:formatter02},
+              {id:3, name:'Units', field:3, width: 180, formatter:formatter03},
+              {id:4, name:'Description', field:4, width: 180, formatter:formatter04},
+              {id:5, name:'uid', field:5, width: 180, formatter:formatter05}];
  return columns;
 },
+
 data: function() {
 var data = [];
 """
@@ -486,7 +498,7 @@ class tables(object):
 styls = styles()
 
 htmlStyle = {}
-htmlStyle['CMORvar'] = {'getIrefs':['requestVar']}
+htmlStyle['CMORvar'] = {'getIrefs':['__all__']}
 htmlStyle['requestVarGroup'] = {'getIrefs':['requestVar','requestLink']}
 htmlStyle['var'] = {'getIrefs':['CMORvar']}
 htmlStyle['objective'] = {'getIrefs':['objectiveLink']}
@@ -495,12 +507,15 @@ htmlStyle['exptgroup'] = {'getIrefs':['__all__']}
 htmlStyle['requestItem'] = {'getIrefs':['__all__']}
 htmlStyle['experiment'] = {'getIrefs':['__all__']}
 htmlStyle['mip'] = {'getIrefs':['__all__']}
+htmlStyle['miptable'] = {'getIrefs':['__all__']}
 htmlStyle['remarks'] = {'getIrefs':['__all__']}
 htmlStyle['varChoice'] = {'getIrefs':['__all__']}
 htmlStyle['spatialShape'] = {'getIrefs':['__all__']}
 htmlStyle['temporalShape'] = {'getIrefs':['__all__']}
 htmlStyle['structure'] = {'getIrefs':['__all__']}
 htmlStyle['standardname'] = {'getIrefs':['__all__']}
+htmlStyle['varRelations'] = {'getIrefs':['__all__']}
+htmlStyle['varRelLnk'] = {'getIrefs':['__all__']}
 
 if __name__ == "__main__":
   assert os.path.isdir( 'html' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml'
@@ -508,7 +523,7 @@ if __name__ == "__main__":
   assert os.path.isdir( 'html/index' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml, and refernces to "u" in style lines below'
   assert os.path.isdir( 'tables' ), 'Before running this script you need to create a "tables" sub-directory, or edit the makeTab class'
 
-  dq = dreq.loadDreq( htmlStyles=htmlStyle)
+  dq = dreq.loadDreq( htmlStyles=htmlStyle, manifest='out/dreqManifest.txt' )
 ##
 ## add special styles to dq object "itemStyle" dictionary.
 ##

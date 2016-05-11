@@ -70,7 +70,7 @@ def filter2( a, b, tt, tm ):
   else:
     return min( [aa,b] )
 
-npy = {'daily':365, u'Annual':1, u'fx':0.01, u'1hr':24*365, u'3hr':8*365, u'monClim':12, u'Timestep':100, u'6hr':4*365, u'day':365, u'1day':365, u'mon':12, u'yr':1, u'1mon':12, 'month':12, 'year':1, 'monthly':12, 'hr':24*365, 'other':24*365, 'subhr':24*365, 'Day':365, '6h':4*365,
+npy = {'1hrClimMon':24*12, 'daily':365, u'Annual':1, u'fx':0.01, u'1hr':24*365, u'3hr':8*365, u'monClim':12, u'Timestep':100, u'6hr':4*365, u'day':365, u'1day':365, u'mon':12, u'yr':1, u'1mon':12, 'month':12, 'year':1, 'monthly':12, 'hr':24*365, 'other':24*365, 'subhr':24*365, 'Day':365, '6h':4*365,
 '3 hourly':8*365, '':1 }
 ## There are 4 cmor variables with blank frequency ....
 
@@ -186,6 +186,7 @@ class dreqQuery(object):
     for i in self.dq.coll['objectiveLink'].items:
       if t1(i.label):
         s.add( self.dq.inx.uid[i.rid] )
+
     ##self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
     self.rqs = list( s )
     return self.rqs
@@ -354,7 +355,7 @@ class dreqQuery(object):
     if verbose:
       for i in rql:
         r = inx.uid[i]
-        print ( '%s, %s, %s' % r.label, r.title, r.uid )
+        print ( '%s, %s, %s' % (r.label, r.title, r.uid) )
 
     dn = False
     if dn:
@@ -408,7 +409,6 @@ class dreqQuery(object):
 ##
 ## for each request item we have nymax, nenmax, nexmax.
 ##
-    nym = {}
     nymg = collections.defaultdict( dict )
 
 ##
@@ -435,38 +435,48 @@ class dreqQuery(object):
           else:
             grd = 'native'
 
+          this = None
           if exset == None:
             thisz = 100
-          elif exi._h.label == 'experiment':
+## 
+## for a single experiment, look up n years, and n ensemble.
+## should have nstart????
+##
+          elif exi._h.label == 'experiment' or ix._h.label == 'experiment':
+            this = None
             if ex in self.rqiExp[i.uid][1]:
               this = self.rqiExp[i.uid][1][ex]
-              thisz = this[-1]*this[-2]
-            else:
-              thisz = None
-          elif ix._h.label == 'experiment':
-            #cc2s[grd].a[i.esid].add( self.rqiExp[i.uid][irqi] )
-            thisz = self.rqiExp[i.uid][irqi]
+            elif ix.uid in self.rqiExp[i.uid][1]:
+              this = self.rqiExp[i.uid][1][ix.uid]
+            if this != None:
+              thisns = this[-3]
+              thisny = this[-2]
+              thisne = this[-1]
+              cc2s[grd].a[u].add( filter1( thisns*thisny*thisne, i.nymax) )
           else:
             thisz = None
             if 'experiment' in inx.iref_by_sect[i.esid].a:
               for u in inx.iref_by_sect[i.esid].a['experiment']:
                 if u in self.rqiExp[i.uid][1]:
                   this = self.rqiExp[i.uid][1][u]
-                  cc2s[grd].a[u].add( this[-1]*this[-2] )
+                  thisns = this[-3]
+                  thisny = this[-2]
+                  thisne = this[-1]
+                  cc2s[grd].a[u].add( filter1( thisns*thisny*thisne, i.nymax) )
 
-          if thisz != None:
-              cc2s[grd].a[i.esid].add( thisz )
+          ##if thisny != None and thisne != None:
+              ##cc2s[grd].a[i.esid].add( thisny*thisne )
           
           if exset != None:
             sg[grd].add( self.rqiExp[i.uid][irqi] )
       
-      if len(s) == 0:
-        nym[v] = 0
-      else:
+      ##if len(s) == 0:
+        ##nym[v] = 0
+      ##else:
 ###
 ### sum over experiments of maximum within each experiment
 ###
-        nym[v] = sum( [max( cc2[k] ) for k in cc2] )
+        ##nym[v] = sum( [max( cc2[k] ) for k in cc2] )
       for g in sg:
         nymg[v][g] = sum( [max( cc2s[g].a[k] ) for k in cc2s[g].a] )
 
@@ -533,7 +543,6 @@ class dreqQuery(object):
       ##raise
       return None
 
-
     if self.tierMax > 0:
       expts1 = []
       for i in expts:
@@ -597,6 +606,7 @@ class dreqQuery(object):
       dat2 = {}
       for i in e:
         dat2[i.uid] = (i.ntot, i.yps, i.ensz, i.tier, i.nstart, filter1(i.yps,rqi.nymax), filter2(i.ensz,rqi.nenmax,i.tier,self.tierMax) )
+        ##print i.label, rqi.title, dat2[i.uid]
       ### number of 
       nytot = sum( [dat2[x][-2]*dat2[x][-3] for x in dat2 ] )
       netot = sum( [dat2[x][-1] for x in dat2 ] )
@@ -700,16 +710,19 @@ class dreqQuery(object):
     else:
       exps = set( [exptid,] )
       ##print exptid, exps
+    
     self.volByE = {}
     vtot = 0
     cc = collections.defaultdict( col_count )
     self.allVars = set()
     for e in exps:
       expts = self.esid_to_exptList(e,deref=True,full=False)
-      if expts != None:
+      if expts not in  [None,[]]:
         self.volByE[e] = self.volByExpt( l1, e, pmax=pmax, cc=cc, retainRedundantRank=retainRedundantRank, intersection=intersection, adsCount=adsCount )
         vtot += self.volByE[e][0]
         self.allVars = self.allVars.union( self.vars )
+      ##else:
+        ##print 'No expts found: ',e
     self.indexedVol = cc
 
     return vtot
@@ -834,11 +847,11 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     for x in notKnownArgs:
       k += 1
       if x[1:] in self.knownargs:
-        print '%s PERHAPS %s instead of %s' % (k, x[1:],x)
+        print ( '%s PERHAPS %s instead of %s' % (k, x[1:],x) )
       elif '-%s' % x in self.knownargs:
-        print '%s PERHAPS -%s instead of %s' % (k, x,x)
+        print ( '%s PERHAPS -%s instead of %s' % (k, x,x) )
       elif x[0] == '\xe2':
-        print '%s POSSIBLY -- (double hyphen) instead of long dash in %s' % (k, x)
+        print ( '%s POSSIBLY -- (double hyphen) instead of long dash in %s' % (k, x) )
     print ('--------------------------------------')
 
     return len( notKnownArgs ) == 0
@@ -888,7 +901,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       odir = self.adict.get( 'xlsdir', 'xls' )
       ##print 'odir:::::::::: ',odir
       ##m = list( mips )[0]
-      self.checkDir( odir, 'xls files' )
+      self.sc.checkDir( odir, 'xls files' )
 
       self.sc.xlsByMipExpt(mips,eid,pmax,odir=odir)
  

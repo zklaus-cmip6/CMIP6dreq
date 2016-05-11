@@ -116,6 +116,34 @@
 <xs:attribute name="ntot" type="xs:integer"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">miptable: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__miptable">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__miptable_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="miptable"/>
+<xs:attribute name="title" type="xs:string" fixed="2.4 MIP tables"/>
+<xs:attribute name="id" type="xs:string" fixed="mtb"/>
+<xs:attribute name="useClass" fixed="vocab"/>
+<xs:attribute name="uid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titlelabel;
+   xs:stringLabeluid;
+   xs:stringIdentifiertitle;
+   xs:stringTitledescription;
+   xs:stringDescriptionfrequency;
+   xs:stringFrequencyprov;
+   xs:stringProvenance</xs:documentation></xs:annotation>
+<xs:complexType name="ct__miptable_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="aa:st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="description" type="xs:string"/>
+<xs:attribute name="frequency" type="xs:string"/>
+<xs:attribute name="prov" type="xs:string"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">CMORvar: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__CMORvar">
@@ -146,7 +174,8 @@
    xs:stringData value type, e.g. float or doublemodeling_realm;
    xs:stringModeling Realmpositive;
    xs:stringCMOR Directive PositivemipTableSection;
-   xs:stringSection of a tablemipTable;
+   xs:stringSection of a tablemtid;
+   xs:stringLink to MIP table recordmipTable;
    xs:stringThe MIP table: each table identifies a collection of variablesprov;
    xs:stringProvenanceprovNote;
    xs:stringProvenance Notefrequency;
@@ -172,6 +201,7 @@
 <xs:attribute name="modeling_realm" type="xs:string"/>
 <xs:attribute name="positive" type="xs:string"/>
 <xs:attribute name="mipTableSection" type="xs:string"/>
+<xs:attribute name="mtid" type="xs:string"/>
 <xs:attribute name="mipTable" type="xs:string"/>
 <xs:attribute name="prov" type="xs:string"/>
 <xs:attribute name="provNote" type="xs:string"/>
@@ -908,6 +938,8 @@
 <xs:element name="requestItem" type="aa:ct__requestItem"/>
 <!--[applying elem main] exptgroup-->
 <xs:element name="exptgroup" type="aa:ct__exptgroup"/>
+<!--[applying elem main] miptable-->
+<xs:element name="miptable" type="aa:ct__miptable"/>
 <!--[applying elem main] CMORvar-->
 <xs:element name="CMORvar" type="aa:ct__CMORvar"/>
 <!--[applying elem main] objective-->
