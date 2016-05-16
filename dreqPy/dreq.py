@@ -168,7 +168,8 @@ class dreqItemBase(object):
 ##
 ## add list of inward references
 ##
-           if self._base._indexInitialised:
+           oldCode = False
+           if self._base._indexInitialised and oldCode:
              f1 = self._htmlStyle.get( sect, {} ).get( 'getIrefs', None ) != None
              if f1:
                tl = []
@@ -217,11 +218,63 @@ class dreqItemBase(object):
                  for m in am:
                     msg.append(m)
                
+           elif self._base._indexInitialised:
+             msg += self.__irefHtml__(sect,ghis)
          else:
            msg.append( '<b>Item %s: uninitialised</b>' % self.sectionLabel )
          return msg
 
 
+       def __irefHtml__(self, sect,ghis):
+         """Returns html (as a list of text strings) for inward references"""
+         if self._htmlStyle.get( sect, {} ).get( 'getIrefs', None ) == None:
+           return []
+         
+         tl = self._htmlStyle[sect]['getIrefs']
+         doall = '__all__' in tl
+         if doall:
+           tl = self._inx.iref_by_sect[self.uid].a.keys()
+         tl1 = []
+         for t in tl:
+           if t in self._inx.iref_by_sect[self.uid].a and len( self._inx.iref_by_sect[self.uid].a[t] ) > 0:
+             tl1.append( t )
+         am = []
+         if len(tl1) > 0:
+               am.append( '''<div class="demo">\n<div id="tabs">\n<ul>''' )
+               for t in tl1:
+                   u0 = self._inx.iref_by_sect[self.uid].a[t][0]
+                   this1 = '<li><a href="#tabs-%s">%s</a></li>' % (t,self._inx.uid[u0]._h.title )
+                   am.append( this1 )
+               am.append( '</ul>' )
+               for t in tl1:
+                   u0 = self._inx.iref_by_sect[self.uid].a[t][0]
+                   am.append( '<div id="tabs-%s">' % t )
+                   am.append( '<h3>%s</h3>' % self._inx.uid[u0]._h.title )
+                   am.append( '<ul>' )
+                   items = [self._inx.uid[u] for  u in self._inx.iref_by_sect[self.uid].a[t] ]
+                   items.sort( ds('label').cmp )
+                   for targ in items:
+                     if ghis == None:
+                       m = '<li>%s:%s [%s]</li>' % ( targ._h.label, targ.label, targ.__href__() )
+                     else:
+                       lst = ghis( targ._h.label )
+                       m = lst( targ, frm=sect )
+                     am.append( m )
+                   am.append( '</ul>' )
+                   am.append( '</div>' )
+               if len(am) > 0:
+                 am.append( '</div>' )
+                 am0 = [ '<h2>Links from other sections</h2>' ,]
+                 am0.append( ''' <script>
+        $(function() {
+                $( "#tabs" ).tabs({cookie: { expires: 1 } });
+        });
+ </script>
+<!-- how to make tab selection stick: http://stackoverflow.com/questions/5066581/jquery-ui-tabs-wont-save-selected-tab-index-upon-page-reload  expiry time in days-->''' )
+                 return am0 + am
+         else:
+           return []
+               
        def dictInit( self, idict ):
          __doc__ = """Initialise from a dictionary."""
          for a in self._a.keys():

@@ -70,8 +70,11 @@ def filter2( a, b, tt, tm ):
   else:
     return min( [aa,b] )
 
-npy = {'1hrClimMon':24*12, 'daily':365, u'Annual':1, u'fx':0.01, u'1hr':24*365, u'3hr':8*365, u'monClim':12, u'Timestep':100, u'6hr':4*365, u'day':365, u'1day':365, u'mon':12, u'yr':1, u'1mon':12, 'month':12, 'year':1, 'monthly':12, 'hr':24*365, 'other':24*365, 'subhr':24*365, 'Day':365, '6h':4*365,
-'3 hourly':8*365, '':1 }
+npy = {'1hrClimMon':24*12, 'daily':365, u'Annual':1, u'fx':0.01, u'1hr':24*365, u'3hr':8*365,
+       u'monClim':12, u'Timestep':100, u'6hr':4*365, u'day':365, u'1day':365, u'mon':12, u'yr':1,
+       u'1mon':12, 'month':12, 'year':1, 'monthly':12, 'hr':24*365, 'other':24*365,
+        'subhr':24*365, 'Day':365, '6h':4*365, '3 hourly':8*365, '':1 }
+
 ## There are 4 cmor variables with blank frequency ....
 
 def vol01( sz, v, npy, freq, inx ):
@@ -106,6 +109,9 @@ class dreqQuery(object):
     self.tierMax = tierMax
 
     self.mips = set( [x.label for x in self.dq.coll['mip'].items ] )
+    self.mips = ['AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
+    self.mipsp = ['DECK','CMIP6',] + self.mips[:-4]
+
     self.experiments = set( [x.uid for x in self.dq.coll['experiment'].items ] )
     self.exptByLabel = {}
     for x in self.dq.coll['experiment'].items:
@@ -204,7 +210,6 @@ class dreqQuery(object):
     ##self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
     self.rqs = list( s )
     return self.rqs
-
 
   def getRequestLinkByObjective( self, objSel ):
     """Return the set of request links which are associated with specified objectives"""
@@ -328,10 +333,11 @@ class dreqQuery(object):
           for l in inx.iref_by_sect[vg].a['requestVar']:
             if inx.uid[l].priority <= min(pmax,max(rqvgs[vg])):
                vars.add(inx.uid[l].vid)
-        ##col1 = reduce( operator.or_, [set( inx.iref_by_sect[vg].a['requestVar'] ) for vg in rqvg ] )
 
+        ##col1 = reduce( operator.or_, [set( inx.iref_by_sect[vg].a['requestVar'] ) for vg in rqvg ] )
 ### filter out cases where the request does not point to a CMOR variable.
     ##vars = {vid for vid in vars if inx.uid[vid][0] == u'CMORvar'}
+
       thisvars = set()
       for vid in vars:
          if inx.uid[vid]._h.label == u'CMORvar':
@@ -348,7 +354,6 @@ class dreqQuery(object):
     imips = set()
     for i in l1:
       imips.add(i.mip)
-    ##imips = {i.mip for i in l1}
     
     rql, l1p, exset = self.rqlByExpt( l1, ex, pmax=pmax, expFullEx=expFullEx )
     verbose = False
@@ -366,7 +371,6 @@ class dreqQuery(object):
       exi = self.dq.inx.uid[ex]
       if exi._h.label == 'experiment':
         exset = set( [ex,exi.egid,exi.mip] )
-
 #####
     if len( rql ) == 0:
       self.vars = set()
@@ -410,7 +414,6 @@ class dreqQuery(object):
 ## for each request item we have nymax, nenmax, nexmax.
 ##
     nymg = collections.defaultdict( dict )
-
 ##
 ## if dataset count rather than volume is wanted, use item 3 from rqiExp tuple.
     if adsCount:
@@ -632,15 +635,17 @@ class dreqQuery(object):
 
   def rqiByMip( self, mip):
 
+    if mip == 'TOTAL':
+        mip = self.mips
     if type(mip) in [type( '' ),type( u'') ]:
       if mip not in self.mips:
         mlg.prnt ( self.mips )
         raise baseException( 'rqiByMip: Name of mip not recognised: %s' % mip )
       l1 = [i for i in  self.dq.coll['requestItem'].items if i.mip == mip]
-    elif type(mip) == type( set()):
+    elif type(mip) in [ type( set()), type( [] ) ]:
       nf = [ m for m in mip if m not in self.mips]
       if len(nf) > 0:
-        raise baseException( 'rqiByMip: Name of mip(s) not recognised: %s' % str(nf) )
+          raise baseException( 'rqiByMip: Name of mip(s) not recognised: %s' % str(nf) )
       l1 = [i for i in  self.dq.coll['requestItem'].items if i.mip in mip]
     elif type(mip) == type( dict()):
       nf = [ m for m in mip if m not in self.mips]
@@ -678,11 +683,22 @@ class dreqQuery(object):
 
 
   def xlsByMipExpt(self,m,ex,pmax,odir='xls'):
+    import scope_utils
+    mxls = scope_utils.xlsTabs(self,tiermax=self.tierMax,pmax=pmax)
+
+    ##tabs = makeTables.tables( self, mips, odir=odir )
+    mlab = makeTables.setMlab( m )
+    ##mm = list( m )[0]
+    ##r = overviewTabs.r1( self, tiermax=1, pmax=pmax, only=mm )
+
+    mxls.run( m, mlab=mlab )
+
+  def xlsByMipExptxx(self,m,ex,pmax,odir='xls'):
 
     mips = ['AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
     tabs = makeTables.tables( self, mips, odir=odir )
     cc = collections.defaultdict( c1 )
-    mlab = tabs.setMlab( m )
+    mlab = makeTables.setMlab( m )
     cc[mlab].dd = {}
     cc[mlab].ee = {}
     if m == 'TOTAL':
@@ -692,11 +708,30 @@ class dreqQuery(object):
 
     ###print 'len l1:',len(l1)
     self.checkDir( odir, 'xls files' )
-    if ex == None:
-      for m2 in mips:
-        l12 = self.rqiByMip( m2 )
-        tabs.doTable(m,l12,m2,pmax,cc, mlab=mlab, acc=True)
+    tabs.accReset()
+    vcc = collections.defaultdict( int  )
+    if ex == None and False:
+      for m2 in self.mipsp:
+        if m2 == 'TOTAL':
+          xx = self.dq.coll['experiment'].items
+        else:
+          xx = [i for i in self.dq.coll['experiment'].items if i.mip == m2]
+        xxi = set( [i.label for i in xx] )
+        cc[mlab].ee[m2] = xx
+##
+## populate collector ....
+##
+        if m2 != 'TOTAL':
+            for i in xx:
+              tabs.doTable(m,l1,i.uid,pmax,self.cc,acc=False,cc=vcc,exptids=xxi)
+        tabs.doTable(m,l1,m2,pmax,self.cc,cc=vcc,exptids=xxi)
+
+    for i in self.dq.coll['experiment'].items:
+            tabs.doTable(m,l1,i.uid,pmax,cc, mlab=mlab,acc=False)
+    ex = 'TOTAL'
          
+    print 'xlsBxMip ... ', m, ex
+    l1 = self.rqiByMip( set( mips ) )
     tabs.doTable(m,l1,ex,pmax,cc, mlab=mlab)
       
   def volByMip( self, mip, pmax=2, retainRedundantRank=False, intersection=False, adsCount=False, exptid=None):
@@ -718,8 +753,10 @@ class dreqQuery(object):
     for e in exps:
       expts = self.esid_to_exptList(e,deref=True,full=False)
       if expts not in  [None,[]]:
-        self.volByE[e] = self.volByExpt( l1, e, pmax=pmax, cc=cc, retainRedundantRank=retainRedundantRank, intersection=intersection, adsCount=adsCount )
-        vtot += self.volByE[e][0]
+        ###print 'EXPTS: ',e,len(expts), list( expts )[0].label
+        for ei in expts:
+          self.volByE[ei.label] = self.volByExpt( l1, ei.uid, pmax=pmax, cc=cc, retainRedundantRank=retainRedundantRank, intersection=intersection, adsCount=adsCount )
+          vtot += self.volByE[ei.label][0]
         self.allVars = self.allVars.union( self.vars )
       ##else:
         ##print 'No expts found: ',e
@@ -887,7 +924,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
         if i.label == self.adict['e']:
           eid = i.uid
       assert eid != None, 'Experiment %s not found' % self.adict['e']
-    ##print ( 'eid=%s' % eid )
+
     assert ok,'Available MIPs: %s' % str(self.sc.mips)
     adsCount = self.adict.get( 'count', False )
 
@@ -899,18 +936,16 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     if makeXls:
       mips = self.adict['m']
       odir = self.adict.get( 'xlsdir', 'xls' )
-      ##print 'odir:::::::::: ',odir
-      ##m = list( mips )[0]
       self.sc.checkDir( odir, 'xls files' )
 
+      print mips, eid
       self.sc.xlsByMipExpt(mips,eid,pmax,odir=odir)
- 
 
   def getVolByMip(self,pmax,eid,adsCount):
 
     v0 = self.sc.volByMip( self.adict['m'], pmax=pmax, intersection=self.intersection, adsCount=adsCount, exptid=eid )
     #mlg.prnt ( '%7.2fTb' % (v0*2.*1.e-12) )
-    mlg.prnt ( '%s [%s]' % (v0,makeTables.vfmt(v0*2.)) )
+    mlg.prnt ( 'getVolByMip: %s [%s]' % (v0,makeTables.vfmt(v0*2.)) )
     cc = collections.defaultdict( int )
     for e in self.sc.volByE:
       for v in self.sc.volByE[e][2]:

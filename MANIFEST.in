@@ -19,3 +19,7 @@ include dreqPy/docs/vocabSchema.xsd
 include dreqPy/docs/vocab.xml
 include dreqPy/docs/xlink.xsd
 include dreqPy/docs/xml.xsd
+include dreqPy/docs/dreqSuppSchema.xsd
+include dreqPy/docs/dreqSuppDefn.xml
+include dreqPy/docs/dreqSupp.xml
+include dreqPy/docs/dreqManifest.txt
