@@ -7,6 +7,17 @@ try:
 except:
     print ('No xlsxwrite: will not make tables ...')
 
+def setMlab( m ):
+      if type(m) == type(''):
+        mlab = m
+      else:
+        ll = sorted( list(m) )
+        if len(ll) == 1:
+          mlab = list(m)[0]
+        else:
+          mlab=string.join( [ x[:2].lower() for x in m ], '.' )
+      return mlab
+
 class xlsx(object):
   def __init__(self,fn):
     self.wb = xlsxwriter.Workbook(fn)
@@ -191,7 +202,12 @@ class makeTab(object):
 
           if not ok:
             if (t,v.label) not in skipped:
-              print ( 'makeTables: skipping %s %s' % (t,v.label) )
+              ml = []
+              for i in range(4):
+                 ii = [cv,strc,sshp,tshp][i]
+                 if ii._h.label == 'remarks':
+                   ml.append( ['var','struct','time','spatial'][i] )
+              print ( 'makeTables: skipping %s %s: %s' % (t,v.label,string.join( ml, ',')) )
               skipped.add( (t,v.label) )
           else:
             dims = []
@@ -417,17 +433,6 @@ class tables(object):
       self.odir = odir
       self.accReset()
 
-  def setMlab( self, m ):
-      if type(m) == type(''):
-        mlab = m
-      else:
-        ll = sorted( list(m) )
-        if len(ll) == 1:
-          mlab = list(m)[0]
-        else:
-          mlab=string.join( [ x[:2].lower() for x in m ], '.' )
-      return mlab
-
   def accReset(self):
     self.acc = [0.,collections.defaultdict(int),collections.defaultdict( float ) ]
 
@@ -436,54 +441,105 @@ class tables(object):
     for k in x[2]:
        self.acc[2][k] += x[2][k]
 
-  def doTable(self,m,l1,m2,pmax,collector,acc=True, mlab=None):
+  def doTable(self,m,l1,m2,pmax,collector,acc=True, mlab=None,exptids=None,cc=None):
       """*acc* allows accumulation of values to be switched off when called in single expt mode"""
       
       if mlab == None:
-        mlab = self.setMlab( m )
+        mlab = setMlab( m )
 
       if m2 in [None, 'TOTAL']:
         x = self.acc
       else:
-        x = self.sc.volByExpt( l1, m2, expFullEx=(m2 in self.mips), pmax=pmax )
-        if acc:
-          self.accAdd(x)
+        x = self.sc.volByExpt( l1, m2, pmax=pmax )
 
-      if x[0] > 0:
-        if m2 not in [ None, 'TOTAL']:
+##self.volByExpt( l1, e, pmax=pmax, cc=cc, retainRedundantRank=retainRedundantRank, intersection=intersection, adsCount=adsCount )
+        v0 = self.sc.volByMip( m, pmax=pmax,  exptid=m2 )
+####
+        if cc==None:
+          cc = collections.defaultdict( int )
+        for e in self.sc.volByE:
+          for v in self.sc.volByE[e][2]:
+             cc[v] += self.sc.volByE[e][2][v]
+        xxx = 0
+        for v in cc:
+          xxx += cc[v]
+####
+        if acc:
+          for e in self.sc.volByE:
+            self.accAdd(self.sc.volByE[e])
+
+      if m2 not in [ None, 'TOTAL']:
           im2 = self.dq.inx.uid[m2]
+          ismip = im2._h.label == 'mip'
           mlab2 = im2.label
-          collector[mlab].a[mlab2] += x[0]
-        else:
+
+          x0 = 0
+          for e in self.sc.volByE:
+            if exptids == None or e in exptids:
+              x = self.sc.volByE[e]
+              if x[0] > 0:
+                collector[mlab].a[mlab2] += x[0]
+                x0 += x[0]
+      else:
+          ismip = False
           mlab2 = 'TOTAL'
+          x0 = x[0]
+
+      ##print 'xxxxxzz',mlab,mlab2,'%12.5e' % x[0],x0
+      if mlab2 == 'TOTAL' and x0 == 0:
+        print 'no data detected for %s' % mlab
+
+      if x0 > 0:
 #
 # create sum for each table
 #
         xs = 0
         kkc = '_%s_%s' % (mlab,mlab2)
-        for k in x[2].keys():
-          i = self.dq.inx.uid[k]
-          xxx =  x[2][k]
-          xs += xxx
-          if xxx > 0:
-            collector[kkc].a[i.mipTable] += xxx
-        assert x[0] == xs, 'ERROR.0088: consistency problem %s  %s %s %s' % (m,m2,x[0],xs)
-        if x[0] == 0:
+        kkct = '_%s_%s' % (mlab,'TOTAL')
+        if m2 in [None, 'TOTAL']:
+          x = self.acc
+          x2 = set(x[2].keys() )
+          for k in x[2].keys():
+           i = self.dq.inx.uid[k]
+           xxx =  x[2][k]
+           xs += xxx
+        else:
+          x2 = set()
+          for e in self.sc.volByE:
+            if exptids == None or e in exptids:
+              x = self.sc.volByE[e]
+              x2 = x2.union( set( x[2].keys() ) )
+              for k in x[2].keys():
+               i = self.dq.inx.uid[k]
+               xxx =  x[2][k]
+               xs += xxx
+               if xxx > 0:
+                collector[kkc].a[i.mipTable] += xxx
+                if ismip:
+                  collector[kkct].a[i.mipTable] += xxx
+
+        if x0 != xs:
+          print ( 'ERROR.0088: consistency problem %s  %s %s %s' % (m,m2,x0,xs) )
+        if x0 == 0:
           print ( 'Zero size: %s, %s' % (m,m2) )
           if len( x[2].keys() ) > 0:
              print ( 'ERROR:zero: %s, %s: %s' % (m,m2,str(x[2].keys()) ) )
 
         if acc and m2 not in [ None, 'TOTAL']:
-          collector[mlab].a['TOTAL'] += x[0]
+          collector[mlab].a['TOTAL'] += x0
 
+        ##print 'xxxxq', collector[mlab].a[mlab2], collector[mlab].a['TOTAL']
+        ##print 'xxxxz', kkc, collector[kkc].a['Amon'], collector[kkct].a['Amon'], ismip
         dd = collections.defaultdict( list )
         lll = set()
-        for v in x[2].keys():
+        for v in x2:
           vi = self.sc.dq.inx.uid[v]
           if vi._h.label != 'remarks':
             f,t,l,tt,d,u = (vi.frequency,vi.mipTable,vi.label,vi.title,vi.description,vi.uid)
             lll.add(u)
             dd[t].append( (f,t,l,tt,d,u) )
+
+        ##print 'xxxxx',mlab,mlab2, x0, len( dd.keys() )
         if len( dd.keys() ) > 0:
           collector[mlab].dd[mlab2] = dd
           if m2 not in [ None, 'TOTAL']:
@@ -493,6 +549,7 @@ class tables(object):
 ### BUT ... there is a treset in the request item .... it may be that some variables are excluded ...
 ###         need the variable list itself .....
 ###
+          ##print '> maketab: ','%s/%s-%s_%s_%s.xlsx' % (self.odir,mlab,mlab2,self.sc.tierMax,pmax)
           makeTab( self.sc.dq, subset=lll, dest='%s/%s-%s_%s_%s.xlsx' % (self.odir,mlab,mlab2,self.sc.tierMax,pmax), collected=collector[kkc].a )
 
 styls = styles()
