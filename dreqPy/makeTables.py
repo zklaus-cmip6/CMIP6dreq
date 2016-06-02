@@ -1,7 +1,26 @@
 
 import dreq
-import collections, string, os
+import collections, string, os, sys
 import vrev
+python2 = True
+if sys.version_info[0] == 3:
+  python2 = False
+  def cmp(x,y):
+    if x == y:
+      return 0
+    elif x > y:
+      return 1
+    else:
+      return -1
+
+if sys.version_info >= (2,7):
+  from functools import cmp_to_key
+  oldpython = False
+else:
+  oldpython = True
+
+import scope_utils
+
 try:
     import xlsxwriter
 except:
@@ -98,6 +117,10 @@ def cmpAnnex( x, y ):
   else:
     return cmp(0,1)
 
+
+if not oldpython:
+  kAnnex = cmp_to_key( cmpAnnex )
+
 import re
 
 
@@ -119,7 +142,10 @@ class makeTab(object):
       cmv = [x for x in dq.coll['CMORvar'].items if x.uid in subset]
     else:
       cmv = dq.coll['CMORvar'].items
-    tables = sorted( list( set( [i.mipTable for i in cmv] ) ), cmp=cmpAnnex )
+    if oldpython:
+      tables = sorted( list( set( [i.mipTable for i in cmv] ) ), cmp=cmpAnnex )
+    else:
+      tables = sorted( list( set( [i.mipTable for i in cmv] ) ), key=kAnnex )
 
     addMips = True
     if addMips:
@@ -444,8 +470,14 @@ class tables(object):
   def doTable(self,m,l1,m2,pmax,collector,acc=True, mlab=None,exptids=None,cc=None):
       """*acc* allows accumulation of values to be switched off when called in single expt mode"""
       
+      self.verbose = False
       if mlab == None:
         mlab = setMlab( m )
+
+      cc0 = scope_utils.getExptSum( self.dq, mlab, l1 )
+      ks = sorted( list( cc0.keys() ) )
+      if self.verbose:
+        print ('Experiment summary: %s %s' % (mlab,string.join( ['%s: %s' % (k,len(cc0[k])) for k in ks], ', ' ) ) )
 
       if m2 in [None, 'TOTAL']:
         x = self.acc
@@ -458,6 +490,8 @@ class tables(object):
         if cc==None:
           cc = collections.defaultdict( int )
         for e in self.sc.volByE:
+          if self.verbose:
+             print ('INFO.mlab.... %s: %s: %s' % ( mlab, e, len( self.sc.volByE[e][2] ) ) )
           for v in self.sc.volByE[e][2]:
              cc[v] += self.sc.volByE[e][2][v]
         xxx = 0
@@ -485,9 +519,9 @@ class tables(object):
           mlab2 = 'TOTAL'
           x0 = x[0]
 
-      ##print 'xxxxxzz',mlab,mlab2,'%12.5e' % x[0],x0
+      ### print 'xxxxxzz',mlab,mlab2,'%12.5e' % x[0],x0
       if mlab2 == 'TOTAL' and x0 == 0:
-        print 'no data detected for %s' % mlab
+        print ( 'no data detected for %s' % mlab )
 
       if x0 > 0:
 #
@@ -544,7 +578,7 @@ class tables(object):
           collector[mlab].dd[mlab2] = dd
           if m2 not in [ None, 'TOTAL']:
             if im2._h.label == 'experiment':
-              dothis = self.sc.tierMax >= im2.tier
+              dothis = self.sc.tierMax >= min( im2.tier )
 ###
 ### BUT ... there is a treset in the request item .... it may be that some variables are excluded ...
 ###         need the variable list itself .....

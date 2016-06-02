@@ -693,46 +693,6 @@ class dreqQuery(object):
 
     mxls.run( m, mlab=mlab )
 
-  def xlsByMipExptxx(self,m,ex,pmax,odir='xls'):
-
-    mips = ['AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
-    tabs = makeTables.tables( self, mips, odir=odir )
-    cc = collections.defaultdict( c1 )
-    mlab = makeTables.setMlab( m )
-    cc[mlab].dd = {}
-    cc[mlab].ee = {}
-    if m == 'TOTAL':
-        l1 = self.rqiByMip( set( mips ) )
-    else:
-        l1 = self.rqiByMip( m )
-
-    ###print 'len l1:',len(l1)
-    self.checkDir( odir, 'xls files' )
-    tabs.accReset()
-    vcc = collections.defaultdict( int  )
-    if ex == None and False:
-      for m2 in self.mipsp:
-        if m2 == 'TOTAL':
-          xx = self.dq.coll['experiment'].items
-        else:
-          xx = [i for i in self.dq.coll['experiment'].items if i.mip == m2]
-        xxi = set( [i.label for i in xx] )
-        cc[mlab].ee[m2] = xx
-##
-## populate collector ....
-##
-        if m2 != 'TOTAL':
-            for i in xx:
-              tabs.doTable(m,l1,i.uid,pmax,self.cc,acc=False,cc=vcc,exptids=xxi)
-        tabs.doTable(m,l1,m2,pmax,self.cc,cc=vcc,exptids=xxi)
-
-    for i in self.dq.coll['experiment'].items:
-            tabs.doTable(m,l1,i.uid,pmax,cc, mlab=mlab,acc=False)
-    ex = 'TOTAL'
-         
-    print 'xlsBxMip ... ', m, ex
-    l1 = self.rqiByMip( set( mips ) )
-    tabs.doTable(m,l1,ex,pmax,cc, mlab=mlab)
       
   def volByMip( self, mip, pmax=2, retainRedundantRank=False, intersection=False, adsCount=False, exptid=None):
 
@@ -812,6 +772,9 @@ class dreqUI(object):
       -v : print version and exit;
       --unitTest : run some simple tests;
       -m <mip>:  MIP of list of MIPs (comma separated; for objective selection see note [1] below);
+      -l <options>: List for options: 
+              o: objectives
+              e: experiments
       -h :       help: print help text;
       -e <expt>: experiment;
       -t <tier> maxmum tier;
@@ -834,6 +797,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     self.adict = {}
     self.knownargs = {'-m':('m',True), '-p':('p',True), '-e':('e',True), '-t':('t',True), \
                       '-h':('h',False), '--printLinesMax':('plm',True), \
+                      '-l':('l',True),
                       '--printVars':('vars',False), '--intersection':('intersection',False), \
                       '--count':('count',False), \
                       '--xlsDir':('xlsdir',True), '--xls':('xls',False) \
@@ -906,7 +870,11 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     if dq == None:
       self.dq = dreq.loadDreq()
     else:
-      self.dq = None
+      self.dq = dq
+
+    if 'l' in self.adict:
+      self.printList()
+      return
 
     self.sc = dreqQuery( dq=self.dq )
 
@@ -938,9 +906,25 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       odir = self.adict.get( 'xlsdir', 'xls' )
       self.sc.checkDir( odir, 'xls files' )
 
-      print mips, eid
+      ##print mips, eid
       self.sc.xlsByMipExpt(mips,eid,pmax,odir=odir)
 
+
+  def printList(self):
+    mips = self.adict['m']
+    ee = {}
+    for i in self.dq.coll['mip'].items:
+      if i.label in mips:
+        ee[i.label] = i
+    if self.adict['l'] in ['o','e']:
+      targ = {'o':'objective', 'e':'experiment' }[self.adict['l']]
+      for k in sorted( ee.keys() ):
+        if targ in self.dq.inx.iref_by_sect[ee[k].uid].a:
+          for u in self.dq.inx.iref_by_sect[ee[k].uid].a[targ]:
+            print ( '%s: %s' % (ee[k].label, self.dq.inx.uid[u].label) )
+    else:
+      print ('list objective *%s* not recognised (should be e or o)' % self.adict['l'] )
+      
   def getVolByMip(self,pmax,eid,adsCount):
 
     v0 = self.sc.volByMip( self.adict['m'], pmax=pmax, intersection=self.intersection, adsCount=adsCount, exptid=eid )
