@@ -102,7 +102,7 @@ class dreqItemBase(object):
                  else:
                    print ( '   %s: [ERROR: key not found] [%s]' % ( a, self.__dict__[a] ) )
                else:
-                 print ( '    %s: %s' % ( a, self.__dict__[a] ) )
+                 print ( 'INFO:    %s: %s' % ( a, self.__dict__[a] ) )
          else:
            print ( 'Item <%s>: uninitialised' % self.sectionLabel )
 
@@ -155,9 +155,9 @@ class dreqItemBase(object):
                      lst = self.getHtmlLinkAttrStyle(a)
                      m = lst( app, targ, frm=sect )
                    except:
-                     print ( a, self.__dict__[a], sect )
+                     print ( 'INFO.cex.00001:',a, self.__dict__[a], sect, self.label )
                      m = '<li>%s: %s .... broken link</li>' % ( app, self.__dict__[a] )
-                     ##raise
+                     raise
                    ##m = '<li>%s, %s: [%s] %s [%s]</li>' % ( a, self.__class__.__dict__[a].__href__(label=self._greenIcon), targ._h.label, targ.label, targ.__href__() )
                elif hasattr( self._a[a], 'useClass') and self._a[a].useClass == 'externalUrl':
                  m = '<li>%s: <a href="%s" title="%s">%s</a></li>' % ( app, self.__dict__[a], self._a[a].description, self._a[a].title )
@@ -335,10 +335,8 @@ class dreqItemBase(object):
              elif self._a[a].type in [u'aa:st__floatList', u'aa:st__floatListMonInc']:
                  v = [float(x) for x in v.split()]
              elif self._a[a].type in [u'aa:st__integerList', u'aa:st__integerListMonInc']:
-                 ##print a,self._a[a].type,str(v)
                  v = [int(x) for x in v.split()]
                  if self._a[a].type in [u'aa:st__integerListMonInc'] and self._strictRead:
-                   ##print a,self._a[a].type,str(v)
                    for i in range(len(v)-1):
                      assert v[i] < v[i+1], 'Attribute %s of type %s with non-monotonic value: %s' % (a,self._a[a].type,str(v))
              elif self._a[a].type == u'xs:integer':
@@ -367,7 +365,7 @@ class dreqItemBase(object):
                else:
                  v = [v,]
              elif self._a[a].type not in [u'xs:string']:
-               print ('ERROR: Type %s not recognised' % self._a[a].type )
+               print ('ERROR: Type %s not recognised [%s:%s]' % (self._a[a].type,self._h.label,a) )
 
              if erase:
                ### need to overwrite attribute (which is inherited from parent class) before deleting it.
@@ -386,9 +384,6 @@ class dreqItemBase(object):
                  sys.exit(0)
              self.__dict__[a] = self._d.defaults.get( a, self._d.glob )
 
-           ##if type( self.__dict__.get( 'rowIndex', 0 ) ) != type(0):
-             ##print 'Bad row index ', el.hasAttribute( 'rowIndex' )
-             ##raise
            if deferredHandling:
              print ( msg )
 
@@ -587,9 +582,6 @@ class config(object):
     """Switchable print function ... switch off by setting self.silent=True"""
     if not self.silent:
       print ( ss )
-
-  ###def get(self):
-    ###return self.coll
 
   def itemClassFact(self, sectionInfo,ns=None):
      class dreqItem(dreqItemBase):
