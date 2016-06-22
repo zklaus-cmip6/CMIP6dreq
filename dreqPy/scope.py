@@ -33,6 +33,8 @@ class c1s(object):
   def __init__(self):
     self.a = collections.defaultdict( set )
 
+NT_txtopts = collections.namedtuple( 'txtopts', ['mode'] )
+
 class baseException(Exception):
   """Basic exception for general use in code."""
 
@@ -52,7 +54,6 @@ class cmpd(object):
   def cmp(self,x,y,):
     return cmp( self.d[x], self.d[y] )
 
-    self.default_mcfg = nt_mcfg._make( [259200,60,64800,40,20,5,100] )
 
 def filter1( a, b ):
   if b < 0:
@@ -122,10 +123,19 @@ class dreqQuery(object):
 
     self.default_mcfg = nt_mcfg._make( [259200,60,64800,40,20,5,100] )
     self.mcfg = self.default_mcfg._asdict()
-    ##for k in self.default_mcfg.__dict__.keys():
-      ##self.mcfg[k] = self.default_mcfg.__dict__[k]
+    self.mcfgNote = None
     self.szcfg()
     self.requestItemExpAll(  )
+
+  def setMcfg(self, ll, msg=None ):
+    assert len(ll) == 7, 'Model config must be of length 7: %s' % str(ll)
+    assert all( [type(x) == type(1) for x in ll] )
+    self.mcfg = nt_mcfg._make( ll )._asdict()
+    if msg == None:
+      self.mcfgNote = 'User supplied model configuration: %s' % str(ll)
+    else:
+      self.mcfgNote = msg
+    self.szcfg()
 
   def szcfg(self):
     szr = {'100km':64800, '1deg':64800, '2deg':16200 }
@@ -279,8 +289,8 @@ class dreqQuery(object):
 
     return rql, l1p, exset
 
-  def varsByRql( self, rql, pmax=2, intersection=False): 
-      """The complete set of variables associated with a set of rquest links."""
+  def varsByRql( self, rql, pmax=2, intersection=False, asDict=False): 
+      """The complete set of variables associated with a set of request links."""
       inx = self.dq.inx
       cc1 = collections.defaultdict( set )
       for i in rql:
@@ -328,19 +338,31 @@ class dreqQuery(object):
           
 ###To obtain a set of variables associated with this collection of variable groups:
 
-        vars = set()
+        if asDict:
+          vars = collections.defaultdict( list )
+        else:
+          vars = set()
         for vg in rqvgs:
           for l in inx.iref_by_sect[vg].a['requestVar']:
             if inx.uid[l].priority <= min(pmax,max(rqvgs[vg])):
-               vars.add(inx.uid[l].vid)
+               if asDict:
+                 vars[inx.uid[l].vid].append( vg )
+               else:
+                 vars.add(inx.uid[l].vid)
 
         ##col1 = reduce( operator.or_, [set( inx.iref_by_sect[vg].a['requestVar'] ) for vg in rqvg ] )
 ### filter out cases where the request does not point to a CMOR variable.
     ##vars = {vid for vid in vars if inx.uid[vid][0] == u'CMORvar'}
 
-      thisvars = set()
-      for vid in vars:
-         if inx.uid[vid]._h.label == u'CMORvar':
+      if asDict:
+        thisvars = {}
+        for vid in vars:
+           if inx.uid[vid]._h.label == u'CMORvar':
+             thisvars[vid] = vars[vid]
+      else:
+        thisvars = set()
+        for vid in vars:
+           if inx.uid[vid]._h.label == u'CMORvar':
              thisvars.add(vid)
 
       return thisvars
@@ -377,7 +399,7 @@ class dreqQuery(object):
       return (0,{},{} )
 
 ## The complete set of variables associated with these requests:
-    vars = self.varsByRql( rql, pmax=pmax, intersection=intersection) 
+    vars = self.varsByRql( rql, pmax=pmax, intersection=intersection, asDict=True) 
     tm = 3
     if tm == 0:
       pass
@@ -387,8 +409,8 @@ class dreqQuery(object):
 ## filter by configuration option and rank
 ##
     if not retainRedundantRank:
-      len1 = len(vars)
-      cmv = self.cmvFilter.filterByChoiceRank(cmv=vars)
+      len1 = len(vars.keys())
+      cmv = self.cmvFilter.filterByChoiceRank(cmv=vars.keys())
 
       vars = cmv
     
@@ -486,6 +508,8 @@ class dreqQuery(object):
     szv = {}
     ov = []
     for v in vars:
+      if 'requestVar' not in inx.iref_by_sect[v].a:
+         print 'Variable with no request ....: %s, %s' % (inx.uid[v].label, inx.uid[v].mipTable)
       szv[v] = self.sz[inx.uid[v].stid]*npy[inx.uid[v].frequency]
       ov.append( self.dq.inx.uid[v] )
     ee = self.listIndexDual( ov, 'mipTable', 'label', acount=None, alist=None, cdict=szv, cc=cc )
@@ -682,14 +706,11 @@ class dreqQuery(object):
          print ('Created directory %s for: %s' % (odir,msg) )
 
 
-  def xlsByMipExpt(self,m,ex,pmax,odir='xls'):
+  def xlsByMipExpt(self,m,ex,pmax,odir='xls',xls=True,txt=False,txtOpts=None):
     import scope_utils
-    mxls = scope_utils.xlsTabs(self,tiermax=self.tierMax,pmax=pmax)
+    mxls = scope_utils.xlsTabs(self,tiermax=self.tierMax,pmax=pmax,xls=xls, txt=txt, txtOpts=txtOpts,odir=odir)
 
-    ##tabs = makeTables.tables( self, mips, odir=odir )
     mlab = makeTables.setMlab( m )
-    ##mm = list( m )[0]
-    ##r = overviewTabs.r1( self, tiermax=1, pmax=pmax, only=mm )
 
     mxls.run( m, mlab=mlab )
 
@@ -780,9 +801,13 @@ class dreqUI(object):
       -t <tier> maxmum tier;
       -p <priority>  maximum priority;
       --xls : Create Excel file with requested variables;
+      --txt : Create text file with requested variables;
+      --mcfg : Model configuration: 7 integers, comma separated, 'nho','nlo','nha','nla','nlas','nls','nh1'
+                 default: 259200,60,64800,40,20,5,100
+      --txtOpts : options for content of text file: (v|c)[(+|-)att1[,att2[...]]]
       --xlsDir <directory> : Directory in which to place variable listing [xls];
-      --printLinesMax <n>: Maximum number of lines to be printed
-      --printVars  : If present, a summary of the variables fitting the selection options will be printed
+      --printLinesMax <n>: Maximum number of lines to be printed (default 20)
+      --printVars  : If present, a summary of the variables (see --printLinesMax) fitting the selection options will be printed
       --intersection : Analyse the intersection of requests rather than union.
 
 NOTES
@@ -800,6 +825,9 @@ drq -m HighResMIP:Ocean.DiurnalCycle
                       '-l':('l',True),
                       '--printVars':('vars',False), '--intersection':('intersection',False), \
                       '--count':('count',False), \
+                      '--txt':('txt',False), \
+                      '--mcfg':('mcfg',True), \
+                      '--txtOpts':('txtOpts',True), \
                       '--xlsDir':('xlsdir',True), '--xls':('xls',False) \
                        } 
     aa = args[:]
@@ -876,7 +904,15 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       self.printList()
       return
 
+    if 'mcfg' in self.adict:
+      ll = string.split( self.adict['mcfg'], ',' )
+      assert len(ll) == 7, 'Length of model configuration argument must be 7 comma separated integers: %s' %  self.adict['mcfg']
+      lli = [ int(x) for x in ll]
+      print lli
+
     self.sc = dreqQuery( dq=self.dq )
+    if 'mcfg' in self.adict:
+      self.sc.setMcfg( lli )
 
     ok = True
     for i in self.adict['m']:
@@ -901,14 +937,22 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     pmax = self.adict.get( 'p', 1 )
     self.getVolByMip(pmax,eid,adsCount)
     makeXls = self.adict.get( 'xls', False )
-    if makeXls:
+    makeTxt = self.adict.get( 'txt', False )
+    if makeXls or makeTxt:
       mips = self.adict['m']
       odir = self.adict.get( 'xlsdir', 'xls' )
       self.sc.checkDir( odir, 'xls files' )
 
       ##print mips, eid
-      self.sc.xlsByMipExpt(mips,eid,pmax,odir=odir)
+      if 'txtOpts' in self.adict:
+        if self.adict['txtOpts'][0] == 'v':
+          txtOpts = NT_txtopts( 'var' )
+        else:
+          txtOpts = NT_txtopts( 'cmv' )
+      else:
+        txtOpts=None
 
+      self.sc.xlsByMipExpt(mips,eid,pmax,odir=odir,xls=makeXls,txt=makeTxt,txtOpts=txtOpts)
 
   def printList(self):
     mips = self.adict['m']
@@ -951,4 +995,6 @@ drq -m HighResMIP:Ocean.DiurnalCycle
 
       for v in vl[:mx]:
         mlg.prnt ( '%s: %7.2fTb' % (self.dq.inx.uid[v].label, cc[v]*2.*1.e-12) )
+      if mx < len(vl):
+        mlg.prnt ( '%s variables not listed (use --printLinesMax to print more)' % (len(vl)-mx) )
 

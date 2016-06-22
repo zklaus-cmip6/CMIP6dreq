@@ -62,8 +62,8 @@ def rankVars(dq):
       ee[i.label] = r
       ff[i.label] = i
       ss = sorted( [dq.inx.uid[x].priority for x in s] )
-      if len(ss) > 1:
-        kk = '%s-%s' % (ss[0],ss[1])
+      if len(ss) > 0:
+        kk = '%s' % (ss[0])
         sn = dq.inx.uid[i.sn]
         if sn._h.label == 'remarks':
           kk += 'x'
@@ -259,21 +259,25 @@ class c1(object):
   def __init__(self):
     self.a = collections.defaultdict( int )
 
+##NT_txtopts = collections.namedtuple( 'txtopts', ['mode'] )
+
 class xlsTabs(object):
-  def __init__(self,sc,tiermax=1,pmax=1):
+  def __init__(self,sc,tiermax=1,pmax=1,xls=True, txt=False, txtOpts=None, odir='xls'):
     self.pmax=pmax
     self.tiermax=tiermax
     self.sc = sc
     sc.setTierMax( tiermax )
     self.cc = collections.defaultdict( c1 )
     self.dq = sc.dq
+    self.doXls = xls
+    self.doTxt = txt
 
     self.mips = ['AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
     self.mipsp = ['DECK','CMIP6',] + self.mips[:-4]
 
-    self.tabs = makeTables.tables( sc, self.mips )
+    self.tabs = makeTables.tables( sc, self.mips, xls=xls, txt=txt, txtOpts=txtOpts, odir=odir )
 
-  def run(self,m,colCallback=None,verb=False,mlab=None):
+  def run(self,m,colCallback=None,verb=False,mlab=None,exid=None):
       if m == 'TOTAL':
         l1 = self.sc.rqiByMip( set( self.mips ) )
       else:
@@ -295,6 +299,11 @@ class xlsTabs(object):
           xx = self.dq.coll['experiment'].items
         else:
           xx = [i for i in self.dq.coll['experiment'].items if i.mip == m2]
+        if exid != None:
+          xxx = [i for i in xx if i.uid == exid]
+          if len(xxx) == 0:
+            break
+          xx = xxx
         self.cc[mlab].ee[m2] = xx
         xxi = set( [i.label for i in xx] )
 ##

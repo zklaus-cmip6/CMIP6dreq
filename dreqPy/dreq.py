@@ -408,6 +408,7 @@ class config(object):
 
     self.tt0 = {}
     self.tt1 = {}
+    self.ttl2 = []
 
     if manifest != None:
       assert os.path.isfile( manifest ), 'Manifest file not found: %s' % manifest
@@ -472,6 +473,9 @@ class config(object):
 ## define a class for the section heading records.
 ##
     self._t1 = self.parsevcfg('__sect__')
+##
+## when used with manifest .. need to preserve entries in "__main__" from each document.
+##
     self._t2 = self.parsevcfg('__main__')
     self._sectClass0 = self.itemClassFact( self._t1, ns=self.ns )
 
@@ -497,7 +501,6 @@ class config(object):
 
       ##self.coll[k] = self.ntf( self.recordAttributeDefn[k].header, self.recordAttributeDefn[k].attributes, self.tableItems[k] )
 
-    self.ttl2 = []
     for v in vl:
       t = self.parsevcfg(v)
       tables[t[0].label] = t
@@ -618,8 +621,8 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
       """Parse a section definition element, including all the record attributes. The results are returned as a namedtuple of attributes for the section and a dictionary of record attribute specifications."""
       if v in [ None,'__main__']:
         idict = {'description':'An extended description of the object', 'title':'Record Description', \
-         'techNote':'', 'useClass':'__core__', 'superclass':'rdf:property',\
-         'type':'xs:string', 'uid':'__core__:description', 'label':'label', 'required':'required' }
+           'techNote':'', 'useClass':'__core__', 'superclass':'rdf:property',\
+           'type':'xs:string', 'uid':'__core__:description', 'label':'label', 'required':'required' }
         if v == None:
           vtt = self.nts( '__core__', 'CoreAttributes', 'X.1 Core Attributes', '00000000', 'def', '0', '0', 'false', '__core__' )
         else:

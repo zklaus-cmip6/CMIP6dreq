@@ -5,6 +5,7 @@ include LICENSE
 include dreqPy/docs/BlockSchema.csv
 include dreqPy/docs/CMIP6_MIP_tables.xlsx
 include dreqPy/docs/dc1.xsd
+include dreqPy/docs/pav.xsd
 include dreqPy/docs/dreq2Defn.xml
 include dreqPy/docs/dreq2Sample.xml
 include dreqPy/docs/dreq2Schema.xsd
