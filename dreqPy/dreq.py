@@ -111,9 +111,9 @@ class dreqItemBase(object):
          igns =  ['','__unset__']
          if title == None:
            if self._htmlTtl == None:
-             if 'description' in self.__dict__ and self.description != None and string.strip( self.description ) not in igns:
+             if 'description' in self.__dict__ and self.description != None and self.description.strip( ) not in igns:
                ttl = self.description
-             elif 'title' in self.__dict__ and self.title != None and string.strip( self.title ) not in igns:
+             elif 'title' in self.__dict__ and self.title != None and self.title.strip( ) not in igns:
                ttl = self.title
              else:
                ttl = self.label
@@ -343,9 +343,9 @@ class dreqItemBase(object):
                if self._rc.isIntStr( v ):
                  v = int(v)
                else:
-                 v = string.strip(v)
+                 v = v.strip()
                  thissect = '%s [%s]' % (self._h.title,self._h.label)
-                 if v in [ '',u'',' ', u' ']:
+                 if v in [ '',u'',' ', u' ', [], '[]']:
                    if nw1 < 20:
                      print ( 'WARN.050.0001: input integer non-compliant: %s: %s: "%s" -- set to zero' % (thissect,a,v) )
                      nw1 += 1
@@ -355,7 +355,7 @@ class dreqItemBase(object):
                      v = int(float(v))
                      print ( 'WARN: input integer non-compliant: %s: %s: %s' % (thissect,a,v) )
                    except:
-                     msg = 'ERROR: failed to convert integer: %s: %s: %s' % (thissect,a,v)
+                     msg = 'ERROR: failed to convert integer: %s: %s: %s, %s' % (thissect,a,v,type(v))
                      deferredHandling=True
              elif self._a[a].type == u'xs:boolean':
                v = v in ['true','1']
@@ -408,13 +408,14 @@ class config(object):
 
     self.tt0 = {}
     self.tt1 = {}
+    self.ttl2 = []
 
     if manifest != None:
       assert os.path.isfile( manifest ), 'Manifest file not found: %s' % manifest
       ii = open(manifest).readlines() 
       docl = []
       for l in ii[1:]:
-        bits = string.split( string.strip(l) )
+        bits = l.strip().split()
         assert len( bits ) > 1, 'Failed to parse line in manifest %s: \n%s' % (manifest,l)
         for b in bits[:2]:
           assert os.path.isfile( b ), 'File %s not found (listed in %s)' % (b,manifest )
@@ -472,6 +473,9 @@ class config(object):
 ## define a class for the section heading records.
 ##
     self._t1 = self.parsevcfg('__sect__')
+##
+## when used with manifest .. need to preserve entries in "__main__" from each document.
+##
     self._t2 = self.parsevcfg('__main__')
     self._sectClass0 = self.itemClassFact( self._t1, ns=self.ns )
 
@@ -497,7 +501,6 @@ class config(object):
 
       ##self.coll[k] = self.ntf( self.recordAttributeDefn[k].header, self.recordAttributeDefn[k].attributes, self.tableItems[k] )
 
-    self.ttl2 = []
     for v in vl:
       t = self.parsevcfg(v)
       tables[t[0].label] = t
@@ -618,8 +621,8 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
       """Parse a section definition element, including all the record attributes. The results are returned as a namedtuple of attributes for the section and a dictionary of record attribute specifications."""
       if v in [ None,'__main__']:
         idict = {'description':'An extended description of the object', 'title':'Record Description', \
-         'techNote':'', 'useClass':'__core__', 'superclass':'rdf:property',\
-         'type':'xs:string', 'uid':'__core__:description', 'label':'label', 'required':'required' }
+           'techNote':'', 'useClass':'__core__', 'superclass':'rdf:property',\
+           'type':'xs:string', 'uid':'__core__:description', 'label':'label', 'required':'required' }
         if v == None:
           vtt = self.nts( '__core__', 'CoreAttributes', 'X.1 Core Attributes', '00000000', 'def', '0', '0', 'false', '__core__' )
         else:
@@ -801,6 +804,7 @@ class loadDreq(object):
     self.inx = index(self.coll)
     self.itemStyles = {}
     self.defaultItemLineStyle = lambda i, frm='', ann='': '<li>%s: %s</li>' % ( i.label, i.__href__(odir='../u/') )
+    self.version = version
 ##
 ## add index to Item base class .. so that it can be accessed by item instances
 ##
@@ -839,11 +843,11 @@ class loadDreq(object):
 
 
   def _sectionSortHelper(self,title):
-    ##ab = string.split( string.split(title)[0], '.' )
+
     ab = title.split(  )[0].split('.')
     if len( ab ) == 2:
       a,b = ab
-    ##sorter =  lambda x: [int(y) for y in string.split( string.split(x,':')[0], '.' )]
+
       if self.c.rc.isIntStr(a):
         a = int(a)
       if self.c.rc.isIntStr(b):

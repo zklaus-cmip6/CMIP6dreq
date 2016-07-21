@@ -1,5 +1,5 @@
 from __init__ import DOC_DIR
-import string, os, sys
+import string, os, sys, collections
 
 try:
   import pkgutil
@@ -44,6 +44,12 @@ class checkbase(object):
     self.lab = lab
     self.ok = True
     self.entryPoint = sys.argv[0].split( '/' )[-1]
+    ##if os.path.isdir( 'out' ):
+      ##self.docdir = 'out'
+    ##elif os.path.isdir( 'docs' ):
+      ##self.docdir = 'docs'
+    ##else:
+      ##assert False, 'Document directory not found'
 
 #document directory
     self.docdir = DOC_DIR
@@ -78,25 +84,30 @@ class check1(checkbase):
 
   def _ch02_importSample(self):
     import dreq
-    self.dq = dreq.loadDreq( dreqXML=self.sampleXml,configdoc=self.defnXml )
+    self.dq = dreq.loadDreq( manifest='%s/dreqManifest.txt' % self.docdir  )
     print ( 'Dreq sample load checked' )
     self.ok = True
 
   def _ch03_linkCheck(self):
     nn = 0
     import dreq
-    self.dq = dreq.loadDreq(  )
+    self.dq = dreq.loadDreq( manifest='%s/dreqManifest.txt' % self.docdir  )
     for section in self.dq.coll :
       ks=[k for k in self.dq.coll[section].attDefn.keys() if self.dq.coll[section].attDefn[k].useClass == 'internalLink']
       nerr = 0
+      cc = collections.defaultdict( int )
       for i in self.dq.coll[section].items:
         for k in ks :
           if k in i.__dict__:
             if i.__dict__[k] not in self.dq.inx.uid:
               nerr += 1
+              cc[k] += 1
               ##print section, k, i.__dict__[k]
       if nerr > 0:
-           print ( 'Section %s: bad links: %s' % (section,nerr) )
+           msg = ''
+           for k in cc:
+             msg += '%s: %s; ' % (k,cc[k])
+           print ( 'Section %s: bad links: %s %s' % (section,nerr,msg) )
            nn += nerr
       ##print section, ks, nerr
     if nn == 0:

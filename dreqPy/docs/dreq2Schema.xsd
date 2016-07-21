@@ -157,7 +157,7 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titlelabel;
-   xs:stringRecord Labeltitle;
+   xs:stringCMOR Variable Nametitle;
    xs:stringRecord Titleuid;
    xs:stringtitle;
    xs:stringLong namestid;
@@ -618,7 +618,8 @@
    xs:stringProcessing commentsprov;
    xs:stringProvenanceuid;
    xs:stringRecord identifierprovmip;
-   xs:stringMIP defining this variables</xs:documentation></xs:annotation>
+   xs:stringMIP defining this variablesunid;
+   xs:stringLink to Units section</xs:documentation></xs:annotation>
 <xs:complexType name="ct__var_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -630,6 +631,7 @@
 <xs:attribute name="prov" type="xs:string"/>
 <xs:attribute name="uid" type="xs:string"/>
 <xs:attribute name="provmip" type="xs:string"/>
+<xs:attribute name="unid" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">mip: Complex Type declaration
@@ -645,10 +647,10 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titlelabel;
-   xs:stringRecord Labeltitle;
-   xs:stringRecord Titleuid;
+   xs:stringMIP short nametitle;
+   xs:stringMIP titleuid;
    xs:stringRecord identifierdescription;
-   xs:stringurl;
+   xs:stringDescription of the Model Intercomparison Projecturl;
    xs:stringProject Home Page</xs:documentation></xs:annotation>
 <xs:complexType name="ct__mip_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
