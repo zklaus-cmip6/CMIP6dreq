@@ -78,14 +78,14 @@ class check1(checkbase):
 
   def _ch02_importSample(self):
     import dreq
-    self.dq = dreq.loadDreq( manifest='docs/dreqManifest.txt'  )
+    self.dq = dreq.loadDreq( manifest='out/dreqManifest.txt'  )
     print ( 'Dreq sample load checked' )
     self.ok = True
 
   def _ch03_linkCheck(self):
     nn = 0
     import dreq
-    self.dq = dreq.loadDreq( manifest='docs/dreqManifest.txt'  )
+    self.dq = dreq.loadDreq( manifest='out/dreqManifest.txt'  )
     for section in self.dq.coll :
       ks=[k for k in self.dq.coll[section].attDefn.keys() if self.dq.coll[section].attDefn[k].useClass == 'internalLink']
       nerr = 0

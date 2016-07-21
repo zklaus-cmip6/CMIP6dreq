@@ -119,8 +119,12 @@ Class to analyse the usage of variables in the data request.
             mips.add(e)
           else:
             if r._h.label == 'exptgroup':
-              r = dq.inx.uid[  dq.inx.iref_by_sect[e].a['experiment'][0] ]
-            if r._h.label == 'remarks':
+              if 'experiment' in dq.inx.iref_by_sect[e].a:
+                r = dq.inx.uid[  dq.inx.iref_by_sect[e].a['experiment'][0] ]
+              else:
+                ei = dq.inx.uid[e]
+                print 'ERROR.exptgroup.00001: empty experiment group: %s: %s' % (ei.label, ei.title)
+            if r._h.label in [ 'remarks','exptgroup']:
               ##print 'WARNING: link to remarks encountered'
               pass
             else:

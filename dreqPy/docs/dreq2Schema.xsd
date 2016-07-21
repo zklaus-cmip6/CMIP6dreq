@@ -157,7 +157,7 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titlelabel;
-   xs:stringRecord Labeltitle;
+   xs:stringCMOR Variable Nametitle;
    xs:stringRecord Titleuid;
    xs:stringtitle;
    xs:stringLong namestid;

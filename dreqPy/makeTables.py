@@ -133,8 +133,8 @@ class xlsx(object):
       j = 0
       ncga = 'NetCDF Global Attribute'
       if mode == 'c':
-        hrec = ['Priority','Long name', 'units', 'description', 'comment', 'Variable Name', 'CF Standard Name', 'cell_methods', 'positive', 'type', 'dimensions', 'CMOR Name', 'modeling_realm', 'frequency', 'cell_measures', 'prov', 'provNote','rowIndex','UID']
-        hcmt = ['Default priority (generally overridden by settings in "requestVar" record)',ncga,'','','Name of variable in file','','','CMOR directive','','','CMOR name, unique within table','','','','','','','','','','']
+        hrec = ['Priority','Long name', 'units', 'description', 'comment', 'Variable Name', 'CF Standard Name', 'cell_methods', 'positive', 'type', 'dimensions', 'CMOR Name', 'modeling_realm', 'frequency', 'cell_measures', 'prov', 'provNote','rowIndex','UID','vid','stid','Structure Title']
+        hcmt = ['Default priority (generally overridden by settings in "requestVar" record)',ncga,'','','Name of variable in file','','','CMOR directive','','','CMOR name, unique within table','','','','','','','','','','CMOR variable identifier','MIP variable identifier','Structure identifier','']
         if self.xls:
           self.sht.set_column(1,1,40)
           self.sht.set_column(1,3,50)
@@ -283,7 +283,9 @@ class makeTab(object):
     if addMips:
       c = vrev.checkVar(dq)
     mode = 'c'
-    tableNotes = [('MIPs (...)','The last two columns in each row list MIPs associated with each variable. The first column in this pair lists the MIPs which are requesting the variable in one or more experiments. The second column lists the MIPs proposing experiments in which this variable is requested. E.g. If a variable is requested in a DECK experiment by HighResMIP, then HighResMIP appears in the first column and DECK in the second')]
+    tableNotes = [
+       ('Request Version',str(dq.version)),
+       ('MIPs (...)','The last two columns in each row list MIPs associated with each variable. The first column in this pair lists the MIPs which are requesting the variable in one or more experiments. The second column lists the MIPs proposing experiments in which this variable is requested. E.g. If a variable is requested in a DECK experiment by HighResMIP, then HighResMIP appears in the first column and DECK in the second')]
 
     wb = xlsx( dest, xls=xls, txt=txt )
     if mcfgNote != None:
@@ -341,7 +343,7 @@ class makeTab(object):
             dims += string.split( strc.coords, '|' )
             dims = string.join( dims )
             if mode == 'c':
-              orec = [str(v.defaultPriority),cv.title, cv.units, cv.description, v.description, cv.label, cv.sn, strc.cell_methods, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, v.prov,v.provNote,str(v.rowIndex),cv.uid]
+              orec = [str(v.defaultPriority),cv.title, cv.units, cv.description, v.description, cv.label, cv.sn, strc.cell_methods, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, v.prov,v.provNote,str(v.rowIndex),v.uid,v.vid,v.stid,strc.title]
             else:
               orec = ['',cv.title, cv.units, v.description, '', cv.label, cv.sn, '','', strc.cell_methods, v.valid_min, v.valid_max, v.ok_min_mean_abs, v.ok_max_mean_abs, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, strc.flag_values, strc.flag_meanings,v.prov,v.provNote,str(v.rowIndex),cv.uid]
             if addMips:
@@ -486,6 +488,13 @@ class styles(object):
       return '<li>%s: Standard name under review [%s]</li>' % ( a, targ.__href__() )
     else:
       return '<li>%s [%s]: %s</li>' % ( targ._h.title, a, targ.__href__(label=targ.label)  )
+
+  def stidLink01(self,a,targ,frm='',ann=''):
+    if targ._h.label == 'remarks':
+      return '<li>%s: Broken link to structure  [%s]</li>' % ( a, targ.__href__() )
+    else:
+      print 'INFO.stidLink01: ',targ.title
+      return '<li>%s [%s]: %s [%s]</li>' % ( targ._h.title, a, targ.__href__(label=targ.title), targ.label  )
 
   def rqlLink02(self,targ,frm='',ann=''):
     t2 = targ._inx.uid[targ.refid]
@@ -659,7 +668,10 @@ class tables(object):
                 if ismip:
                   collector[kkct].a[i.mipTable] += xxx
 
-        if x0 != xs:
+##
+## One user was getting false error message here, with ('%s' % x0) == ('%s' % xs)
+##
+        if abs(x0 -xs) > 1.e-8*( abs(x0) + abs(xs) ):
           print ( 'ERROR.0088: consistency problem %s  %s %s %s' % (m,m2,x0,xs) )
         if x0 == 0:
           print ( 'Zero size: %s, %s' % (m,m2) )
@@ -742,6 +754,7 @@ if __name__ == "__main__":
   dq.itemStyles['requestItem'] = styls.rqiLink02
   dq.itemStyles['spatialShape'] = styls.labTtl
   dq.coll['var'].items[0].__class__._linkAttrStyle['sn'] = styls.snLink01
+  dq.coll['CMORvar'].items[0].__class__._linkAttrStyle['stid'] = styls.stidLink01
 ##dq.coll['requestVarGroup'].items[0].__class__._linkAttrStyle['requestVar'] = styls.rqvLink01
   dq.itemStyles['requestVar'] = styls.rqvLink01
 
