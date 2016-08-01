@@ -253,7 +253,8 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
    xs:stringdimensions;
-   xs:stringList of spatial dimensionsshape;
+   xs:stringList of spatial dimensionsdimids;
+   aa:st__stringListIdentifiers for records in grids sectionshape;
    xs:stringShape - as used in input levels;
    xs:integerNumber of vertical levels (ignored if levelFlag=false)levelFlag;
    xs:booleanFlag set to *false* if number of levels is optional (e.g. determined by the model)</xs:documentation></xs:annotation>
@@ -262,6 +263,7 @@
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
 <xs:attribute name="dimensions" type="xs:string"/>
+<xs:attribute name="dimids" type="aa:st__stringList"/>
 <xs:attribute name="shape" type="xs:string"/>
 <xs:attribute name="levels" type="xs:integer"/>
 <xs:attribute name="levelFlag" type="xs:boolean"/>
@@ -706,13 +708,15 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringdimensions;
+   xs:stringdimid;
+   xs:stringIdentifiers for record in grids sectiondimensions;
    xs:stringDimensionsdescription;
    xs:stringDescription</xs:documentation></xs:annotation>
 <xs:complexType name="ct__temporalShape_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="dimid" type="xs:string"/>
 <xs:attribute name="dimensions" type="xs:string"/>
 <xs:attribute name="description" type="xs:string"/>
 
@@ -735,15 +739,18 @@
    xs:stringspid;
    xs:stringSpatial Shapetmid;
    xs:stringTemporal Shapeodims;
-   xs:stringOther Dimensionscoords;
-   xs:stringCoordinatescell_methods;
+   xs:stringOther Dimensionsdids;
+   aa:st__stringListIdentifiers for records in grids section for dimensionscoords;
+   xs:stringCoordinatescids;
+   aa:st__stringListIdentifiers for records in grids section for coordinatescell_methods;
    xs:stringCell Methodscell_measures;
    xs:stringCell Measuresflag_values;
    xs:stringFlag Valuesflag_meanings;
    xs:stringFLag Meaningsdescription;
    xs:stringDescriptionprocNote;
    xs:stringProcessing Noteprov;
-   xs:stringProvenance</xs:documentation></xs:annotation>
+   xs:stringProvenancecmid;
+   xs:stringLink to Cell Methods Record</xs:documentation></xs:annotation>
 <xs:complexType name="ct__structure_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -751,7 +758,9 @@
 <xs:attribute name="spid" type="xs:string"/>
 <xs:attribute name="tmid" type="xs:string"/>
 <xs:attribute name="odims" type="xs:string"/>
+<xs:attribute name="dids" type="aa:st__stringList"/>
 <xs:attribute name="coords" type="xs:string"/>
+<xs:attribute name="cids" type="aa:st__stringList"/>
 <xs:attribute name="cell_methods" type="xs:string"/>
 <xs:attribute name="cell_measures" type="xs:string"/>
 <xs:attribute name="flag_values" type="xs:string"/>
@@ -759,6 +768,7 @@
 <xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="procNote" type="xs:string"/>
 <xs:attribute name="prov" type="xs:string"/>
+<xs:attribute name="cmid" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">grids: Complex Type declaration
@@ -853,6 +863,30 @@
 <xs:attribute name="sliceLen" type="xs:integer"/>
 <xs:attribute name="nyears" type="xs:float"/>
 <xs:attribute name="uid" type="xs:string"/>
+
+</xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">cellMethods: Complex Type declaration
+       </xs:documentation></xs:annotation>
+<xs:complexType name="ct__cellMethods">
+<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__cellMethods_vocabItem"/></xs:sequence>
+<xs:attribute name="label" type="xs:string" fixed="cellMethods"/>
+<xs:attribute name="title" type="xs:string" fixed="7.1 Cell Methods"/>
+<xs:attribute name="id" type="xs:string" fixed="cmth"/>
+<xs:attribute name="useClass" fixed="vocab"/>
+<xs:attribute name="uid" type="xs:string"/>
+</xs:complexType>
+<xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titlelabel;
+   xs:stringRecord Labeltitle;
+   xs:stringRecord Titleuid;
+   xs:stringcell_methods;
+   xs:stringCell Methods String</xs:documentation></xs:annotation>
+<xs:complexType name="ct__cellMethods_vocabItem">
+<xs:attribute name="id" type="xs:string"/>
+<xs:attribute name="label" type="aa:st__attLabel_def"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="cell_methods" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">tags: Complex Type declaration
@@ -982,6 +1016,8 @@
 <xs:element name="grids" type="aa:ct__grids"/>
 <!--[applying elem main] timeSlice-->
 <xs:element name="timeSlice" type="aa:ct__timeSlice"/>
+<!--[applying elem main] cellMethods-->
+<xs:element name="cellMethods" type="aa:ct__cellMethods"/>
 </xs:all></xs:complexType>
 </xs:element>
 <xs:element name="annex"><xs:complexType><xs:all>

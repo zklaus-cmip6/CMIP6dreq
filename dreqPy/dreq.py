@@ -6,11 +6,15 @@ After ingesting the XML documents (configuration and request) the module generat
 import xml, string, collections
 import xml.dom
 import xml.dom.minidom
-import re, shelve, os
+import re, shelve, os, sys
 try:
   from __init__ import DOC_DIR, version
 except:
   from dreqPy.__init__ import DOC_DIR, version
+
+python2 = True
+if sys.version_info[0] == 3:
+  python2 = False
 
 jsh='''<link type="text/css" href="/css/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />
  <script src="/js/2013/jquery.min.js" type="text/javascript"></script>
@@ -22,6 +26,67 @@ jsh='''<link type="text/css" href="/css/jquery-ui-1.8.16.custom.css" rel="Styles
 
 blockSchemaFile = '%s/%s' % (DOC_DIR, 'BlockSchema.csv' )
 
+class lutilsC(object):
+
+  def __init__(self):
+    pass
+
+  def addAttributes( self, thisClass, attrDict ):
+    """Add a set of attributes, from a dictionary, to a class"""
+    for k in attrDict:
+      setattr( thisClass, '%s' % k , attrDict[k] )
+
+  def itemClassFact(self, sectionInfo,ns=None):
+     class dreqItem(dreqItemBase):
+       """Inherits all methods from dreqItemBase.
+
+USAGE
+-----
+The instanstiated object contains a single data record. The "_h" attribute links to information about the record and the section it belongs to. 
+
+object._a: a python dictionary defining the attributes in each record. The keys in the dictionary correspond to the attribute names and the values are python "named tuples" (from the "collections" module). E.g. object._a['priority'].type contains the type of the 'priority' attribute. Type is expressed using XSD schema language, so "xs:integer" implies integer.  The "useClass" attribute carries information about usage. If object._a['xxx'].useClass = u'internalLink' then the record attribute provides a link to another element and object.xxx is the unique identifier of that element.
+
+object._h: a python named tuple describing the section. E.g. object._h.title is the section title (E.g. "CMOR Variables")
+"""
+       _base=dreqItemBase
+       
+     dreqItem.__name__ = 'dreqItem_%s' % str( sectionInfo.header.label )
+     dreqItem._h = sectionInfo.header
+     dreqItem._a = sectionInfo.attributes
+     dreqItem._d = sectionInfo.defaults
+     if sectionInfo.attributes != None:
+        self.addAttributes(dreqItem, sectionInfo.attributes )
+     ##dreqItem.itemLabelMode = itemLabelMode
+     ##dreqItem.attributes = attributes
+     dreqItem._rc = rechecks()
+     dreqItem.ns = ns
+     return dreqItem
+
+         
+
+##
+## from http://stackoverflow.com/questions/4474754/how-to-keep-comments-while-parsing-xml-using-python-elementtree
+##
+## does not work for python3 ... may not be needed.
+##
+## needed in python2.6 to preserve comments in output XML
+##
+def getParser():
+  import xml.etree.ElementTree as ET
+  class PCParser(ET.XMLTreeBuilder):
+
+     def __init__(self):
+       ET.XMLTreeBuilder.__init__(self)
+       # assumes ElementTree 1.2.X
+       self._parser.CommentHandler = self.handle_comment
+
+     def handle_comment(self, data):
+       self._target.start(ET.Comment, {})
+       self._target.data(data)
+       self._target.end(ET.Comment)
+
+  return PCParser
+
 def loadBS(bsfile):
   """Read in the 'BlockSchema' definitions of the attributes defining attributes"""
   ii = open( bsfile, 'r' ).readlines()
@@ -31,6 +96,7 @@ def loadBS(bsfile):
   cc = collections.defaultdict( dict )
   
   for l in ll[3:]:
+    l[-1] = l[-1] == '1'
     if len(l) < len(ll[2]):
       l.append( '' )
     try:
@@ -128,13 +194,34 @@ class dreqItemBase(object):
              
          return '<span title="%s"><a href="%s%s.html">%s</a></span>' % (title,odir,self.uid,label)
 
-       def getHtmlLinkAttrStyle(self,a):
-         """Return a string containing a html fragment for a link to an attribute."""
-         if a in self.__class__._linkAttrStyle:
-           return self.__class__._linkAttrStyle[a]
-         else:
-           return lambda a,targ, frm='': '<li>%s: [%s] %s [%s]</li>' % ( a, targ._h.label, targ.label, targ.__href__() )
+       def htmlLinkAttrListStyle(self,a,targ,frm=None):
+           xx = string.join( ['%s [%s]' % (x.label, x.__href__()) for x in targ], '; ')
+           return '<li>%s: [%s] %s</li>' % ( a, targ[0]._h.label, xx )
 
+       def getHtmlLinkAttrStyle(self,a):
+           """Return a string containing a html fragment for a link to an attribute."""
+           if a in self.__class__._linkAttrStyle:
+             return self.__class__._linkAttrStyle[a]
+           else:
+             return lambda a,targ, frm='': '<li>%s: [%s] %s [%s]</li>' % ( a, targ._h.label, targ.label, targ.__href__() )
+
+       def __htmlLink__(self,a, sect,app):
+          """Create html line for a link or list of links"""
+          if self._a[a].useClass == 'internalLink':
+                   lst = self.getHtmlLinkAttrStyle(a)
+                   try:
+                     targ = self._base._inx.uid[ self.__dict__[a] ]
+                     m = lst( app, targ, frm=sect )
+                   except:
+                     print ( 'INFO.cex.00001:',a, self.__dict__[a], sect, self.label )
+                     m = '<li>%s: %s .... broken link</li>' % ( app, self.__dict__[a] )
+                     raise
+          else:
+            assert self._a[a].useClass == 'internalLinkList', 'Unrecognised useClass in __htmlLink__: %s' % self._a[a].useClass
+            m = self.htmlLinkAttrListStyle( app, [self._base._inx.uid[u] for u in self.__dict__[a] ], frm=sect )
+            return m
+          return m
+                   ##m = '<li>%s, %s: [%s] %s [%s]</li>' % ( a, self.__class__.__dict__[a].__href__(label=self._greenIcon), targ._h.label, targ.label, targ.__href__() )
        def __html__(self,ghis=None):
          """Create html view"""
          msg = []
@@ -146,19 +233,11 @@ class dreqItemBase(object):
            for a in self.__dict__.keys():
              if a[0] != '_':
                app = '%s%s' % (a, self.__class__.__dict__[a].__href__(label=self._greenIcon) )
-               if hasattr( self._a[a], 'useClass') and self._a[a].useClass == 'internalLink' and self._base._indexInitialised:
+               if hasattr( self._a[a], 'useClass') and self._a[a].useClass in ['internalLink','internalLinkList'] and self._base._indexInitialised:
                  if self.__dict__[a] == '__unset__':
                    m = '<li>%s: %s [missing link]</li>' % ( app, self.__dict__[a] )
                  else:
-                   try:
-                     targ = self._base._inx.uid[ self.__dict__[a] ]
-                     lst = self.getHtmlLinkAttrStyle(a)
-                     m = lst( app, targ, frm=sect )
-                   except:
-                     print ( 'INFO.cex.00001:',a, self.__dict__[a], sect, self.label )
-                     m = '<li>%s: %s .... broken link</li>' % ( app, self.__dict__[a] )
-                     raise
-                   ##m = '<li>%s, %s: [%s] %s [%s]</li>' % ( a, self.__class__.__dict__[a].__href__(label=self._greenIcon), targ._h.label, targ.label, targ.__href__() )
+                   m = self.__htmlLink__(a, sect,app)
                elif hasattr( self._a[a], 'useClass') and self._a[a].useClass == 'externalUrl':
                  m = '<li>%s: <a href="%s" title="%s">%s</a></li>' % ( app, self.__dict__[a], self._a[a].description, self._a[a].title )
                else:
@@ -284,7 +363,14 @@ class dreqItemBase(object):
              vv = True
            else:
              if type( self.__class__.__dict__[a] ) not in (type( ''), type( u'' )) and (not self.__class__.__dict__[a].required):
-               delattr( self, a )
+               if hasattr( self, a):
+                 setattr( self, a, None )
+                 ##self.a = None
+                 delattr( self, a )
+                 ##if a in self.__dict__:
+                   ##self.__dict__.pop(a)
+               else:
+                 print ( 'ERROR: attempt to remove non-existent attribute: %s' % a )
              else:
                val = self._d.defaults.get( a, self._d.glob )
                vv = True
@@ -395,6 +481,7 @@ class config(object):
 
   def __init__(self, configdoc='out/dreqDefn.xml', thisdoc='../workbook/trial_20150724.xml', manifest=None, useShelve=False, strings=False):
     self.rc = rechecks()
+    self.lu = lutilsC()
     self.silent = True
     self.coll = {}
 
@@ -409,6 +496,7 @@ class config(object):
     self.tt0 = {}
     self.tt1 = {}
     self.ttl2 = []
+    self.docs = {}
 
     if manifest != None:
       assert os.path.isfile( manifest ), 'Manifest file not found: %s' % manifest
@@ -425,9 +513,19 @@ class config(object):
     else:
       self.__read__(thisdoc, configdoc)
 
+  def getByUid(self,uid):
+    mmm = []
+    for fn,rr in self.docs.items():
+       root, doc = rr
+       mm = root.findall( ".//*[@uid='%s']" % uid )
+       mmm += mm
+       print ('%s: %s' % (fn, str(mm)) )
+    return mmm
+
   def __read__(self, thisdoc, configdoc):
     self.vdef = configdoc
     self.vsamp = thisdoc
+    fn = thisdoc.split( '/' )[-1]
 
     if self.strings:
       doc = xml.dom.minidom.parseString( self.vdef  )
@@ -440,13 +538,22 @@ class config(object):
     self.etree = True
     if self.etree:
       import xml.etree.cElementTree as cel
+      
+      cel.register_namespace('', "urn:w3id.org:cmip6.dreq.dreq:a")
+      cel.register_namespace('pav', "http://purl.org/pav/2.3")
 
       if not self.strings:
-        self.contentDoc = cel.parse( self.vsamp )
+        if python2:
+          parser = getParser()()
+          self.contentDoc = cel.parse( self.vsamp, parser=parser )
+        else:
+          self.contentDoc = cel.parse( self.vsamp )
+
         root = self.contentDoc.getroot()
       else:
         root = cel.fromstring(self.vsamp)
       ##bs = string.split( root.tag, '}' )
+      self.docs[fn] = (root, self.contentDoc)
       bs = root.tag.split( '}' )
       if len( bs ) > 1:
         self.ns = bs[0] + '}'
@@ -468,7 +575,8 @@ class config(object):
 ## this loads in some metadata, but not yet in a useful way.
 ##
     self._t0 = self.parsevcfg(None)
-    self._tableClass0 = self.itemClassFact( self._t0, ns=self.ns )
+    self._t2 = self.parsevcfg('__main__')
+    self._tableClass0 = self.lu.itemClassFact( self._t0, ns=self.ns )
 ##
 ## define a class for the section heading records.
 ##
@@ -476,8 +584,7 @@ class config(object):
 ##
 ## when used with manifest .. need to preserve entries in "__main__" from each document.
 ##
-    self._t2 = self.parsevcfg('__main__')
-    self._sectClass0 = self.itemClassFact( self._t1, ns=self.ns )
+    self._sectClass0 = self.lu.itemClassFact( self._t1, ns=self.ns )
 
     for k in self.bscc:
       self.tt0[k] = self._tableClass0(idict=self.bscc[k])
@@ -499,12 +606,10 @@ class config(object):
     for i in self.coll['__core__'].items:
       ec[i.label] = i
 
-      ##self.coll[k] = self.ntf( self.recordAttributeDefn[k].header, self.recordAttributeDefn[k].attributes, self.tableItems[k] )
-
     for v in vl:
       t = self.parsevcfg(v)
       tables[t[0].label] = t
-      self.tableClasses[t[0].label] = self.itemClassFact( t, ns=self.ns )
+      self.tableClasses[t[0].label] = self.lu.itemClassFact( t, ns=self.ns )
       thisc = self.tableClasses[t[0].label]
       self.tt1[t[0].label] = self._sectClass0( idict=t.header._asdict() )
       self.tt1[t[0].label].maxOccurs = t.header.maxOccurs
@@ -512,6 +617,7 @@ class config(object):
       self.tt1[t[0].label].level = t.header.level
       self.tt1[t[0].label].itemLabelMode = t.header.itemLabelMode
       self.ttl2 += [thisc.__dict__[a] for a in t.attributes]
+    mil = [t[1] for t in self._t2.attributes.items()]
     self.coll['__main__'] = self.ntf( self._t2.header, self._t2.attributes, self.ttl2 )
 
     self.coll['__sect__'] = self.ntf( self._t1.header, self._t1.attributes, [self.tt1[k] for k in self.tt1] )
@@ -586,39 +692,8 @@ class config(object):
     if not self.silent:
       print ( ss )
 
-  def itemClassFact(self, sectionInfo,ns=None):
-     class dreqItem(dreqItemBase):
-       """Inherits all methods from dreqItemBase.
-
-USAGE
------
-The instanstiated object contains a single data record. The "_h" attribute links to information about the record and the section it belongs to. 
-
-object._a: a python dictionary defining the attributes in each record. The keys in the dictionary correspond to the attribute names and the values are python "named tuples" (from the "collections" module). E.g. object._a['priority'].type contains the type of the 'priority' attribute. Type is expressed using XSD schema language, so "xs:integer" implies integer.  The "useClass" attribute carries information about usage. If object._a['xxx'].useClass = u'internalLink' then the record attribute provides a link to another element and object.xxx is the unique identifier of that element.
-
-object._h: a python named tuple describing the section. E.g. object._h.title is the section title (E.g. "CMOR Variables")
-"""
-       _base=dreqItemBase
-       
-     dreqItem.__name__ = 'dreqItem_%s' % str( sectionInfo.header.label )
-     dreqItem._h = sectionInfo.header
-     dreqItem._a = sectionInfo.attributes
-     dreqItem._d = sectionInfo.defaults
-     if sectionInfo.attributes != None:
-        self.addAttributes(dreqItem, sectionInfo.attributes )
-     ##dreqItem.itemLabelMode = itemLabelMode
-     ##dreqItem.attributes = attributes
-     dreqItem._rc = self.rc
-     dreqItem.ns = ns
-     return dreqItem
-
-  def addAttributes( self, thisClass, attrDict ):
-    """Add a set of attributes, from a dictionary, to a class"""
-    for k in attrDict:
-      setattr( thisClass, '%s' % k , attrDict[k] )
-         
   def parsevcfg(self,v):
-      """Parse a section definition element, including all the record attributes. The results are returned as a namedtuple of attributes for the section and a dictionary of record attribute specifications."""
+      """Parse a section definition element, including all the record attributes. The results are returned as a named tuple of attributes for the section and a dictionary of record attribute specifications."""
       if v in [ None,'__main__']:
         idict = {'description':'An extended description of the object', 'title':'Record Description', \
            'techNote':'', 'useClass':'__core__', 'superclass':'rdf:property',\
@@ -629,7 +704,7 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
           vtt = self.nts( '__main__', 'DataRequestAttributes', 'X.2 Data Request Attributes', '00000001', 'def', '0', '0', 'false', '__main__' )
       elif v == '__sect__':
         idict = {'title':'Record Description', \
-         'uid':'__core__:description', 'label':'label', 'useClass':'text', 'id':'id', 'maxOccurs':'', 'itemLabelMode':'', 'level':'', 'labUnique':'', 'required':'' }
+         'uid':'__core__:description', 'label':'label', 'useClass':'text', 'id':'id', 'maxOccurs':'', 'itemLabelMode':'', 'level':'', 'labUnique':'' }
         vtt = self.nts( '__sect__', 'sectionAttributes', 'X.3 Section Attributes', '00000000', 'def', '0', '0', 'false', '__sect__' )
 ##<var label="var" uid="SECTION:var" useClass="vocab" title="MIP Variable" id="cmip.drv.001">
       else:
@@ -647,6 +722,8 @@ object._h: a python named tuple describing the section. E.g. object._h.title is 
           tt = self.parseicfg(i)
           idict[tt.label] = tt
       deflt = self.nt__default( {}, '__unset__' )
+
+      ## return a named tuple: (header, attributes, defaults)
       return self.ntt( vtt, idict, deflt )
 
   def parseicfg(self,i):
@@ -713,7 +790,7 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
     ## collected names of attributes which carry internal links
     ##
       for ka in dreq[k].attDefn.keys():
-        if hasattr( dreq[k].attDefn[ka], 'useClass') and dreq[k].attDefn[ka].useClass == 'internalLink':
+        if hasattr( dreq[k].attDefn[ka], 'useClass') and dreq[k].attDefn[ka].useClass in  ['internalLink','internalLinkList']:
            irefdict[k].append( ka )
 
     for k in dreq.keys():
@@ -738,13 +815,16 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
               if id2 != '__unset__':
                 sect = i._h.label
   ## append attribute name and target  -- item i.uid, attribute k2 reference item id2
-                self.iref_by_uid[ id2 ].append( (k2,i.uid) )
-                self.iref_by_sect[ id2 ].a[sect].append( i.uid )
-                if id2 in self.uid:
-                  n1 += 1
-                else:
-                  n2 += 1
-                  self.missingIds[id2].append( (k,k2,i.uid) )
+                if type(id2) != type( [] ):
+                  id2 = [id2,]
+                for u in id2:
+                  self.iref_by_uid[ u ].append( (k2,i.uid) )
+                  self.iref_by_sect[ u ].a[sect].append( i.uid )
+                  if u in self.uid:
+                    n1 += 1
+                  else:
+                    n2 += 1
+                    self.missingIds[u].append( (k,k2,i.uid) )
           self.info(  'INFO:: %s, %s:  %s (%s)' % (k,k2,n1,n2) )
 
     for k in dreq.keys():
@@ -841,7 +921,79 @@ class loadDreq(object):
       return self.itemStyles[sect]
     return self.defaultItemLineStyle
 
+  def updateByUid( self, uid, dd, delete=[] ):
+    typePar={'xs:string':'x', 'xs:integer':0, 'xs:float':1., 'xs:boolean':True, 'xs:duration':'x'}
+    listTypePar={ "aa:st__integerList":1,"aa:st__integerListMonInc":1, "aa:st__stringList":'x', "aa:st__floatList":1. }
 
+    mmm = self.c.getByUid( uid )
+    assert len(mmm) == 1, 'Expected single uid match, found: %s' % len(mmm)
+    thisdoc = mmm[0]
+    item = self.inx.uid[uid]
+    d1 = [d for d in delete if d not in item._a]
+    e1 = len(d1) > 0
+    if e1:
+      print ('ERROR.update.0001: request to delete non-existent keys: %s' % d1 )
+    d1 = [d for d in delete if d in item._a and item._a[d].required ]
+    e1b = len(d1) > 0
+    if e1b:
+      print ('ERROR.update.0002: request to delete required attributes: %s' % d1 )
+    d2 = [d for d in dd if d not in item._a]
+    e2 = len(d2) > 0
+    if e2:
+      print ('ERROR.update.0003: request to modify non-existent keys: %s' % d2 )
+    e3 = []
+    for k in [d for d in dd if d in item._a]:
+      if item._a[k].type in typePar:
+        e3.append( type( dd[k] ) != type( typePar[item._a[k].type] ) )
+        if e3[-1]:
+          print ('ERROR.update.0004: value has wrong type [%s] %s --- %s' % (item._a[k].type, dd[k], type( dd[k] ) ) )
+      elif item._a[k].type in listTypePar:
+        a = type( dd[k] ) not in [type( [] ), type( () )]
+        if a:
+          print ('ERROR.update.0005: value has wrong type [%s] %s --- should be list or tuple' % (item._a[k].type, dd[k] ) )
+        else:
+          a = not all( [type(x) == type(listTypePar[item._a[k].type]) for x in dd[k]] )
+          if a:
+            print ('ERROR.update.0005: value has wrong type [%s] %s --- %s' % (item._a[k].type, dd[k], [type(x)for x in dd[k]] ) )
+
+        if not a and item._a[k].type == 'aa:st__integerListMonInc':
+          a = not all( [dd[k][i+1] > dd[k][i] for i in range( len(dd[k]) -1 )] )
+          if a:
+            print ('ERROR.update.0006: value should be a monotonic increasing integer list: %s' % str( dd[k] ) )
+        e3.append(a)
+      else:
+        print ( 'Type not recognised: %s' % item._a[k].type )
+        e3.append( False )
+    eee = any([e1,e1b,e2,any(e3)])
+    assert not eee, 'STOPPING: validation errors'
+    self.thisdoc = thisdoc
+    for k in dd:
+      thisdoc.set( k, self.__string4xml__( dd[k], item._a[k].type ) )
+      item.__dict__[k] = dd[k]
+
+  def saveXml( self, docfn=None, targ=None ):
+    if docfn == None:
+      docfn, tt = self.c.docs.items()[0]
+    else:
+      tt = self.c.docs[docfn]
+
+    if targ == None:
+      targ = docfn
+    tt[1].write( targ )
+    print ('XML document saved to %s' % targ)
+ 
+  def __string4xml__(self,v,typ):
+    if typ in ['xs:string','xs:duration']:
+       return v
+    elif typ in ['xs:integer', 'xs:float', 'xs:boolean']:
+       return str(v)
+    elif typ == "aa:st__stringList":
+       return string.join(v)
+    elif typ in ["aa:st__integerList","aa:st__integerListMonInc", "aa:st__floatList"]:
+       return string.join( [str(x) for x in v] )
+    else:
+       assert False, 'Data type not recognised'
+      
   def _sectionSortHelper(self,title):
 
     ab = title.split(  )[0].split('.')

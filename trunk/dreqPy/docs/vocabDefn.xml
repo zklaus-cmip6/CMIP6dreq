@@ -1,0 +1,203 @@
+<?xml version="1.0" ?>
+<defDoc 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="urn:w3id.org:cmip6.dreq.framework:a"
+xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd">
+<table label="institute" uid="SECTION:institute" title="Institute" id="cmip.drv.001" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876a507c-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876a8c54-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="url" type="xs:string" title="Home page" uid="876ac516-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="isni" type="xs:string" title="International Standard Name Identifier (ISO 27729)" uid="876afe78-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="description" type="xs:string" uid="876b3708-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876b3d3e-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="model" uid="SECTION:model" title="Model" id="cmip.drv.002" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876b472a-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876b4900-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="description" type="xs:string" uid="876b4ab8-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="url" type="xs:string" uid="876b4c52-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="altUrl" type="xs:string" uid="876b4dec-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="source" type="xs:string" title="List of major model components" uid="876b4f90-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876b5120-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="physicsvers" uid="SECTION:physicsvers" title="Physics Version" id="cmip.drv.003" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876b5544-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876b56e8-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="description" type="xs:string" uid="876b588c-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876b5a26-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="initialisationmethod" uid="SECTION:initialisationmethod" title="Initialisation Method" id="cmip.drv.004" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876b5e18-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876b5fc6-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="description" type="xs:string" uid="876b6160-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876b62f0-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="modelComp" uid="SECTION:modelComp" title="Model Components" id="cmip.drv.005" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876b6778-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876b6930-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="componentType" type="xs:string" uid="876b6ac0-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="sizeH" type="xs:string" uid="876b6c5a-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="sizeV" type="xs:string" uid="876b6dea-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876b6f84-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="activity" uid="SECTION:activity" title="Coordinating activity" id="cmip.drv.006" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876b77cc-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876b7a60-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="url" type="xs:string" uid="876b7c36-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="status" type="xs:string" title="Status and role within the CMIP6 process" uid="876b7dbc-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876b7f38-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="project" type="xs:string" title="Project which is sponsoring the CMIP6 contribution, if applicable" uid="876b80e6-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="product" uid="SECTION:product" title="Data product" id="cmip.drv.007" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876b8550-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876b8708-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876b88a2-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="experiment" uid="SECTION:experiment" title="Numerical Experiment" id="cmip.drv.008" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876b8d8e-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876b8f3c-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="altLabel" type="xs:string" uid="876b9130-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="description" type="xs:string" uid="876b92e8-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="url" type="xs:string" uid="876b9496-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="sponsor" type="xs:string" uid="876b9626-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876b97d4-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="frequency" uid="SECTION:frequency" title="Temporal frequency of data values" id="cmip.drv.009" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876b9ce8-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876b9e96-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="iso" type="xs:string" uid="876ba030-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876ba1b6-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="isClimatology" type="xs:boolean" title="True if term is a climatology label" uid="876ba332-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="realm" uid="SECTION:realm" title="Modeling realm" id="cmip.drv.010" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876ba6ac-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876ba83c-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876ba9cc-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="grid" uid="SECTION:grid" title="Native grid" id="cmip.drv.011" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876bad14-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876baeb8-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876bb03e-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="dimensions" uid="SECTION:dimensions" title="MIP table variable dimensions" id="cmip.drv.012" itemLabelMode="an" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876bb49e-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876bb642-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="altLabel" type="xs:string" uid="876bb7be-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="sn" type="xs:string" uid="876bb93a-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="size" type="xs:integer" uid="876bbaac-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876bbc46-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="forcings" uid="SECTION:forcings" title="Forcing" id="cmip.drv.013" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876bbfe8-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876bc18c-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876bc31c-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="table" uid="SECTION:table" title="Data specification table" id="cmip.drv.014" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876bc740-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876bc8ee-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="description" type="xs:string" uid="876bca7e-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="comment" type="xs:string" uid="876bcbfa-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="frequency" type="xs:string" uid="876bcd80-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876bcf24-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="cref" uid="SECTION:cref" title="Coordinate Reference" id="cmip.drv.015" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876bd29e-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876bd438-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="label" type="xs:string" uid="876bd5be-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876bd744-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="areaType" uid="SECTION:areaType" title="CMIP Area Type" id="cmip.drv.016" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876bdaaa-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876bdc4e-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="inCF" type="xs:string" uid="876bddd4-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876bdf5a-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="timeSlice" uid="SECTION:timeSlice" title="Time slices used in data request" id="cmip.drv.017" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876be4b4-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876be662-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876be7f2-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="type" type="xs:string" uid="876be982-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="start" type="xs:string" uid="876beb08-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="end" type="xs:string" uid="876bec84-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="step" type="xs:string" uid="876bee00-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="sliceLen" type="xs:string" uid="876bef72-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="nyears" type="xs:string" uid="876bf0e4-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="modelFamily" uid="SECTION:modelFamily" title="Family of model" id="cmip.drv.018" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876bf418-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876bf5a8-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876bf724-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="priority" uid="SECTION:priority" title="Variable priority" id="cmip.drv.019" itemLabelMode="int" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876bfaf8-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876bfc92-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="description" type="xs:string" uid="876bfe0e-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876bff9e-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="qcLevel" uid="SECTION:qcLevel" title="Quality control level" id="cmip.drv.020" itemLabelMode="int" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876c02b4-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876c0462-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876c05de-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="complianceCode" uid="SECTION:complianceCode" title="Data specification compliance codes" id="cmip.drv.021" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876c08ea-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876c0a7a-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876c0bf6-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="glossary" uid="SECTION:glossary" title="Glossary" id="cmip.drv.022" itemLabelMode="def" level="0" maxOccurs="1" labUnique="No">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876c107e-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876c1218-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="fullName" type="xs:string" uid="876c13a8-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="description" type="xs:string" uid="876c152e-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="url" type="xs:string" uid="876c16be-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876c184e-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="modelCompType" uid="SECTION:modelCompType" title="Model Component Types/Categories [redundant with *Native Grid*]" id="cmip.drv.023" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876c1b64-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876c1d08-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876c1ea2-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="modelType" uid="SECTION:modelType" title="Class of model" id="cmip.drv.024" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876c21a4-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876c2348-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876c24d8-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="index" uid="SECTION:index" title="Index of vocabularies" id="cmip.drv.025" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876c28f2-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876c2a82-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="table" type="xs:string" uid="876c2c08-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" uid="876c2de8-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="description" type="xs:string" uid="876c2fa0-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876c314e-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="cmorDimAttr" uid="SECTION:cmorDimAttr" title="CMOR Dimension Attributes" id="cmip.drv.026" itemLabelMode="und" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876c3662-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876c37fc-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="description" type="xs:string" uid="876c3978-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876c3af4-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="CMORattr" type="xs:string" title="Corresponding label in the CMOR MIP tables, if different" uid="876c3c70-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="processingOptions" uid="SECTION:processingOptions" title="Processing steps required" id="cmip.drv.027" itemLabelMode="an" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876c3fd6-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876c4184-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="description" type="xs:string" uid="876c4300-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876c4472-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="coordinateReference" uid="SECTION:coordinateReference" title="Processing steps required" id="cmip.drv.028" itemLabelMode="an" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876c48be-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876c4a4e-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" uid="876c4bca-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="ogc_wkt" type="xs:string" uid="876c4d46-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="url" type="xs:string" uid="876c4ec2-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="uid" type="xs:string" uid="876c503e-9385-11e5-b828-5404a60d96b5"/>
+</table>
+<table label="modelConfig" uid="SECTION:modelConfig" title="Model configuration options" id="cmip.drv.029" itemLabelMode="an" level="0" maxOccurs="1" labUnique="Yes">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="876c5520-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="876c56ba-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="title" type="xs:string" uid="876c582c-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="MIPs" type="xs:string" uid="876c59a8-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="usage" type="xs:string" uid="876c5b1a-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="type" type="xs:string" uid="876c5c96-9385-11e5-b828-5404a60d96b5"/>
+  <rowAttribute label="range" type="xs:string" title="Range of valid values, e.g. xs:boolean" uid="876c5e12-9385-11e5-b828-5404a60d96b5"/>
+</table>
+</defDoc>
