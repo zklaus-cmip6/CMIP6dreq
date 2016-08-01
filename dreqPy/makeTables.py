@@ -493,7 +493,6 @@ class styles(object):
     if targ._h.label == 'remarks':
       return '<li>%s: Broken link to structure  [%s]</li>' % ( a, targ.__href__() )
     else:
-      print 'INFO.stidLink01: ',targ.title
       return '<li>%s [%s]: %s [%s]</li>' % ( targ._h.title, a, targ.__href__(label=targ.title), targ.label  )
 
   def rqlLink02(self,targ,frm='',ann=''):
@@ -546,6 +545,9 @@ class styles(object):
 
   def strLink(self,targ,frm='',ann=''):
     return '<li>%s: %s</li>' % (  targ.label, targ.__href__(odir='../u/', label=targ.title) )
+
+  def cmLink(self,targ,frm='',ann=''):
+    return '<li>%s [%s]: %s</li>' % (  targ.cell_methods,targ.label, targ.__href__(odir='../u/', label=targ.title) )
 
   def objLnkLink(self,targ,frm='',ann=''):
     if frm == 'objective':
@@ -721,10 +723,12 @@ htmlStyle['experiment'] = {'getIrefs':['__all__']}
 htmlStyle['mip'] = {'getIrefs':['__all__']}
 htmlStyle['miptable'] = {'getIrefs':['__all__']}
 htmlStyle['remarks'] = {'getIrefs':['__all__']}
+htmlStyle['grids'] = {'getIrefs':['__all__']}
 htmlStyle['varChoice'] = {'getIrefs':['__all__']}
 htmlStyle['spatialShape'] = {'getIrefs':['__all__']}
 htmlStyle['temporalShape'] = {'getIrefs':['__all__']}
 htmlStyle['structure'] = {'getIrefs':['__all__']}
+htmlStyle['cellMethods'] = {'getIrefs':['__all__']}
 htmlStyle['standardname'] = {'getIrefs':['__all__']}
 htmlStyle['varRelations'] = {'getIrefs':['__all__']}
 htmlStyle['varRelLnk'] = {'getIrefs':['__all__']}
@@ -748,6 +752,7 @@ if __name__ == "__main__":
   dq.itemStyles['objective'] = styls.objLink
   dq.itemStyles['units'] = styls.unitLink
   dq.itemStyles['structure'] = styls.strLink
+  dq.itemStyles['cellMethods'] = styls.cmLink
   dq.itemStyles['objectiveLink'] = styls.objLnkLink
   dq.itemStyles['requestVarGroup'] = styls.vgrpLink
   dq.itemStyles['requestLink'] = styls.rqlLink02
