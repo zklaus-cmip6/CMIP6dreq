@@ -15,6 +15,8 @@ except:
 python2 = True
 if sys.version_info[0] == 3:
   python2 = False
+elif sys.version_info[0] == 2:
+  pythonPre27 = sys.version_info[1] < 7
 
 jsh='''<link type="text/css" href="/css/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />
  <script src="/js/2013/jquery.min.js" type="text/javascript"></script>
@@ -539,8 +541,12 @@ class config(object):
     if self.etree:
       import xml.etree.cElementTree as cel
       
-      cel.register_namespace('', "urn:w3id.org:cmip6.dreq.dreq:a")
-      cel.register_namespace('pav', "http://purl.org/pav/2.3")
+      if not pythonPre27:
+        ## this for of namespace registration not available in 2.6
+        ## absence of registration means module cannot write data exactly as read.
+        ##
+        cel.register_namespace('', "urn:w3id.org:cmip6.dreq.dreq:a")
+        cel.register_namespace('pav', "http://purl.org/pav/2.3")
 
       if not self.strings:
         if python2:
