@@ -5,12 +5,13 @@ The scope.py module contains the dreqQuery class and a set of ancilliary functio
 try:
   import dreq
   from utilities import cmvFilter 
+  import makeTables
 except:
-  import dreqPy.dreq
+  import dreqPy.dreq  as dreq
   from dreqPy.utilities import cmvFilter 
+  import dreqPy.makeTables as makeTables
 
 import collections, string, operator
-import makeTables
 import sys, os
 
 python2 = True
@@ -183,9 +184,15 @@ class dreqQuery(object):
       s = 1
       if i.odims != '':
         s = s*5
-      self.sz[i.uid] = self.szss[i.spid]*s
-      for k in szr:
-        self.szg[k][i.uid] = self.szgss[k][i.spid]*s
+      if i.spid in self.szss:
+        self.sz[i.uid] = self.szss[i.spid]*s
+        for k in szr:
+          self.szg[k][i.uid] = self.szgss[k][i.spid]*s
+      else:
+        print ('WARNING: spid has no size info: %s' % i.spid )
+        self.sz[i.uid] = 0.
+        for k in szr:
+          self.szg[k][i.uid] = 0.
 
   def getRequestLinkByMip( self, mipSel ):
     """Return the set of request links which are associated with specified MIP"""
@@ -509,7 +516,7 @@ class dreqQuery(object):
     ov = []
     for v in vars:
       if 'requestVar' not in inx.iref_by_sect[v].a:
-         print 'Variable with no request ....: %s, %s' % (inx.uid[v].label, inx.uid[v].mipTable)
+         print ( 'Variable with no request ....: %s, %s' % (inx.uid[v].label, inx.uid[v].mipTable) )
       szv[v] = self.sz[inx.uid[v].stid]*npy[inx.uid[v].frequency]
       ov.append( self.dq.inx.uid[v] )
     ee = self.listIndexDual( ov, 'mipTable', 'label', acount=None, alist=None, cdict=szv, cc=cc )
@@ -908,7 +915,6 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       ll = string.split( self.adict['mcfg'], ',' )
       assert len(ll) == 7, 'Length of model configuration argument must be 7 comma separated integers: %s' %  self.adict['mcfg']
       lli = [ int(x) for x in ll]
-      print lli
 
     self.sc = dreqQuery( dq=self.dq )
     if 'mcfg' in self.adict:
@@ -943,7 +949,6 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       odir = self.adict.get( 'xlsdir', 'xls' )
       self.sc.checkDir( odir, 'xls files' )
 
-      ##print mips, eid
       if 'txtOpts' in self.adict:
         if self.adict['txtOpts'][0] == 'v':
           txtOpts = NT_txtopts( 'var' )

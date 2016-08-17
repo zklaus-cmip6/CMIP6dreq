@@ -15,6 +15,21 @@ except:
 python2 = True
 if sys.version_info[0] == 3:
   python2 = False
+  pythonPre27 = False
+elif sys.version_info[0] == 2:
+  pythonPre27 = sys.version_info[1] < 7
+
+charmeTempl = """<span title="Using the CHARMe annotation system">Comment on this page:<a href="%s/%s/%s.html" class="charme-metadata-document"></a></span>
+
+<span>
+<div id="charme-placeholder"></div>
+</span>
+<br/>
+<!-- the charme-placeholder-all-targets appears to be required, but can be hidden ... -->
+<span style="display: None;">
+<div id="charme-placeholder-all-targets"></div>
+</span>
+"""
 
 jsh='''<link type="text/css" href="/css/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />
  <script src="/js/2013/jquery.min.js" type="text/javascript"></script>
@@ -23,6 +38,9 @@ jsh='''<link type="text/css" href="/css/jquery-ui-1.8.16.custom.css" rel="Styles
 
 <link type="text/css" href="/css/dreq.css" rel="Stylesheet" />
 '''
+
+def dref(i,x):
+  return i._inx.uid[i.__dict__[x]]
 
 blockSchemaFile = '%s/%s' % (DOC_DIR, 'BlockSchema.csv' )
 
@@ -131,6 +149,7 @@ class dreqItemBase(object):
        _urlBase = ''
        _htmlStyle = {}
        _linkAttrStyle = {}
+       __charmeEnable__ = {}
 
        def __init__(self,idict=None,xmlMiniDom=None,id='defaultId',etree=False):
          self._strictRead = True
@@ -228,6 +247,8 @@ class dreqItemBase(object):
          if self._contentInitialised:
            sect = self._h.label
            msg.append( '<h1>%s: [%s] %s</h1>' % (self._h.title,self.label,self.title) )
+           if sect in self.__charmeEnable__:
+             msg.append( charmeTempl % (self.__charmeEnable__[sect].site, 'u', self.uid) )
            msg.append( '<a href="../index.html">Home</a> &rarr; <a href="../index/%s.html">%s section index</a><br/>\n' % (sect, self._h.title) )
            msg.append( '<ul>' )
            for a in self.__dict__.keys():
@@ -299,6 +320,8 @@ class dreqItemBase(object):
                
            elif self._base._indexInitialised:
              msg += self.__irefHtml__(sect,ghis)
+           if sect in self.__charmeEnable__:
+             msg.append( '<script src="/js/dreq/charme/charme.js"></script>' )
          else:
            msg.append( '<b>Item %s: uninitialised</b>' % self.sectionLabel )
          return msg
@@ -539,8 +562,12 @@ class config(object):
     if self.etree:
       import xml.etree.cElementTree as cel
       
-      cel.register_namespace('', "urn:w3id.org:cmip6.dreq.dreq:a")
-      cel.register_namespace('pav', "http://purl.org/pav/2.3")
+      if not pythonPre27:
+        ## this for of namespace registration not available in 2.6
+        ## absence of registration means module cannot write data exactly as read.
+        ##
+        cel.register_namespace('', "urn:w3id.org:cmip6.dreq.dreq:a")
+        cel.register_namespace('pav', "http://purl.org/pav/2.3")
 
       if not self.strings:
         if python2:
@@ -559,11 +586,17 @@ class config(object):
         self.ns = bs[0] + '}'
       else:
         self.ns = None
+      vl = root.findall( './/{http://purl.org/pav/2.3}version' )
+      self.version = vl[0].text
     else:
       if self.strings:
         self.contentDoc = xml.dom.minidom.parseString( self.vsamp  )
       else:
         self.contentDoc = xml.dom.minidom.parse( self.vsamp )
+
+        vl = self.contentDoc.getElementsByTagName( 'prologue' )
+        v = vl[0].getElementsByTagName( 'pav:version' )
+        self.version = v[0].firstChild.data
       self.ns = None
 
     vl = doc.getElementsByTagName( 'table' ) + doc.getElementsByTagName( 'annextable' )
@@ -881,10 +914,11 @@ class loadDreq(object):
   def __init__(self,dreqXML=defaultDreqPath, configdoc=defaultConfigPath, useShelve=False, htmlStyles=None, strings=False, manifest=None ):
     self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve,strings=strings,manifest=manifest)
     self.coll = self.c.coll
+    self.version = self.c.version
     self.inx = index(self.coll)
     self.itemStyles = {}
     self.defaultItemLineStyle = lambda i, frm='', ann='': '<li>%s: %s</li>' % ( i.label, i.__href__(odir='../u/') )
-    self.version = version
+    self.softwareVersion = version
 ##
 ## add index to Item base class .. so that it can be accessed by item instances
 ##

@@ -8,7 +8,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="title" type="xs:string" title="Record Title" description="Title of record" uid="ATTRIBUTE::requestVarGroup.title" required="True"/>
   <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="ATTRIBUTE::requestVarGroup.label" superclass="" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::requestVarGroup.title" superclass="" required="true"/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::requestVarGroup.uid" superclass="" required="true"/>
+  <rowAttribute label="uid" type="xs:string" title="Record Identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::requestVarGroup.uid" superclass="" required="true"/>
   <rowAttribute label="mip" type="xs:string" title="Endorsed MIP defining the variable group" useClass="internalLink" techNote="" description="The MIP which specified this collection of variables. The collection may be re-used by other MIPs through the requestLink records." uid="ATTRIBUTE::requestVarGroup.mip" superclass="" required="true"/>
   <rowAttribute label="ref" type="xs:string" title="Reference" useClass="" techNote="" description="Information about the origins of this group" uid="ATTRIBUTE::requestVarGroup.ref" superclass="" required="true"/>
   <rowAttribute label="refNote" type="xs:string" title="Reference Note" useClass="" techNote="" description="Further information about the origins of this group." uid="ATTRIBUTE::requestVarGroup.refNote" superclass="" required="true"/>
@@ -18,7 +18,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="title" type="xs:string" title="Record Title" description="Title of record" uid="ATTRIBUTE::requestItem.title" required="True"/>
   <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="ATTRIBUTE::requestItem.label" superclass="" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::requestItem.title" superclass="" required="true"/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::requestItem.uid" superclass="" required="true"/>
+  <rowAttribute label="uid" type="xs:string" title="Record Identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::requestItem.uid" superclass="" required="true"/>
   <rowAttribute label="mip" type="xs:string" title="The MIP making the request. " useClass="Redundant" techNote="" description="" uid="ATTRIBUTE::requestItem.mip" superclass="" required="true"/>
   <rowAttribute label="tab" type="xs:string" title="Redundant?" useClass="" techNote="" description="" uid="ATTRIBUTE::requestItem.tab" superclass="" required="true"/>
   <rowAttribute label="expt" type="xs:string" title="Name of experiment or group of experiments" useClass="" techNote="" description="" uid="ATTRIBUTE::requestItem.expt" superclass="" required="true"/>
@@ -46,7 +46,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="label" type="xs:string" title="Record Label" description="Mnemonic label for record" uid="ATTRIBUTE::miptable.label" required="True"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" description="Title of record" uid="ATTRIBUTE::miptable.title" required="True"/>
   <rowAttribute label="label" type="xs:string" title="Label" useClass="" techNote="" description="" uid="ATTRIBUTE::miptable.label" superclass="" required="true"/>
-  <rowAttribute label="uid" type="xs:string" title="Identifier" useClass="" techNote="" description="" uid="ATTRIBUTE::miptable.uid" superclass="" required="true"/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="" techNote="" description="" uid="ATTRIBUTE::miptable.uid" superclass="" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Title" useClass="" techNote="" description="" uid="ATTRIBUTE::miptable.title" superclass="" required="true"/>
   <rowAttribute label="description" type="xs:string" title="Description" useClass="" techNote="" description="" uid="ATTRIBUTE::miptable.description" superclass="" required="true"/>
   <rowAttribute label="frequency" type="xs:string" title="Frequency" useClass="" techNote="" description="" uid="ATTRIBUTE::miptable.frequency" superclass="" required="true"/>
@@ -57,7 +57,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="title" type="xs:string" title="Record Title" description="Title of record" uid="ATTRIBUTE::CMORvar.title" required="True"/>
   <rowAttribute label="label" type="xs:string" title="CMOR Variable Name" useClass="" techNote="" description="When there are multiple options for a variable within one CMOR table, each option must be given a unique CMOR name in this attribute. If there is only one option, the CMOR name should equal the value of the label in the MIP variable record referred to by the vid attribute." uid="ATTRIBUTE::CMORvar.label" superclass="" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::CMORvar.title" superclass="" required="true"/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::CMORvar.uid" superclass="" required="true"/>
+  <rowAttribute label="uid" type="xs:string" title="Record Identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::CMORvar.uid" superclass="" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Long name" useClass="" techNote="" description="The long name is used as the long_name variable attribute in the NetCDF files." uid="ATTRIBUTE::CMORvar.title" superclass="" required="true"/>
   <rowAttribute label="stid" type="xs:string" title="Link to a record specifying the structure of the variable (dimensions and associated variable attributes)." useClass="internalLink" techNote="structure" description="Link to a record describing the structure of the variable (e.g. spatial and temporal dimensions)." uid="ATTRIBUTE::CMORvar.stid" superclass="" required="true"/>
   <rowAttribute label="vid" type="xs:string" title="MIP Variable" useClass="internalLink" techNote="var" description="The MIP Variable specifies the physical quantity." uid="ATTRIBUTE::CMORvar.vid" superclass="" required="true"/>
@@ -76,6 +76,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="mtid" type="xs:string" title="Link to MIP table record" useClass="internalLink" techNote="" description="" uid="ATTRIBUTE::CMORvar.mtid" superclass="" required="true"/>
   <rowAttribute label="mipTable" type="xs:string" title="The MIP table: each table identifies a collection of variables" useClass="subsection" techNote="" description="" uid="ATTRIBUTE::CMORvar.mipTable" superclass="" required="true"/>
   <rowAttribute label="prov" type="xs:string" title="Provenance" useClass="" techNote="" description="" uid="ATTRIBUTE::CMORvar.prov" superclass="" required="true"/>
+  <rowAttribute label="processing" type="xs:string" title="Processing notes" useClass="" techNote="" description="Processing notes (questions and issues)" uid="ATTRIBUTE::CMORvar.processing" superclass="" required="false"/>
   <rowAttribute label="provNote" type="xs:string" title="Provenance Note" useClass="" techNote="" description="" uid="ATTRIBUTE::CMORvar.provNote" superclass="" required="true"/>
   <rowAttribute label="frequency" type="xs:string" title="Frequency of time steps to be archived." useClass="drsVocab" techNote="" description="" uid="ATTRIBUTE::CMORvar.frequency" superclass="" required="true"/>
   <rowAttribute label="rowIndex" type="xs:integer" title="Row index of entry in source sheet" useClass="" techNote="" description="" uid="ATTRIBUTE::CMORvar.rowIndex" superclass="" required="true"/>
@@ -96,7 +97,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="title" type="xs:string" title="Record Title" description="Title of record" uid="ATTRIBUTE::spatialShape.title" required="True"/>
   <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="A string of the form 'hh-vv' where 'hh' and 'vv' are short mnemonics for the horizontal and vertical structure respectively, each set to 'na', for 'not applicable', if there are no relevant dimensions. " uid="ATTRIBUTE::spatialShape.label" superclass="" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::spatialShape.title" superclass="" required="true"/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::spatialShape.uid" superclass="" required="true"/>
+  <rowAttribute label="uid" type="xs:string" title="Record Identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::spatialShape.uid" superclass="" required="true"/>
   <rowAttribute label="dimensions" type="xs:string" title="List of spatial dimensions" useClass="" techNote="" description="" uid="ATTRIBUTE::spatialShape.dimensions" superclass="" required="true"/>
   <rowAttribute label="dimids" type="aa:st__stringList" title="Identifiers for records in grids section" useClass="internalLinkList" techNote="" description="" uid="ATTRIBUTE::spatialShape.dimids" superclass="" required="true"/>
   <rowAttribute label="shape" type="xs:string" title="Shape - as used in input " useClass="" techNote="" description="" uid="ATTRIBUTE::spatialShape.shape" superclass="" required="true"/>
@@ -108,15 +109,15 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="title" type="xs:string" title="Record Title" description="Title of record" uid="ATTRIBUTE::requestLink.title" required="True"/>
   <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.label" superclass="" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.title" superclass="" required="true"/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::requestLink.uid" superclass="" required="true"/>
+  <rowAttribute label="uid" type="xs:string" title="Record Identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::requestLink.uid" superclass="" required="true"/>
   <rowAttribute label="mip" type="xs:string" title="Endorsed MIP requesting the data" useClass="internalLink" techNote="" description="" uid="ATTRIBUTE::requestLink.mip" superclass="" required="true"/>
-  <rowAttribute label="tab" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.tab" superclass="" required="true"/>
+  <rowAttribute label="tab" type="xs:string" title="Redundant" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.tab" superclass="" required="false"/>
   <rowAttribute label="objective" type="xs:string" title="Science objectives associated with this request" useClass="" techNote="" description="Every request for model ouput is linked to one or more objectives. The XML link is made via objectiveLink records, each of which associates one requestLink with one objective record." uid="ATTRIBUTE::requestLink.objective" superclass="" required="true"/>
-  <rowAttribute label="grid" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.grid" superclass="" required="true"/>
-  <rowAttribute label="gridreq" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.gridreq" superclass="" required="true"/>
-  <rowAttribute label="comment" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.comment" superclass="" required="true"/>
-  <rowAttribute label="ref" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.ref" superclass="" required="true"/>
-  <rowAttribute label="refNote" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.refNote" superclass="" required="true"/>
+  <rowAttribute label="grid" type="xs:string" title="Grid options" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.grid" superclass="" required="true"/>
+  <rowAttribute label="gridreq" type="xs:string" title="Grid option constraints" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.gridreq" superclass="" required="true"/>
+  <rowAttribute label="comment" type="xs:string" title="Comment" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.comment" superclass="" required="true"/>
+  <rowAttribute label="ref" type="xs:string" title="Reference" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.ref" superclass="" required="false"/>
+  <rowAttribute label="refNote" type="xs:string" title="Note on reference" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.refNote" superclass="" required="false"/>
   <rowAttribute label="refid" type="xs:string" title="reference to a request Variable Group" useClass="internalLink" techNote="" description="" uid="ATTRIBUTE::requestLink.refid" superclass="" required="true"/>
   <rowAttribute label="opt" type="xs:string" title="option for selecting a subset of variables" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.opt" superclass="" required="true"/>
   <rowAttribute label="opar" type="xs:string" title="parameter associated with *opt*" useClass="" techNote="" description="" uid="ATTRIBUTE::requestLink.opar" superclass="" required="true"/>
@@ -126,11 +127,11 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="title" type="xs:string" title="Record Title" description="Title of record" uid="ATTRIBUTE::tableSection.title" required="True"/>
   <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="ATTRIBUTE::tableSection.label" superclass="" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::tableSection.title" superclass="" required="true"/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::tableSection.uid" superclass="" required="true"/>
+  <rowAttribute label="uid" type="xs:string" title="Record Identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::tableSection.uid" superclass="" required="true"/>
   <rowAttribute label="gpid" type="xs:string" title="Identifier for CMOR Tables" useClass="internalLink" techNote="requestVarGroup" description="" uid="ATTRIBUTE::tableSection.gpid" superclass="" required="true"/>
   <rowAttribute label="mip" type="xs:string" title="Project" useClass="" techNote="" description="" uid="ATTRIBUTE::tableSection.mip" superclass="" required="true"/>
-  <rowAttribute label="ref" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::tableSection.ref" superclass="" required="true"/>
-  <rowAttribute label="refNote" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::tableSection.refNote" superclass="" required="true"/>
+  <rowAttribute label="ref" type="xs:string" title="Reference" useClass="" techNote="" description="" uid="ATTRIBUTE::tableSection.ref" superclass="" required="false"/>
+  <rowAttribute label="refNote" type="xs:string" title="Note on reference" useClass="" techNote="" description="" uid="ATTRIBUTE::tableSection.refNote" superclass="" required="false"/>
 </table>
 <table label="modelConfig" uid="SECTION:modelConfig" title="3.5 Model configuration options" id="mcfg" itemLabelMode="an" level="0" maxOccurs="1" labUnique="Yes" description="Configuration options for models">
   <rowAttribute label="label" type="xs:string" title="Record Label" description="Mnemonic label for record" uid="ATTRIBUTE::modelConfig.label" required="True"/>
@@ -138,10 +139,9 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="ATTRIBUTE::modelConfig.label" superclass="" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::modelConfig.title" superclass="" required="true"/>
   <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::modelConfig.uid" superclass="" required="true"/>
-  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::modelConfig.title" superclass="" required="true"/>
-  <rowAttribute label="MIPs" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::modelConfig.MIPs" superclass="" required="true"/>
-  <rowAttribute label="usage" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::modelConfig.usage" superclass="" required="true"/>
-  <rowAttribute label="type" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::modelConfig.type" superclass="" required="true"/>
+  <rowAttribute label="MIPs" type="xs:string" title="MIPs which make use of this feature" useClass="" techNote="" description="" uid="ATTRIBUTE::modelConfig.MIPs" superclass="" required="true"/>
+  <rowAttribute label="usage" type="xs:string" title="How the feature is relevant to the data request" useClass="" techNote="" description="" uid="ATTRIBUTE::modelConfig.usage" superclass="" required="true"/>
+  <rowAttribute label="type" type="xs:string" title="Type of model" useClass="" techNote="" description="" uid="ATTRIBUTE::modelConfig.type" superclass="" required="true"/>
   <rowAttribute label="range" type="xs:string" title="Range of valid values, e.g. xs:boolean" useClass="" techNote="" description="" uid="ATTRIBUTE::modelConfig.range" superclass="" required="true"/>
 </table>
 <table label="varChoiceLinkC" uid="SECTION:varChoiceLinkC" title="3.6 Links a variable to a choice element" id="vclc" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes" description="Link between a variable choice element and variables">
@@ -169,7 +169,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="title" type="xs:string" title="Record Title" description="Title of record" uid="ATTRIBUTE::remarks.title" required="True"/>
   <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="ATTRIBUTE::remarks.label" superclass="" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::remarks.title" superclass="" required="true"/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::remarks.uid" superclass="" required="true"/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::remarks.uid" superclass="" required="true"/>
   <rowAttribute label="tid" type="xs:string" title="Target identifier: the record ID of the item this refers to." useClass="internalLink" techNote="" description="" uid="ATTRIBUTE::remarks.tid" superclass="" required="false"/>
   <rowAttribute label="tattr" type="xs:string" title="Target attribute: an attribute of the target item, or 'ALL'" useClass="" techNote="" description="" uid="ATTRIBUTE::remarks.tattr" superclass="" required="true"/>
   <rowAttribute label="description" type="xs:string" title="Free text remarks -- unless there are specific restrictions associated with the class attribute of this remark" useClass="" techNote="" description="" uid="ATTRIBUTE::remarks.description" superclass="" required="true"/>
@@ -190,8 +190,8 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="mcfg" type="xs:string" title="Model category" useClass="" techNote="" description="" uid="ATTRIBUTE::experiment.mcfg" superclass="" required="true"/>
   <rowAttribute label="tier" type="aa:st__integerListMonInc" title="Tier of experiment" useClass="" techNote="" description="Experiments are assigned a tier by the MIP specifying the tier, tier 1 experiments being the most important." uid="ATTRIBUTE::experiment.tier" superclass="" usage="Must be a list of the same length as ensz." required="true"/>
   <rowAttribute label="nstart" type="xs:integer" title="Number of start dates" useClass="" techNote="" description="" uid="ATTRIBUTE::experiment.nstart" superclass="" required="true"/>
-  <rowAttribute label="starty" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::experiment.starty" superclass="" required="true"/>
-  <rowAttribute label="endy" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::experiment.endy" superclass="" required="true"/>
+  <rowAttribute label="starty" type="xs:string" title="Start year" useClass="" techNote="" description="" uid="ATTRIBUTE::experiment.starty" superclass="" required="true"/>
+  <rowAttribute label="endy" type="xs:string" title="End year" useClass="" techNote="" description="" uid="ATTRIBUTE::experiment.endy" superclass="" required="true"/>
   <rowAttribute label="yps" type="xs:integer" title="Years per simulation" useClass="" techNote="" description="" uid="ATTRIBUTE::experiment.yps" superclass="" required="true"/>
   <rowAttribute label="ensz" type="aa:st__integerListMonInc" title="Ensemble size" useClass="" techNote="" description="" uid="ATTRIBUTE::experiment.ensz" superclass="" required="true"/>
   <rowAttribute label="ntot" type="xs:integer" title="Total number of years" useClass="" techNote="" description="" uid="ATTRIBUTE::experiment.ntot" superclass="" required="true"/>
@@ -202,11 +202,11 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="title" type="xs:string" title="Record Title" description="Title of record" uid="ATTRIBUTE::requestVar.title" required="True"/>
   <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="ATTRIBUTE::requestVar.label" superclass="" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::requestVar.title" superclass="" required="true"/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::requestVar.uid" superclass="" required="true"/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::requestVar.uid" superclass="" required="true"/>
   <rowAttribute label="priority" type="xs:integer" title="Variable priority" useClass="" techNote="" description="" uid="ATTRIBUTE::requestVar.priority" superclass="" required="true"/>
   <rowAttribute label="vid" type="xs:string" title="Identifier for MIP Output Variable" useClass="internalLink" techNote="ovar" description="" uid="ATTRIBUTE::requestVar.vid" superclass="" required="true"/>
   <rowAttribute label="vgid" type="xs:string" title="Identifier for Variable Group" useClass="internalLink" techNote="requestVarGroup" description="" uid="ATTRIBUTE::requestVar.vgid" superclass="" required="true"/>
-  <rowAttribute label="mip" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::requestVar.mip" superclass="" required="true"/>
+  <rowAttribute label="mip" type="xs:string" title="Endorsed MIP" useClass="" techNote="" description="" uid="ATTRIBUTE::requestVar.mip" superclass="" required="true"/>
 </table>
 <table label="standardname" uid="SECTION:standardname" title="1.8 CF Standard Names" id="sn" itemLabelMode="an" level="0" maxOccurs="1" labUnique="Yes" description="CF Standard Names (copied into data request to facilitate validation, particularly validation of consistency of definition in the CF standard with usage in the data request).">
   <rowAttribute label="label" type="xs:string" title="Record Label" description="Mnemonic label for record" uid="ATTRIBUTE::standardname.label" required="True"/>
@@ -214,9 +214,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="ATTRIBUTE::standardname.label" superclass="" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::standardname.title" superclass="" required="true"/>
   <rowAttribute label="uid" type="xs:string" title="CF Standard Name" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::standardname.uid" superclass="" required="true"/>
-  <rowAttribute label="description" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::standardname.description" superclass="" required="true"/>
-  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::standardname.title" superclass="" required="true"/>
-  <rowAttribute label="label" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::standardname.label" superclass="" required="true"/>
+  <rowAttribute label="description" type="xs:string" title="Record Description" useClass="" techNote="" description="" uid="ATTRIBUTE::standardname.description" superclass="" required="true"/>
   <rowAttribute label="units" type="xs:string" title="Canonical Units" useClass="" techNote="" description="" uid="ATTRIBUTE::standardname.units" superclass="" required="true"/>
 </table>
 <table label="varChoiceLinkR" uid="SECTION:varChoiceLinkR" title="3.9 Links a variable to a choice element" id="vclr" itemLabelMode="def" level="0" maxOccurs="1" labUnique="Yes" description="Link between a variable choice element and variables">
@@ -235,7 +233,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="label" type="xs:string" title="Variable Name" useClass="" techNote="" description="" uid="ATTRIBUTE::var.label" superclass="skos:prefLabel" usage="A short name for the variable, consistent, where possible, with names of related variables." required="true"/>
   <rowAttribute label="sn" type="xs:string" title="CF Standard Name" useClass="internalLink" techNote="" description="The CF Standard Name is part of an extensive vocabulary maintained within the CF Convention." uid="ATTRIBUTE::var.sn" superclass="" usage="The CF Standard Name must be approved and published in the CF Convention" required="true"/>
   <rowAttribute label="units" type="xs:string" title="Units" useClass="" techNote="" description="The units in which the variable is to be measured, as a short text string. They must conform with the canonical units of the CF Standard Name. A link to a record describing the units in more detail is given be the unid attribute." uid="ATTRIBUTE::var.units" superclass="" usage="Units " required="true"/>
-  <rowAttribute label="description" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::var.description" superclass="dc:description" required="true"/>
+  <rowAttribute label="description" type="xs:string" title="Record Description" useClass="" techNote="" description="" uid="ATTRIBUTE::var.description" superclass="dc:description" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Long name" useClass="" techNote="" description="The long name is used as the long_name variable attribute in the NetCDF files." uid="ATTRIBUTE::var.title" superclass="dc:title" usage="A short phrase to be used in the long_name NetCDF variable attribute" required="true"/>
   <rowAttribute label="procnote" type="aa:st__stringList" title="Processing notes" useClass="list" techNote="" description="Space separated list of keywords." uid="ATTRIBUTE::var.procnote" superclass="" required="true"/>
   <rowAttribute label="procComment" type="xs:string" title="Processing comments" useClass="freeText" techNote="" description="Free text comment about processing of the variable." uid="ATTRIBUTE::var.procComment" superclass="" required="true"/>
@@ -260,8 +258,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::varChoice.title" superclass="" required="true"/>
   <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::varChoice.uid" superclass="" required="true"/>
   <rowAttribute label="class" type="xs:string" title="Class of choice: heirarchy|cfg" useClass="" techNote="" description="" uid="ATTRIBUTE::varChoice.class" superclass="" required="true"/>
-  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::varChoice.title" superclass="" required="true"/>
-  <rowAttribute label="description" type="xs:string" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::varChoice.description" superclass="" required="true"/>
+  <rowAttribute label="description" type="xs:string" title="Record description" useClass="" techNote="" description="" uid="ATTRIBUTE::varChoice.description" superclass="" required="true"/>
   <rowAttribute label="varList" type="xs:string" title="A colon separated list of variable names" useClass="" techNote="" description="" uid="ATTRIBUTE::varChoice.varList" superclass="" required="true"/>
   <rowAttribute label="optionList" type="xs:string" title="A list of options, one for each variable" useClass="" techNote="" description="" uid="ATTRIBUTE::varChoice.optionList" superclass="" required="true"/>
 </table>
@@ -270,7 +267,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="title" type="xs:string" title="Record Title" description="Title of record" uid="ATTRIBUTE::temporalShape.title" required="True"/>
   <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="ATTRIBUTE::temporalShape.label" superclass="skos:prefLabel" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::temporalShape.title" superclass="dc:title" required="true"/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::temporalShape.uid" superclass="" required="true"/>
+  <rowAttribute label="uid" type="xs:string" title="Record Identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::temporalShape.uid" superclass="" required="true"/>
   <rowAttribute label="dimid" type="xs:string" title="Identifiers for record in grids section" useClass="internalLink" techNote="" description="" uid="ATTRIBUTE::temporalShape.dimid" superclass="" required="true"/>
   <rowAttribute label="dimensions" type="xs:string" title="Dimensions" useClass="" techNote="" description="" uid="ATTRIBUTE::temporalShape.dimensions" superclass="" required="true"/>
   <rowAttribute label="description" type="xs:string" title="Description" useClass="" techNote="" description="" uid="ATTRIBUTE::temporalShape.description" superclass="dc:description" required="true"/>
@@ -280,7 +277,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="title" type="xs:string" title="Record Title" description="Title of record" uid="ATTRIBUTE::structure.title" required="True"/>
   <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="ATTRIBUTE::structure.label" superclass="skos:prefLabel" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::structure.title" superclass="dc:title" required="true"/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::structure.uid" superclass="" required="true"/>
+  <rowAttribute label="uid" type="xs:string" title="Record Identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::structure.uid" superclass="" required="true"/>
   <rowAttribute label="spid" type="xs:string" title="Spatial Shape" useClass="internalLink" techNote="spatialShape" description="" uid="ATTRIBUTE::structure.spid" superclass="" required="true"/>
   <rowAttribute label="tmid" type="xs:string" title="Temporal Shape" useClass="internalLink" techNote="temporalShape" description="" uid="ATTRIBUTE::structure.tmid" superclass="" required="true"/>
   <rowAttribute label="odims" type="xs:string" title="Other Dimensions" useClass="" techNote="" description="Dimensions other than temporal and spatial dimensions." uid="ATTRIBUTE::structure.odims" superclass="" required="false"/>
@@ -339,7 +336,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="title" type="xs:string" title="Record Title" description="Title of record" uid="ATTRIBUTE::cellMethods.title" required="True"/>
   <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="ATTRIBUTE::cellMethods.label" superclass="" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::cellMethods.title" superclass="" required="true"/>
-  <rowAttribute label="uid" type="xs:string" title="" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::cellMethods.uid" superclass="" required="true"/>
+  <rowAttribute label="uid" type="xs:string" title="Record Identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::cellMethods.uid" superclass="" required="true"/>
   <rowAttribute label="cell_methods" type="xs:string" title="Cell Methods String" useClass="" techNote="" description="The string to be used in the NetCDF cell_methods attribute" uid="ATTRIBUTE::cellMethods.cell_methods" superclass="" required="true"/>
 </table>
 <annextable label="tags" uid="SECTION:_tags" title="6.1 Tags" id="tag" itemLabelMode="def" level="6" maxOccurs="1" labUnique="Yes" description="A set of labels which can be used to tag variables.">

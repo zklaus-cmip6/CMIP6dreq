@@ -1,7 +1,17 @@
 
-import dreq
 import collections, string, os, sys
-import vrev
+
+nt__charmeEnable = collections.namedtuple( 'charme', ['id','site'] )
+
+try:
+  import dreq
+  import vrev
+  import misc_utils
+except:
+  import dreqPy.dreq as dreq
+  import dreqPy.vrev as vrev
+  import dreqPy.misc_utils as misc_utils
+
 python2 = True
 if sys.version_info[0] == 3:
   python2 = False
@@ -18,8 +28,6 @@ if sys.version_info >= (2,7):
   oldpython = False
 else:
   oldpython = True
-
-import scope_utils
 
 try:
     import xlsxwriter
@@ -593,7 +601,7 @@ class tables(object):
       if mlab == None:
         mlab = setMlab( m )
 
-      cc0 = scope_utils.getExptSum( self.dq, mlab, l1 )
+      cc0 = misc_utils.getExptSum( self.dq, mlab, l1 )
       ks = sorted( list( cc0.keys() ) )
       if self.verbose:
         print ('Experiment summary: %s %s' % (mlab,string.join( ['%s: %s' % (k,len(cc0[k])) for k in ks], ', ' ) ) )
@@ -762,6 +770,8 @@ if __name__ == "__main__":
   dq.coll['CMORvar'].items[0].__class__._linkAttrStyle['stid'] = styls.stidLink01
 ##dq.coll['requestVarGroup'].items[0].__class__._linkAttrStyle['requestVar'] = styls.rqvLink01
   dq.itemStyles['requestVar'] = styls.rqvLink01
+
+  dreq.dreqItemBase.__charmeEnable__['var'] = nt__charmeEnable( 'test','http://clipc-services.ceda.ac.uk/dreq' )
 
   ht = htmlTrees(dq)
   dq.makeHtml( annotations={'var':ht.anno}, ttl0='Data Request [%s]' % dreq.version )
