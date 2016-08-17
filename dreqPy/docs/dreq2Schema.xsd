@@ -29,7 +29,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringmip;
+   xs:stringRecord Identifiermip;
    xs:stringEndorsed MIP defining the variable groupref;
    xs:stringReferencerefNote;
    xs:stringReference Note</xs:documentation></xs:annotation>
@@ -57,7 +57,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringmip;
+   xs:stringRecord Identifiermip;
    xs:stringThe MIP making the request. tab;
    xs:stringRedundant?expt;
    xs:stringName of experiment or group of experimentsrlid;
@@ -130,7 +130,7 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titlelabel;
    xs:stringLabeluid;
-   xs:stringIdentifiertitle;
+   xs:stringRecord identifiertitle;
    xs:stringTitledescription;
    xs:stringDescriptionfrequency;
    xs:stringFrequencyprov;
@@ -159,7 +159,7 @@
    xs:stringRecord Titlelabel;
    xs:stringCMOR Variable Nametitle;
    xs:stringRecord Titleuid;
-   xs:stringtitle;
+   xs:stringRecord Identifiertitle;
    xs:stringLong namestid;
    xs:stringLink to a record specifying the structure of the variable (dimensions and associated variable attributes).vid;
    xs:stringMIP Variablevalid_min;
@@ -177,7 +177,8 @@
    xs:stringSection of a tablemtid;
    xs:stringLink to MIP table recordmipTable;
    xs:stringThe MIP table: each table identifies a collection of variablesprov;
-   xs:stringProvenanceprovNote;
+   xs:stringProvenanceprocessing;
+   xs:stringProcessing notesprovNote;
    xs:stringProvenance Notefrequency;
    xs:stringFrequency of time steps to be archived.rowIndex;
    xs:integerRow index of entry in source sheetdescription;
@@ -204,6 +205,7 @@
 <xs:attribute name="mtid" type="xs:string"/>
 <xs:attribute name="mipTable" type="xs:string"/>
 <xs:attribute name="prov" type="xs:string"/>
+<xs:attribute name="processing" type="xs:string"/>
 <xs:attribute name="provNote" type="xs:string"/>
 <xs:attribute name="frequency" type="xs:string"/>
 <xs:attribute name="rowIndex" type="xs:integer"/>
@@ -252,7 +254,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringdimensions;
+   xs:stringRecord Identifierdimensions;
    xs:stringList of spatial dimensionsdimids;
    aa:st__stringListIdentifiers for records in grids sectionshape;
    xs:stringShape - as used in input levels;
@@ -284,15 +286,15 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringmip;
+   xs:stringRecord Identifiermip;
    xs:stringEndorsed MIP requesting the datatab;
-   xs:stringobjective;
+   xs:stringRedundantobjective;
    xs:stringScience objectives associated with this requestgrid;
-   xs:stringgridreq;
-   xs:stringcomment;
-   xs:stringref;
-   xs:stringrefNote;
-   xs:stringrefid;
+   xs:stringGrid optionsgridreq;
+   xs:stringGrid option constraintscomment;
+   xs:stringCommentref;
+   xs:stringReferencerefNote;
+   xs:stringNote on referencerefid;
    xs:stringreference to a request Variable Groupopt;
    xs:stringoption for selecting a subset of variablesopar;
    xs:stringparameter associated with *opt*</xs:documentation></xs:annotation>
@@ -328,11 +330,11 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringgpid;
+   xs:stringRecord Identifiergpid;
    xs:stringIdentifier for CMOR Tablesmip;
    xs:stringProjectref;
-   xs:stringrefNote;
-   xs:string</xs:documentation></xs:annotation>
+   xs:stringReferencerefNote;
+   xs:stringNote on reference</xs:documentation></xs:annotation>
 <xs:complexType name="ct__tableSection_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -358,11 +360,10 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord identifiertitle;
-   xs:stringMIPs;
-   xs:stringusage;
-   xs:stringtype;
-   xs:stringrange;
+   xs:stringRecord identifierMIPs;
+   xs:stringMIPs which make use of this featureusage;
+   xs:stringHow the feature is relevant to the data requesttype;
+   xs:stringType of modelrange;
    xs:stringRange of valid values, e.g. xs:boolean</xs:documentation></xs:annotation>
 <xs:complexType name="ct__modelConfig_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
@@ -445,7 +446,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringtid;
+   xs:stringRecord identifiertid;
    xs:stringTarget identifier: the record ID of the item this refers to.tattr;
    xs:stringTarget attribute: an attribute of the target item, or 'ALL'description;
    xs:stringFree text remarks -- unless there are specific restrictions associated with the class attribute of this remarkclass;
@@ -488,8 +489,8 @@
    xs:stringModel categorytier;
    aa:st__integerListMonIncTier of experimentnstart;
    xs:integerNumber of start datesstarty;
-   xs:stringendy;
-   xs:stringyps;
+   xs:stringStart yearendy;
+   xs:stringEnd yearyps;
    xs:integerYears per simulationensz;
    aa:st__integerListMonIncEnsemble sizentot;
    xs:integerTotal number of yearscomment;
@@ -527,11 +528,11 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringpriority;
+   xs:stringRecord identifierpriority;
    xs:integerVariable priorityvid;
    xs:stringIdentifier for MIP Output Variablevgid;
    xs:stringIdentifier for Variable Groupmip;
-   xs:string</xs:documentation></xs:annotation>
+   xs:stringEndorsed MIP</xs:documentation></xs:annotation>
 <xs:complexType name="ct__requestVar_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -558,9 +559,7 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
    xs:stringCF Standard Namedescription;
-   xs:stringtitle;
-   xs:stringlabel;
-   xs:stringunits;
+   xs:stringRecord Descriptionunits;
    xs:stringCanonical Units</xs:documentation></xs:annotation>
 <xs:complexType name="ct__standardname_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
@@ -614,7 +613,7 @@
    xs:stringVariable Namesn;
    xs:stringCF Standard Nameunits;
    xs:stringUnitsdescription;
-   xs:stringtitle;
+   xs:stringRecord Descriptiontitle;
    xs:stringLong nameprocnote;
    aa:st__stringListProcessing notesprocComment;
    xs:stringProcessing commentsprov;
@@ -678,9 +677,8 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
    xs:stringRecord identifierclass;
-   xs:stringClass of choice: heirarchy|cfgtitle;
-   xs:stringdescription;
-   xs:stringvarList;
+   xs:stringClass of choice: heirarchy|cfgdescription;
+   xs:stringRecord descriptionvarList;
    xs:stringA colon separated list of variable namesoptionList;
    xs:stringA list of options, one for each variable</xs:documentation></xs:annotation>
 <xs:complexType name="ct__varChoice_vocabItem">
@@ -708,7 +706,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringdimid;
+   xs:stringRecord Identifierdimid;
    xs:stringIdentifiers for record in grids sectiondimensions;
    xs:stringDimensionsdescription;
    xs:stringDescription</xs:documentation></xs:annotation>
@@ -736,7 +734,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringspid;
+   xs:stringRecord Identifierspid;
    xs:stringSpatial Shapetmid;
    xs:stringTemporal Shapeodims;
    xs:stringOther Dimensionsdids;
@@ -880,7 +878,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringcell_methods;
+   xs:stringRecord Identifiercell_methods;
    xs:stringCell Methods String</xs:documentation></xs:annotation>
 <xs:complexType name="ct__cellMethods_vocabItem">
 <xs:attribute name="id" type="xs:string"/>

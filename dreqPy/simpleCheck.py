@@ -102,7 +102,7 @@ class check1(checkbase):
             if i.__dict__[k] not in self.dq.inx.uid:
               nerr += 1
               cc[k] += 1
-              ##print section, k, i.__dict__[k]
+              print ('Bad link found: section: %s: %s   %s' % (section, k, i.__dict__[k]) )
       if nerr > 0:
            msg = ''
            for k in cc:

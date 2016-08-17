@@ -1,6 +1,5 @@
 """This module has a class which will analyse the usage of variables in the data request"""
 import operator
-import dreq
 import collections
 
 class checkVar(object):
@@ -123,7 +122,7 @@ Class to analyse the usage of variables in the data request.
                 r = dq.inx.uid[  dq.inx.iref_by_sect[e].a['experiment'][0] ]
               else:
                 ei = dq.inx.uid[e]
-                print 'ERROR.exptgroup.00001: empty experiment group: %s: %s' % (ei.label, ei.title)
+                print ( 'ERROR.exptgroup.00001: empty experiment group: %s: %s' % (ei.label, ei.title) )
             if r._h.label in [ 'remarks','exptgroup']:
               ##print 'WARNING: link to remarks encountered'
               pass
@@ -138,6 +137,10 @@ Class to analyse the usage of variables in the data request.
       return mips0
 
 if __name__ == '__main__':
+  try:
+    import dreq
+  except:
+    import dreqPy.dreq as dreq
   dq = dreq.loadDreq()
   c = checkVar(dq)
   c.chk( 'tas' )
