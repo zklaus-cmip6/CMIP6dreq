@@ -1,6 +1,6 @@
 import sys, os
 
-if len(sys.argv) > 1:
+if len(sys.argv) > 1 and __name__ == '__main__':
   if os.path.isdir( sys.argv[1] ):
     if os.path.isfile( '%s/scope.py' % sys.argv[1] ):
       sys.path.insert(0, sys.argv[1] )
@@ -9,7 +9,7 @@ if len(sys.argv) > 1:
       print ( 'No scope.py in specified directory' )
       sys.exit(0)
   else:
-    print ( 'Specified directoty does not exist' )
+    print ( 'Specified directory does not exist: %s' % sys.argv[1] )
     sys.exit(0)
 else:
   from dreqPy import scope

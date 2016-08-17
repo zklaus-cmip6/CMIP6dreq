@@ -21,7 +21,7 @@ def main_entry():
       print( "Starting test suite 1" )
       import simpleCheck
       print( "Starting test suite 2" )
-      import example
+      import examples.ex203
       print( "Tests completed" )
   else:
      x = scope.dreqUI(sys.argv[1:])
