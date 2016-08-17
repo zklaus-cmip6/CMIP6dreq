@@ -528,11 +528,13 @@ class config(object):
       for l in ii[1:]:
         bits = l.strip().split()
         assert len( bits ) > 1, 'Failed to parse line in manifest %s: \n%s' % (manifest,l)
+        bb = []
         for b in bits[:2]:
           if not os.path.isfile( b ):
              b = '%s/%s' % (PACKAGE_DIR,b)
           assert os.path.isfile( b ), 'File %s not found (listed in %s)' % (b,manifest )
-        docl.append( tuple( bits[:2] ) )
+          bb.append( b )
+        docl.append( tuple( bb ) )
       for d,c in docl:
         self.__read__(d, c)
     else:
