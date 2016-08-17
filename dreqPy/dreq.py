@@ -8,9 +8,9 @@ import xml.dom
 import xml.dom.minidom
 import re, shelve, os, sys
 try:
-  from __init__ import DOC_DIR, version
+  from __init__ import DOC_DIR, version, PACKAGE_DIR
 except:
-  from dreqPy.__init__ import DOC_DIR, version
+  from dreqPy.__init__ import DOC_DIR, version, PACKAGE_DIR
 
 python2 = True
 if sys.version_info[0] == 3:
@@ -529,6 +529,8 @@ class config(object):
         bits = l.strip().split()
         assert len( bits ) > 1, 'Failed to parse line in manifest %s: \n%s' % (manifest,l)
         for b in bits[:2]:
+          if not os.path.isfile( b ):
+             b = '%s/%s' % (PACKAGE_DIR,b)
           assert os.path.isfile( b ), 'File %s not found (listed in %s)' % (b,manifest )
         docl.append( tuple( bits[:2] ) )
       for d,c in docl:
