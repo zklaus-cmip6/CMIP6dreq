@@ -1,4 +1,4 @@
-from __init__ import DOC_DIR
+from .__init__ import DOC_DIR
 import string, os, sys, collections
 
 try:
@@ -78,19 +78,19 @@ class checkbase(object):
        
 class check1(checkbase):
   def _ch01_importDreq(self):
-    import dreq
+    from . import dreq
     print ( 'Dreq software import checked' )
     self.ok = True
 
   def _ch02_importSample(self):
-    import dreq
+    from . import dreq
     self.dq = dreq.loadDreq( manifest='%s/dreqManifest.txt' % self.docdir  )
     print ( 'Dreq sample load checked' )
     self.ok = True
 
   def _ch03_linkCheck(self):
     nn = 0
-    import dreq
+    from . import dreq
     self.dq = dreq.loadDreq( manifest='%s/dreqManifest.txt' % self.docdir  )
     for section in self.dq.coll :
       ks=[k for k in self.dq.coll[section].attDefn.keys() if self.dq.coll[section].attDefn[k].useClass == 'internalLink']

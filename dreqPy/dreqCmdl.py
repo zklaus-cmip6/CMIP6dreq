@@ -2,7 +2,13 @@
 Entry point for command line usage -- see ccinit for usage information.
 """
 
-import scope, sys
+scr = __name__ == '__main__'
+import sys
+if scr:
+  import scope
+else:
+  from . import scope
+
 
 def main_entry():
   """
@@ -15,13 +21,22 @@ def main_entry():
       return
 
   if sys.argv[1] == '-v':
-      from packageConfig import __version__, __versionComment__
+      if scr:
+        from packageConfig import __version__, __versionComment__
+      else:
+        from .packageConfig import __version__, __versionComment__
       print( 'dreqPy version %s [%s]' % (__version__,__versionComment__) )
   elif sys.argv[1] == '--unitTest':
       print( "Starting test suite 1" )
-      import simpleCheck
+      if scr:
+        import simpleCheck
+      else:
+        from . import simpleCheck
       print( "Starting test suite 2" )
-      import examples.ex203
+      if scr:
+        import examples.ex203
+      else:
+        from .examples import ex203
       print( "Tests completed" )
   else:
      x = scope.dreqUI(sys.argv[1:])

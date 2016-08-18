@@ -7,7 +7,13 @@ from setuptools import setup, find_packages
 ####################################################################
 
 NAME = "dreqPy"
-PACKAGES = find_packages(exclude=["tests*"])
+python2 = True
+if sys.version_info[0] == 3:
+  PACKAGES = find_packages(exclude=["tests*","dreqPy.utilP2"])
+  python2 = False
+else:
+  PACKAGES = find_packages(exclude=["tests*"])
+
 META_PATH = os.path.join("dreqPy", "packageConfig.py")
 KEYWORDS = ["CMIP6"]
 CLASSIFIERS = [

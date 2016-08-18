@@ -24,8 +24,8 @@ if sys.version_info[0] == 3:
     from dreqPy.utilP3 import mlog3
   mlg = mlog3()
 else:
-  from utilP2 import mlog
-  mlg = mlog()
+  from utilP2 import util
+  mlg = util.mlog()
 
 class c1(object):
   def __init__(self):
@@ -977,7 +977,6 @@ drq -m HighResMIP:Ocean.DiurnalCycle
   def getVolByMip(self,pmax,eid,adsCount):
 
     v0 = self.sc.volByMip( self.adict['m'], pmax=pmax, intersection=self.intersection, adsCount=adsCount, exptid=eid )
-    #mlg.prnt ( '%7.2fTb' % (v0*2.*1.e-12) )
     mlg.prnt ( 'getVolByMip: %s [%s]' % (v0,makeTables.vfmt(v0*2.)) )
     cc = collections.defaultdict( int )
     for e in self.sc.volByE:
