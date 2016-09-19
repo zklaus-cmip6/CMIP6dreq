@@ -6,6 +6,10 @@ except:
 
 ##NT_txtopts = collections.namedtuple( 'txtopts', ['mode'] )
 
+class c1(object):
+  def __init__(self):
+    self.a = collections.defaultdict( int )
+
 class xlsTabs(object):
   """used in scope.py; uses makeTables.py"""
   def __init__(self,sc,tiermax=1,pmax=1,xls=True, txt=False, txtOpts=None, odir='xls'):

@@ -64,13 +64,17 @@ def filter1( a, b ):
 
 def filter2( a, b, tt, tm ):
 ## largest tier less than or equal to tm
-  t1 = [t for t in tt if t <= tm][-1]
-  it1 = tt.index(t1)
-  aa = a[it1]
-  if b < 0:
-    return aa
+  ll = [t for t in tt if t <= tm]
+  if len( ll ) > 0:
+    t1 = [t for t in tt if t <= tm][-1]
+    it1 = tt.index(t1)
+    aa = a[it1]
+    if b < 0:
+      return aa
+    else:
+      return min( [aa,b] )
   else:
-    return min( [aa,b] )
+    return 0
 
 npy = {'1hrClimMon':24*12, 'daily':365, u'Annual':1, u'fx':0.01, u'1hr':24*365, u'3hr':8*365,
        u'monClim':12, u'Timestep':100, u'6hr':4*365, u'day':365, u'1day':365, u'mon':12, u'yr':1,
@@ -206,11 +210,12 @@ class dreqQuery(object):
       t1 = lambda x: x in mipSel
 
     s = set()
-    for i in self.dq.coll['objectiveLink'].items:
-      if t1(i.label):
-        s.add( self.dq.inx.uid[i.rid] )
+    for i in self.dq.coll['requestLink'].items:
+      if t1(i.mip):
+        if 'requestItem' in self.dq.inx.iref_by_sect[i.uid].a:
+          if any( [ self.rqiExp[x][-1] > 0 for  x in self.dq.inx.iref_by_sect[i.uid].a['requestItem'] if x in self.rqiExp ] ):
+            s.add( i )
 
-    ##self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
     self.rqs = list( s )
     return self.rqs
 
@@ -220,28 +225,24 @@ class dreqQuery(object):
     assert type(mipSel) == type( {} ),'Argument must be a dictionary, listing objectives for each MIP'
 
     s = set()
-    for i in self.dq.coll['objectiveLink'].items:
-      if i.label in mipSel:
-        if len(mipSel[i]) == 0 or self.dq.inx.uid[i.oid].label in mipSel[i]:
-          s.add( self.dq.inx.uid[i.rid] )
-    ##self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.label) })
-    self.rqs = list( s )
-    return self.rqs
-
-  def getRequestLinkByObjective( self, objSel ):
-    """Return the set of request links which are associated with specified objectives"""
-    if type(objSel) == type(''):
-      t1 = lambda x: x == self.rlu[objSel]
-    elif type(objSel) == type(set()):
-      t1 = lambda x: x in [self.rlu[i] for i in objSel]
-
-    s = set()
-    for i in self.dq.coll['objectiveLink'].items:
-      if t1(i.label):
-        s.add( self.dq.inx.uid[i.oid] )
+    for i in self.dq.coll['requestLink'].items:
+      if i.mip in mipSel:
+        if len(mipSel[i.mip]) == 0:
+          s.add( i )
+        elif 'objectiveLink' in self.dq.inx.iref_by_sect[i.uid].a:
+          ss = {self.dq.inx.uid[k].label for k in self.dq.inx.iref_by_sect[i.uid].a['objectiveLink']}
+          if any( [x in mipSel[i.mip] for x in ss] ):
+            s.add( i )
 ##
-    self.rqs = list( s )
-    ##self.rqs = list({self.dq.inx.uid[i.rid] for i in self.dq.coll['objectiveLink'].items if t1(i.oid) })
+## filter requestLinks by tierMax: check to see whether they link to experiments with tier below or equal to tiermax.
+##
+    s1 = set()
+    for i in s:
+      if 'requestItem' in self.dq.inx.iref_by_sect[i.uid].a:
+        if any( [ self.rqiExp[x][-1] > 0 for  x in self.dq.inx.iref_by_sect[i.uid].a['requestItem'] if x in self.rqiExp ] ):
+            s1.add( i )
+
+    self.rqs = list( s1 )
     return self.rqs
 
   def varGroupXexpt(self, rqList ):
@@ -517,7 +518,14 @@ class dreqQuery(object):
     for v in vars:
       if 'requestVar' not in inx.iref_by_sect[v].a:
          print ( 'Variable with no request ....: %s, %s' % (inx.uid[v].label, inx.uid[v].mipTable) )
-      szv[v] = self.sz[inx.uid[v].stid]*npy[inx.uid[v].frequency]
+      try:
+        szv[v] = self.sz[inx.uid[v].stid]*npy[inx.uid[v].frequency]
+      except:
+        if inx.uid[v].stid not in self.sz:
+          print ('ERROR: size not found for stid %s (v=%s, %s)' % (inx.uid[v].stid,v,inx.uid[v].label) )
+        if inx.uid[v].frequency not in npy:
+          print ('ERROR: npy not found for frequency %s (v=%s, %s)' % (inx.uid[v].frequency,v,inx.uid[v].label) )
+        szv[v] = 0
       ov.append( self.dq.inx.uid[v] )
     ee = self.listIndexDual( ov, 'mipTable', 'label', acount=None, alist=None, cdict=szv, cc=cc )
 
@@ -527,7 +535,7 @@ class dreqQuery(object):
         ff[v] = 1
       else:
         if 'native' in nymg[v]:
-          ff[v] = self.sz[ inx.uid[v].stid ] * npy[inx.uid[v].frequency]
+          ff[v] = szv[v]
           ny = nymg[v]['native']
         else:
           if len( nymg[v] ) > 1:
@@ -540,7 +548,10 @@ class dreqQuery(object):
           else:
             ks = list( nymg[v].keys() )[0]
             ny = nymg[v][ks]
-            ff[v] = self.szg[ks][ inx.uid[v].stid ] * npy[inx.uid[v].frequency]
+            if inx.uid[v].stid in self.szg[ks]:
+              ff[v] = self.szg[ks][ inx.uid[v].stid ] * npy[inx.uid[v].frequency]
+            else:
+              ff[v] = 0.
 
         if inx.uid[v].frequency != 'monClim':
           ff[v] = ff[v]*ny
@@ -803,6 +814,10 @@ class dreqUI(object):
       -l <options>: List for options: 
               o: objectives
               e: experiments
+      -q <options>: List information about the schema:
+              s: sections
+              <section>: attributes for a section
+              <section:attribute>: definition of an attribute.
       -h :       help: print help text;
       -e <expt>: experiment;
       -t <tier> maxmum tier;
@@ -830,6 +845,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     self.knownargs = {'-m':('m',True), '-p':('p',True), '-e':('e',True), '-t':('t',True), \
                       '-h':('h',False), '--printLinesMax':('plm',True), \
                       '-l':('l',True),
+                      '-q':('q',True),
                       '--printVars':('vars',False), '--intersection':('intersection',False), \
                       '--count':('count',False), \
                       '--txt':('txt',False), \
@@ -854,7 +870,9 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     assert self.checkArgs( notKnownArgs ), 'FATAL ERROR 001: Arguments not recognised: %s' % (str(notKnownArgs) )
 
     if 'm' in self.adict:
-      if self.adict['m'].find( ':' ) != -1:
+      if self.adict['m'] == '_all_':
+        pass
+      elif self.adict['m'].find( ':' ) != -1:
         ee = {}
         for i in self.adict['m'].split(','):
           bits =  i.split( ':' )
@@ -897,6 +915,39 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       mlg.prnt ( self.__doc__ )
       return
 
+    if 'q' in self.adict:
+      if dq == None:
+        dq = dreq.loadDreq(configOnly=True)
+      s = self.adict['q']
+      if self.adict['q'] == 's':
+        ss = sorted( [(i.title,i.label) for i in dq.coll['__sect__'].items] )
+        for s in ss:
+          mlg.prnt( '%16s:: %s' % (s[1],s[0]) )
+      else:
+        ss = [i.label for i in dq.coll['__sect__'].items]
+        if s.find( ':' ) != -1:
+          s,a = s.split( ':' )
+        else:
+          a = None
+        if s not in ss:
+          mlg.prnt( 'ERROR: option must be a section; use "-q s" to list sections' )
+        elif a == None:
+          x = [i for i in dq.coll['__sect__'].items if i.label == s]
+          s1 = [i for i in  dq.coll['__main__'].items if 'ATTRIBUTE::%s' % s in i.uid]
+          mlg.prnt( x[0].title )
+          mlg.prnt( ' '.join( sorted  ([i.label for i in s1] ) ))
+        else:
+          x = [i for i in dq.coll['__main__'].items if i.uid == 'ATTRIBUTE::%s.%s' % (s,a) ]
+          if len(x) == 0:
+            mlg.prnt( 'ERROR: attribute not found' )
+            s1 = [i for i in  dq.coll['__main__'].items if 'ATTRIBUTE::%s' % s in i.uid]
+            mlg.prnt( 'ATTRIBUTES: ' + ' '.join( sorted  ([i.label for i in s1] ) ))
+          else:
+            mlg.prnt( 'Section %s, attribute %s' % (s,a) )
+            mlg.prnt( x[0].title )
+            mlg.prnt( x[0].description )
+      return
+
     if not 'm' in self.adict:
       mlg.prnt ( 'Current version requires -m argument'  )
       mlg.prnt ( self.__doc__ )
@@ -921,7 +972,10 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       self.sc.setMcfg( lli )
 
     ok = True
-    for i in self.adict['m']:
+    if self.adict['m'] == '_all_':
+      self.adict['m'] = set(self.sc.mips )
+    else:
+      for i in self.adict['m']:
         if i not in self.sc.mips:
           ok = False
           mlg.prnt ( 'NOT FOUND: %s' % i )

@@ -1,4 +1,8 @@
-from .__init__ import DOC_DIR
+scr = __name__ == '__main__'
+if scr:
+  from __init__ import DOC_DIR
+else:
+  from .__init__ import DOC_DIR
 import string, os, sys, collections
 
 try:
@@ -78,19 +82,29 @@ class checkbase(object):
        
 class check1(checkbase):
   def _ch01_importDreq(self):
-    from . import dreq
+    if scr:
+      import dreq
+    else:
+      from . import dreq
     print ( 'Dreq software import checked' )
     self.ok = True
 
   def _ch02_importSample(self):
-    from . import dreq
+    if scr:
+      import dreq
+    else:
+      from . import dreq
     self.dq = dreq.loadDreq( manifest='%s/dreqManifest.txt' % self.docdir  )
     print ( 'Dreq sample load checked' )
     self.ok = True
 
   def _ch03_linkCheck(self):
+    if scr:
+      import dreq
+    else:
+      from . import dreq
+
     nn = 0
-    from . import dreq
     self.dq = dreq.loadDreq( manifest='%s/dreqManifest.txt' % self.docdir  )
     for section in self.dq.coll :
       ks=[k for k in self.dq.coll[section].attDefn.keys() if self.dq.coll[section].attDefn[k].useClass == 'internalLink']
@@ -102,7 +116,7 @@ class check1(checkbase):
             if i.__dict__[k] not in self.dq.inx.uid:
               nerr += 1
               cc[k] += 1
-              print ('Bad link found: section: %s: %s   %s' % (section, k, i.__dict__[k]) )
+              print ('Bad link found: section: %s: %s   %s [%s]' % (section, k, i.__dict__[k], i.uid) )
       if nerr > 0:
            msg = ''
            for k in cc:

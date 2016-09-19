@@ -26,6 +26,7 @@ def main_entry():
       else:
         from .packageConfig import __version__, __versionComment__
       print( 'dreqPy version %s [%s]' % (__version__,__versionComment__) )
+      print( 'Running in python %s' % str( sys.version_info ) )
   elif sys.argv[1] == '--unitTest':
       print( "Starting test suite 1" )
       if scr:

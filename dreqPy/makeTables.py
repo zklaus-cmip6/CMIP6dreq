@@ -1,5 +1,6 @@
 
 import collections, string, os, sys
+import rvgExtraTable
 
 nt__charmeEnable = collections.namedtuple( 'charme', ['id','site'] )
 
@@ -770,6 +771,8 @@ if __name__ == "__main__":
   dq.coll['CMORvar'].items[0].__class__._linkAttrStyle['stid'] = styls.stidLink01
 ##dq.coll['requestVarGroup'].items[0].__class__._linkAttrStyle['requestVar'] = styls.rqvLink01
   dq.itemStyles['requestVar'] = styls.rqvLink01
+
+  dreq.dreqItemBase._extraHtml['requestVarGroup'] = rvgExtraTable.vgx1(dq).mxoGet
 
   dreq.dreqItemBase.__charmeEnable__['var'] = nt__charmeEnable( 'test','http://clipc-services.ceda.ac.uk/dreq' )
 
