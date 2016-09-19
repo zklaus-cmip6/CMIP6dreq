@@ -230,7 +230,7 @@ class dreqQuery(object):
         if len(mipSel[i.mip]) == 0:
           s.add( i )
         elif 'objectiveLink' in self.dq.inx.iref_by_sect[i.uid].a:
-          ss = {self.dq.inx.uid[k].label for k in self.dq.inx.iref_by_sect[i.uid].a['objectiveLink']}
+          ss = set( [self.dq.inx.uid[k].label for k in self.dq.inx.iref_by_sect[i.uid].a['objectiveLink'] ] )
           if any( [x in mipSel[i.mip] for x in ss] ):
             s.add( i )
 ##

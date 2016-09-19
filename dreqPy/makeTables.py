@@ -1,6 +1,5 @@
 
 import collections, string, os, sys
-import rvgExtraTable
 
 nt__charmeEnable = collections.namedtuple( 'charme', ['id','site'] )
 
@@ -8,10 +7,12 @@ try:
   import dreq
   import vrev
   import misc_utils
+  import rvgExtraTable
 except:
   import dreqPy.dreq as dreq
   import dreqPy.vrev as vrev
   import dreqPy.misc_utils as misc_utils
+  import dreqPy.rvgExtraTable as rvgExtraTable
 
 python2 = True
 if sys.version_info[0] == 3:
