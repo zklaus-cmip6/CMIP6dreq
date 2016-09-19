@@ -5,4 +5,4 @@ xmlf = sys.argv[1]
 doc = xml.dom.minidom.parse( xmlf )
 
 ver = doc.getElementsByTagName('pav:version')[0]
-print ver.firstChild.data
+print ( ver.firstChild.data )

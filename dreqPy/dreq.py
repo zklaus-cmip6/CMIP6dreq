@@ -150,6 +150,7 @@ class dreqItemBase(object):
        _htmlStyle = {}
        _linkAttrStyle = {}
        __charmeEnable__ = {}
+       _extraHtml = {}
 
        def __init__(self,idict=None,xmlMiniDom=None,id='defaultId',etree=False):
          self._strictRead = True
@@ -265,61 +266,17 @@ class dreqItemBase(object):
                  m = '<li>%s: %s</li>' % ( app, self.__dict__[a] )
                msg.append( m )
            msg.append( '</ul>' )
+           sect = self._h.label
+           if sect in self._extraHtml:
+             rc, href, hlab = self._extraHtml[sect](self)
+             if rc:
+                msg.append( '<p><a href="%s">%s</a></p>' % (href,hlab) )
 ##
 ## add list of inward references
 ##
-           oldCode = False
-           if self._base._indexInitialised and oldCode:
-             f1 = self._htmlStyle.get( sect, {} ).get( 'getIrefs', None ) != None
-             if f1:
-               tl = []
-               if f1:
-                 tl = self._htmlStyle[sect]['getIrefs']
-               doall = '__all__' in tl
-               if doall:
-                 tl = self._inx.iref_by_sect[self.uid].a.keys()
-               tl1 = []
-               for t in tl:
-                 if t in self._inx.iref_by_sect[self.uid].a and len( self._inx.iref_by_sect[self.uid].a[t] ) > 0:
-                   tl1.append( t )
-               am = []
-               if len(tl1) > 0:
-                 am.append( '''<div class="demo">\n<div id="tabs">\n<ul>''' )
-                 for t in tl1:
-                   u0 = self._inx.iref_by_sect[self.uid].a[t][0]
-                   this1 = '<li><a href="#tabs-%s">%s</a></li>' % (t,self._inx.uid[u0]._h.title )
-                   am.append( this1 )
-                 am.append( '</ul>' )
-               for t in tl1:
-                   u0 = self._inx.iref_by_sect[self.uid].a[t][0]
-                   am.append( '<div id="tabs-%s">' % t )
-                   am.append( '<h3>%s</h3>' % self._inx.uid[u0]._h.title )
-                   am.append( '<ul>' )
-                   items = [self._inx.uid[u] for  u in self._inx.iref_by_sect[self.uid].a[t] ]
-                   items.sort( ds('label').cmp )
-                   for targ in items:
-                     if ghis == None:
-                       m = '<li>%s:%s [%s]</li>' % ( targ._h.label, targ.label, targ.__href__() )
-                     else:
-                       lst = ghis( targ._h.label )
-                       m = lst( targ, frm=sect )
-                     am.append( m )
-                   am.append( '</ul>' )
-                   am.append( '</div>' )
-               if len(am) > 0:
-                 am.append( '</div>' )
-                 msg.append( '<h2>Links from other sections</h2>' )
-                 msg.append( ''' <script>
-        $(function() {
-                $( "#tabs" ).tabs({cookie: { expires: 1 } });
-        });
- </script>
-<!-- how to make tab selection stick: http://stackoverflow.com/questions/5066581/jquery-ui-tabs-wont-save-selected-tab-index-upon-page-reload  expiry time in days-->''' )
-                 for m in am:
-                    msg.append(m)
-               
-           elif self._base._indexInitialised:
+           if self._base._indexInitialised:
              msg += self.__irefHtml__(sect,ghis)
+
            if sect in self.__charmeEnable__:
              msg.append( '<script src="/js/dreq/charme/charme.js"></script>' )
          else:
@@ -502,10 +459,11 @@ class dreqItemBase(object):
 class config(object):
   """Read in a vocabulary collection configuration document and a vocabulary document"""
 
-  def __init__(self, configdoc='out/dreqDefn.xml', thisdoc='../workbook/trial_20150724.xml', manifest=None, useShelve=False, strings=False):
+  def __init__(self, configdoc='out/dreqDefn.xml', thisdoc='../workbook/trial_20150724.xml', manifest=None, useShelve=False, strings=False,configOnly=False):
     self.rc = rechecks()
     self.lu = lutilsC()
     self.silent = True
+    self.configOnly = configOnly
     self.coll = {}
 
     self.nts = collections.namedtuple( 'sectdef', ['tag','label','title','id','itemLabelMode','level','maxOccurs','labUnique','uid'] )
@@ -652,6 +610,7 @@ class config(object):
       self.tt1[t[0].label].maxOccurs = t.header.maxOccurs
       self.tt1[t[0].label].labUnique = t.header.labUnique
       self.tt1[t[0].label].level = t.header.level
+      self.tt1[t[0].label].uid = t.header.uid
       self.tt1[t[0].label].itemLabelMode = t.header.itemLabelMode
       self.ttl2 += [thisc.__dict__[a] for a in t.attributes]
     mil = [t[1] for t in self._t2.attributes.items()]
@@ -665,6 +624,9 @@ class config(object):
         self.coll[sct].attDefn[k] = ec[k]
 
     self.recordAttributeDefn = tables
+
+    if self.configOnly:
+      return
     for k in tables.keys():
       if self.etree:
         vl = root.findall( './/%s%s' % (self.ns,k) )
@@ -748,12 +710,14 @@ class config(object):
         l = v.getAttribute( 'label' )
         t = v.getAttribute( 'title' )
         i = v.getAttribute( 'id' )
+        u = v.getAttribute( 'uid' )
         ilm = v.getAttribute( 'itemLabelMode' )
         lev = v.getAttribute( 'level' )
         maxo = v.getAttribute( 'maxOccurs' )
         labu = v.getAttribute( 'labUnique' )
         il = v.getElementsByTagName( 'rowAttribute' )
-        vtt = self.nts( v.nodeName, l,t,i,ilm,lev, maxo, labu, 's__%s' % v.nodeName )
+        ##vtt = self.nts( v.nodeName, l,t,i,ilm,lev, maxo, labu, 's__%s' % v.nodeName )
+        vtt = self.nts( v.nodeName, l,t,i,ilm,lev, maxo, labu, u )
         idict = {}
         for i in il:
           tt = self.parseicfg(i)
@@ -915,29 +879,30 @@ class loadDreq(object):
   htmlStyles: dictionary of styling directives which influence structure of html page generates by the "makeHtml" method
 """
 
-  def __init__(self,dreqXML=defaultDreqPath, configdoc=defaultConfigPath, useShelve=False, htmlStyles=None, strings=False, manifest=None ):
-    self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve,strings=strings,manifest=manifest)
+  def __init__(self,dreqXML=defaultDreqPath, configdoc=defaultConfigPath, useShelve=False, htmlStyles=None, strings=False, manifest=None , configOnly=False):
+    self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve,strings=strings,manifest=manifest,configOnly=configOnly)
     self.coll = self.c.coll
     self.version = self.c.version
-    self.inx = index(self.coll)
-    self.itemStyles = {}
-    self.defaultItemLineStyle = lambda i, frm='', ann='': '<li>%s: %s</li>' % ( i.label, i.__href__(odir='../u/') )
     self.softwareVersion = version
+    if not configOnly:
+      self.inx = index(self.coll)
+      self.itemStyles = {}
+      self.defaultItemLineStyle = lambda i, frm='', ann='': '<li>%s: %s</li>' % ( i.label, i.__href__(odir='../u/') )
 ##
 ## add index to Item base class .. so that it can be accessed by item instances
 ##
-    dreqItemBase._inx = self.inx
-    dreqItemBase._indexInitialised = True
+      dreqItemBase._inx = self.inx
+      dreqItemBase._indexInitialised = True
 ##
 ## load in additional styling directives
 ##
-    if htmlStyles != None:
-      for k in htmlStyles:
-        dreqItemBase._htmlStyle[k] = htmlStyles[k]
+      if htmlStyles != None:
+        for k in htmlStyles:
+          dreqItemBase._htmlStyle[k] = htmlStyles[k]
 
 ##    dreqItemBase._htmlStyle['__general__'] = {'addRemarks':True}
 
-    self.pageTmpl = """<html><head><title>%s</title>
+      self.pageTmpl = """<html><head><title>%s</title>
 %s
 <link rel="stylesheet" type="text/css" href="%scss/dreq.css">
 </head><body>

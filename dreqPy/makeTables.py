@@ -7,10 +7,12 @@ try:
   import dreq
   import vrev
   import misc_utils
+  import rvgExtraTable
 except:
   import dreqPy.dreq as dreq
   import dreqPy.vrev as vrev
   import dreqPy.misc_utils as misc_utils
+  import dreqPy.rvgExtraTable as rvgExtraTable
 
 python2 = True
 if sys.version_info[0] == 3:
@@ -770,6 +772,8 @@ if __name__ == "__main__":
   dq.coll['CMORvar'].items[0].__class__._linkAttrStyle['stid'] = styls.stidLink01
 ##dq.coll['requestVarGroup'].items[0].__class__._linkAttrStyle['requestVar'] = styls.rqvLink01
   dq.itemStyles['requestVar'] = styls.rqvLink01
+
+  dreq.dreqItemBase._extraHtml['requestVarGroup'] = rvgExtraTable.vgx1(dq).mxoGet
 
   dreq.dreqItemBase.__charmeEnable__['var'] = nt__charmeEnable( 'test','http://clipc-services.ceda.ac.uk/dreq' )
 

@@ -6,10 +6,10 @@ if len(sys.argv) > 1:
       sys.path.insert(0, sys.argv[1] )
       import scope
     else:
-      print 'No scope.py in specified directory'
+      print ( 'No scope.py in specified directory' )
       sys.exit(0)
   else:
-    print 'Specified directoty does not exist'
+    print  ('Specified directoty does not exist' )
     sys.exit(0)
 else:
   from dreqPy import scope
