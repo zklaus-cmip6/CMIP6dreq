@@ -184,6 +184,7 @@ class dreqQuery(object):
       self.szss[i.uid] = nh*nz
       for k in szr:
         self.szgss[k][i.uid] = szr[k]*nz
+
     for i in self.dq.coll['structure'].items:
       s = 1
       if i.odims != '':
@@ -527,7 +528,6 @@ class dreqQuery(object):
           print ('ERROR: npy not found for frequency %s (v=%s, %s)' % (inx.uid[v].frequency,v,inx.uid[v].label) )
         szv[v] = 0
       ov.append( self.dq.inx.uid[v] )
-    ee = self.listIndexDual( ov, 'mipTable', 'label', acount=None, alist=None, cdict=szv, cc=cc )
 
     ff = {}
     for v in vars:
@@ -555,6 +555,8 @@ class dreqQuery(object):
 
         if inx.uid[v].frequency != 'monClim':
           ff[v] = ff[v]*ny
+
+    ee = self.listIndexDual( ov, 'mipTable', 'label', acount=None, alist=None, cdict=ff, cc=cc )
     self.ngptot = sum( [  ff[v]  for v in vars] )
     return (self.ngptot, ee, ff )
 
