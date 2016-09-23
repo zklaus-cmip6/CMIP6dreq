@@ -393,11 +393,7 @@ class dreqQuery(object):
         r = inx.uid[i]
         print ( '%s, %s, %s' % (r.label, r.title, r.uid) )
 
-    dn = False
-    if dn:
-## obsolete code deleted here
-      pass
-    elif ex != None:
+    if ex != None:
       
       exi = self.dq.inx.uid[ex]
       if exi._h.label == 'experiment':
@@ -409,18 +405,12 @@ class dreqQuery(object):
 
 ## The complete set of variables associated with these requests:
     vars = self.varsByRql( rql, pmax=pmax, intersection=intersection, asDict=True) 
-    tm = 3
-    if tm == 0:
-      pass
-    elif tm == 1:
-      pass
 ##
 ## filter by configuration option and rank
 ##
     if not retainRedundantRank:
       len1 = len(vars.keys())
       cmv = self.cmvFilter.filterByChoiceRank(cmv=vars.keys())
-
       vars = cmv
     
     self.vars = vars
@@ -498,19 +488,12 @@ class dreqQuery(object):
                   thisne = this[-1]
                   cc2s[grd].a[u].add( filter1( thisns*thisny*thisne, i.nymax) )
 
-          ##if thisny != None and thisne != None:
-              ##cc2s[grd].a[i.esid].add( thisny*thisne )
-          
           if exset != None:
             sg[grd].add( self.rqiExp[i.uid][irqi] )
       
-      ##if len(s) == 0:
-        ##nym[v] = 0
-      ##else:
 ###
 ### sum over experiments of maximum within each experiment
 ###
-        ##nym[v] = sum( [max( cc2[k] ) for k in cc2] )
       for g in sg:
         nymg[v][g] = sum( [max( cc2s[g].a[k] ) for k in cc2s[g].a] )
 
@@ -542,7 +525,6 @@ class dreqQuery(object):
             print ( '########### Selecting first in list .............' )
           ks0 = nymg[v].keys()
           if len(ks0) == 0:
-            ##print 'WARN: no nymg entry for %s [%s]' % (v,ex)
             ff[v] = 0.
             ny = 0.
           else:
@@ -1054,7 +1036,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
         mx = len(vl)
 
       for v in vl[:mx]:
-        mlg.prnt ( '%s: %7.2fTb' % (self.dq.inx.uid[v].label, cc[v]*2.*1.e-12) )
+        mlg.prnt ( '%s.%s: %7.2fTb' % (self.dq.inx.uid[v].mipTable,self.dq.inx.uid[v].label, cc[v]*2.*1.e-12) )
       if mx < len(vl):
         mlg.prnt ( '%s variables not listed (use --printLinesMax to print more)' % (len(vl)-mx) )
 
