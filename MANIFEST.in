@@ -24,3 +24,4 @@ include dreqPy/docs/dreqSuppSchema.xsd
 include dreqPy/docs/dreqSuppDefn.xml
 include dreqPy/docs/dreqSupp.xml
 include dreqPy/docs/dreqManifest.txt
+include dreqPy/docs/md5Manifest.txt
