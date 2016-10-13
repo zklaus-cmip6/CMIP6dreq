@@ -427,9 +427,9 @@ class dreqItemBase(object):
                v = v in ['true','1']
              elif self._a[a].type == u'aa:st__stringList':
                if v.find(' ') != -1:
-                 v = v.split()
+                 v = tuple( v.split() )
                else:
-                 v = [v,]
+                 v = (v,)
              elif self._a[a].type not in [u'xs:string']:
                print ('ERROR: Type %s not recognised [%s:%s]' % (self._a[a].type,self._h.label,a) )
 
@@ -442,10 +442,12 @@ class dreqItemBase(object):
                self.__dict__[a] = v
            else:
              if a in ['uid',]:
-               thissect = '%s [%s]' % (self._h.title,self._h.tag)
-               print ( 'ERROR.020.0001: missing uid: %s' % thissect )
+               thissect = '%s' % (self._h.title)
+               p = self.parent_map( el )
+               print ( 'ERROR.020.0001: missing uid: %s: a,tv,v: %s, %s, %s' % (thissect,a,tv,v) )
                if etree:
                  print ( ks )
+                 raise
                  import sys
                  sys.exit(0)
              self.__dict__[a] = self._d.defaults.get( a, self._d.glob )
@@ -550,6 +552,7 @@ class config(object):
         self.ns = None
       vl = root.findall( './/{http://purl.org/pav/2.3}version' )
       self.version = vl[0].text
+      self.parent_map = dict((c, p) for p in root.getiterator() for c in p)
     else:
       if self.strings:
         self.contentDoc = xml.dom.minidom.parseString( self.vsamp  )
@@ -816,7 +819,7 @@ For any record, with identifier u, iref_by_uid[u] gives a list of the section an
               if id2 != '__unset__':
                 sect = i._h.label
   ## append attribute name and target  -- item i.uid, attribute k2 reference item id2
-                if type(id2) != type( [] ):
+                if type(id2) not in [type( [] ),type(())]:
                   id2 = [id2,]
                 for u in id2:
                   self.iref_by_uid[ u ].append( (k2,i.uid) )
@@ -1030,9 +1033,14 @@ page for each item and also generating index pages.
       oo.write( self.pageTmpl % (ttl, jsh, '../', '../index.html', bdy ) )
       oo.close()
 
-    msg0 = ['<h1>%s</h1>' % ttl0, '<ul>',]
-    msg0.append( '<li><a href="tab01_1_1.html">Overview: priority 1 variables, tier 1 experiments</a></li>' )
+    subttl1 = 'Overview tables and search'
+    subttl2 = 'Sections of the data request'
+    msg0 = ['<h1>%s</h1>' % ttl0, '<h2>%s</h2>' % subttl1, '<ul>',]
     msg0.append( '<li><a href="tab01_3_3.html">Overview: all variables and experiments</a></li>' )
+    msg0.append( '<li><a href="tab01_1_1.html">Overview: priority 1 variables, tier 1 experiments</a></li>' )
+    msg0.append( '<li><a href="tab01_1_1_dn.html">Overview: priority 1 variables, tier 1 experiments (grid default to native)</a></li>' )
+    msg0.append( '<li><a href="mipVars.html">Search for variables</a></li>' )
+    msg0 += ['</ul>', '<h2>%s</h2>' % subttl2, '<ul>',]
     ks = sorted( self.coll.keys() )
     ee = {}
     for k in ks:
