@@ -1,5 +1,6 @@
 
-import collections, string, os, sys
+import collections, os, sys
+import volsum
 
 nt__charmeEnable = collections.namedtuple( 'charme', ['id','site'] )
 
@@ -40,13 +41,16 @@ except:
 
 def setMlab( m ):
       if type(m) == type(''):
-        mlab = m
+        if m == '_all_':
+          mlab = 'TOTAL'
+        else:
+          mlab = m
       else:
         ll = sorted( list(m) )
         if len(ll) == 1:
           mlab = list(m)[0]
         else:
-          mlab=string.join( [ x[:2].lower() for x in m ], '.' )
+          mlab='.'.join( [ x[:2].lower() for x in m ] )
       return mlab
 
 class xlsx(object):
@@ -85,20 +89,26 @@ class xlsx(object):
         ri += 2
         sht.write( ri, 0, 'Table', self.sect_cell_format )
         sht.write( ri, 1, self.mcfgNote, self.sect_cell_format )
+        ttl = 0.
         for k in sorted( collected.keys() ):
           ri += 1
           sht.write( ri, 0, k )
           sht.write( ri, 1, vfmt( collected[k]*2. ) )
+          ttl += collected[k]
+
+        ri += 1
+        sht.write( ri, 0, 'TOTAL' )
+        sht.write( ri, 1, vfmt( ttl*2. ) )
 
     if self.txt:
-      self.oo.write( string.join( ['Notes','','Notes on tables'], '\t') + '\n' )
+      self.oo.write( '\t'.join( ['Notes','','Notes on tables']) + '\n' )
       for t in tableNotes:
-        self.oo.write( string.join( ['Notes',] + list(t), '\t') + '\n' )
+        self.oo.write( '\t'.join( ['Notes',] + list(t)) + '\n' )
 
       if collected != None:
-        self.oo.write( string.join( ['Notes','Table','Reference Volume (1 deg. atmosphere, 0.5 deg. ocean)'], '\t') + '\n')
+        self.oo.write( '\t'.join( ['Notes','Table','Reference Volume (1 deg. atmosphere, 0.5 deg. ocean)']) + '\n')
         for k in sorted( collected.keys() ):
-          self.oo.write( string.join( ['Notes',k,vfmt( collected[k]*2. )], '\t') + '\n' )
+          self.oo.write( '\t'.join( ['Notes',k,vfmt( collected[k]*2. )]) + '\n' )
 
   def cmvtabrec(self,j,t,orec):
      if self.xls:
@@ -106,7 +116,7 @@ class xlsx(object):
            self.sht.write( j,i, orec[i], self.cell_format )
 
      if self.txt:
-        self.oo.write( string.join( [t,] + orec, '\t') + '\n' )
+        self.oo.write( '\t'.join( [t,] + orec) + '\n' )
 
   def varrec(self,j,orec):
      if self.xls:
@@ -114,7 +124,7 @@ class xlsx(object):
            self.sht.write( j,i, orec[i], self.cell_format )
 
      if self.txt:
-        self.oo.write( string.join( orec, '\t') + '\n' )
+        self.oo.write( '\t'.join( orec, '\t') + '\n' )
 
   def var(self):
       if self.xls:
@@ -284,6 +294,7 @@ class makeTab(object):
       cmv = [x for x in dq.coll['CMORvar'].items if x.uid in subset]
     else:
       cmv = dq.coll['CMORvar'].items
+
     if oldpython:
       tables = sorted( list( set( [i.mipTable for i in cmv] ) ), cmp=cmpAnnex )
     else:
@@ -343,15 +354,15 @@ class makeTab(object):
                  ii = [cv,strc,sshp,tshp][i]
                  if ii._h.label == 'remarks':
                    ml.append( ['var','struct','time','spatial'][i] )
-              print ( 'makeTables: skipping %s %s: %s' % (t,v.label,string.join( ml, ',')) )
+              print ( 'makeTables: skipping %s %s: %s' % (t,v.label,','.join( ml)) )
               skipped.add( (t,v.label) )
           else:
             dims = []
-            dims += string.split( sshp.dimensions, '|' )
-            dims += string.split( tshp.dimensions, '|' )
-            dims += string.split( strc.odims, '|' )
-            dims += string.split( strc.coords, '|' )
-            dims = string.join( dims )
+            dims +=  sshp.dimensions.split( '|' )
+            dims +=  tshp.dimensions.split( '|' )
+            dims +=  strc.odims.split( '|' )
+            dims +=  strc.coords.split( '|' )
+            dims = ' '.join( dims )
             if mode == 'c':
               orec = [str(v.defaultPriority),cv.title, cv.units, cv.description, v.description, cv.label, cv.sn, strc.cell_methods, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, v.prov,v.provNote,str(v.rowIndex),v.uid,v.vid,v.stid,strc.title]
             else:
@@ -359,11 +370,11 @@ class makeTab(object):
             if addMips:
               thismips = c.chkCmv( v.uid )
               thismips2 = c.chkCmv( v.uid, byExpt=True )
-              orec.append( string.join( sorted( list( thismips) ),',') )
-              orec.append( string.join( sorted( list( thismips2) ),',') )
+              orec.append( ','.join( sorted( list( thismips) ) ) )
+              orec.append( ','.join( sorted( list( thismips2) ) ) )
 
             if withoo:
-              oo.write( string.join(orec, '\t' ) + '\n' )
+              oo.write( '\t'.join(orec ) + '\n' )
             j+=1
             wb.cmvtabrec( j,t,orec )
 
@@ -433,7 +444,7 @@ class htmlTrees(object):
           bdy.append( '</ul></li>\n' )
       bdy.append( '</ul></body></html>\n' )
       oo = open( '%s/%s.html' % (self.odir,v.label), 'w' )
-      oo.write( dq.pageTmpl % ( title, '', '../', '../index.html', string.join( bdy, '\n' ) ) )
+      oo.write( dq.pageTmpl % ( title, '', '../', '../index.html', '\n'.join( bdy ) ) )
       oo.close()
       self.anno[v.label] = '<a href="../t/%s.html">Usage</a>' % v.label
     else:
@@ -445,23 +456,24 @@ class makeJs(object):
     n = 0
     rl = []
     for v in dq.coll['var'].items:
-      var = '%s %s' % (v.label,v.uid)
-      sn = v.sn
-      ln = v.title
-      u = v.units
-      d = v.description
-      uid = v.uid
-      d = locals()
-      for k in ['sn','ln','u','var','d']:
+      if 'CMORvar' in dq.inx.iref_by_sect[v.uid].a and len(dq.inx.iref_by_sect[v.uid].a['CMORvar'] ) > 0:
+        var = '%s %s' % (v.label,v.uid)
+        sn = v.sn
+        ln = v.title
+        u = v.units
+        d = v.description
+        uid = v.uid
+        d = locals()
+        for k in ['sn','ln','u','var','d']:
     
-        if string.find( d[k], '"' ) != -1:
-          print ( "WARNING ... quote in %s .. %s [%s]" % (k,var,d[k]) )
-          d[k] = string.replace( d[k], '"', "'" )
-          print ( d[k] )
+          if  d[k].fin( '"' ) != -1:
+            print ( "WARNING ... quote in %s .. %s [%s]" % (k,var,d[k]) )
+            d[k] =  d[k].replace( '"', "'" )
+            print ( d[k] )
         
-      rr = rtmpl % d
-      rl.append( rr )
-      n += 1
+        rr = rtmpl % d
+        rl.append( rr )
+        n += 1
     oo = open( 'data3.js', 'w' )
     oo.write( hdr )
     for r in rl:
@@ -578,15 +590,16 @@ class styles(object):
     return '<li>%s {%s}: %s variables, %s request links</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.mip, gpsz, nlnk )
 
 class tables(object):
-  def __init__(self,sc, mips, odir='xls',xls=True,txt=False,txtOpts=None):
+  def __init__(self,sc, odir='xls',xls=True,txt=False,txtOpts=None):
       self.sc = sc
       self.dq = sc.dq
-      self.mips = mips
+      ##self.mips = mips
       self.odir = odir
       self.accReset()
       self.doXls = xls
       self.doTxt = txt
       self.txtOpts = txtOpts
+      self.odir = 'vs-xls'
 
   def accReset(self):
     self.acc = [0.,collections.defaultdict(int),collections.defaultdict( float ) ]
@@ -596,6 +609,17 @@ class tables(object):
     for k in x[2]:
        self.acc[2][k] += x[2][k]
 
+
+  def getTable(self,m,m2,pmax,odsz,npy):
+     vs = volsum.vsum( self.sc, odsz, npy )
+     mlab = setMlab( m )
+     vs.run( m, 'requestVol_%s_%s_%s' % (mlab,self.sc.tierMax,pmax), pmax=pmax )
+
+
+## collected=summed volumes by table for first page.
+     makeTab( self.sc.dq, subset=vs.thiscmvset, dest='%s/%s-%s_%s_%s' % (self.odir,mlab,mlab2,self.sc.tierMax,pmax), collected=collector[kkc].a,
+              mcfgNote=self.sc.mcfgNote,
+              txt=self.doTxt, xls=self.doXls, txtOpts=self.txtOpts )
   def doTable(self,m,l1,m2,pmax,collector,acc=True, mlab=None,exptids=None,cc=None):
       """*acc* allows accumulation of values to be switched off when called in single expt mode"""
       
@@ -606,7 +630,7 @@ class tables(object):
       cc0 = misc_utils.getExptSum( self.dq, mlab, l1 )
       ks = sorted( list( cc0.keys() ) )
       if self.verbose:
-        print ('Experiment summary: %s %s' % (mlab,string.join( ['%s: %s' % (k,len(cc0[k])) for k in ks], ', ' ) ) )
+        print ('Experiment summary: %s %s' % (mlab,', '.join( ['%s: %s' % (k,len(cc0[k])) for k in ks] ) ) )
 
       if m2 in [None, 'TOTAL']:
         x = self.acc
@@ -693,8 +717,6 @@ class tables(object):
         if acc and m2 not in [ None, 'TOTAL']:
           collector[mlab].a['TOTAL'] += x0
 
-        ##print 'xxxxq', collector[mlab].a[mlab2], collector[mlab].a['TOTAL']
-        ##print 'xxxxz', kkc, collector[kkc].a['Amon'], collector[kkct].a['Amon'], ismip
         dd = collections.defaultdict( list )
         lll = set()
         for v in x2:
@@ -704,7 +726,6 @@ class tables(object):
             lll.add(u)
             dd[t].append( (f,t,l,tt,d,u) )
 
-        ##print 'xxxxx',mlab,mlab2, x0, len( dd.keys() )
         if len( dd.keys() ) > 0:
           collector[mlab].dd[mlab2] = dd
           if m2 not in [ None, 'TOTAL']:
@@ -714,7 +735,6 @@ class tables(object):
 ### BUT ... there is a treset in the request item .... it may be that some variables are excluded ...
 ###         need the variable list itself .....
 ###
-          ##print '> maketab: ','%s/%s-%s_%s_%s.xlsx' % (self.odir,mlab,mlab2,self.sc.tierMax,pmax)
           makeTab( self.sc.dq, subset=lll, dest='%s/%s-%s_%s_%s' % (self.odir,mlab,mlab2,self.sc.tierMax,pmax), collected=collector[kkc].a,
               mcfgNote=self.sc.mcfgNote,
               txt=self.doTxt, xls=self.doXls, txtOpts=self.txtOpts )
@@ -737,12 +757,13 @@ htmlStyle['grids'] = {'getIrefs':['__all__']}
 htmlStyle['varChoice'] = {'getIrefs':['__all__']}
 htmlStyle['spatialShape'] = {'getIrefs':['__all__']}
 htmlStyle['temporalShape'] = {'getIrefs':['__all__']}
-htmlStyle['structure'] = {'getIrefs':['__all__']}
-htmlStyle['cellMethods'] = {'getIrefs':['__all__']}
+htmlStyle['structure']    = {'getIrefs':['__all__']}
+htmlStyle['cellMethods']  = {'getIrefs':['__all__']}
 htmlStyle['standardname'] = {'getIrefs':['__all__']}
 htmlStyle['varRelations'] = {'getIrefs':['__all__']}
-htmlStyle['varRelLnk'] = {'getIrefs':['__all__']}
-htmlStyle['units'] = {'getIrefs':['__all__']}
+htmlStyle['varRelLnk']    = {'getIrefs':['__all__']}
+htmlStyle['units']        = {'getIrefs':['__all__']}
+htmlStyle['timeSlice']    = {'getIrefs':['__all__']}
 
 if __name__ == "__main__":
   assert os.path.isdir( 'html' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml'
@@ -774,7 +795,6 @@ if __name__ == "__main__":
   dq.itemStyles['requestVar'] = styls.rqvLink01
 
   dreq.dreqItemBase._extraHtml['requestVarGroup'] = rvgExtraTable.vgx1(dq).mxoGet
-
   dreq.dreqItemBase.__charmeEnable__['var'] = nt__charmeEnable( 'test','http://clipc-services.ceda.ac.uk/dreq' )
 
   ht = htmlTrees(dq)

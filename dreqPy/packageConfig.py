@@ -14,7 +14,7 @@ DOC_DEFAULT_DIR = os.path.join(PACKAGE_DIR, 'docs')
 DOC_DIR = os.environ.get('DRQ_CONFIG_DIR', DOC_DEFAULT_DIR)
 
 __versionComment__ = "Updates to content for several MIPs; uniqueness of CMOR variable name per table"
-__version__ = "01.beta.36"
+__version__ = "01.beta.37"
 __title__ = "dreqPy"
 __description__ = "CMIP6 Data Request Python API"
 __uri__ = "http://proj.badc.rl.ac.uk/svn/exarch/CMIP6dreq/tags/{0}".format(__version__)
