@@ -5,6 +5,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
        Some specialised string types
     </xs:documentation></xs:annotation>
+<xs:simpleType name="st__uid"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9:_.+-])+"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="st__attLabel_def"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9-])+"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="st__attLabel_und"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9_])+"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="st__attLabel_int"><xs:restriction base="xs:integer"/></xs:simpleType>
@@ -29,14 +30,14 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord Identifiermip;
+   aa:st__uidRecord Identifiermip;
    xs:stringEndorsed MIP defining the variable groupref;
    xs:stringReferencerefNote;
    xs:stringReference Note</xs:documentation></xs:annotation>
 <xs:complexType name="ct__requestVarGroup_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="mip" type="xs:string"/>
 <xs:attribute name="ref" type="xs:string"/>
 <xs:attribute name="refNote" type="xs:string"/>
@@ -57,7 +58,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord Identifiermip;
+   aa:st__uidRecord Identifiermip;
    xs:stringThe MIP making the request. tab;
    xs:stringRedundant?expt;
    xs:stringName of experiment or group of experimentsrlid;
@@ -74,7 +75,7 @@
 <xs:complexType name="ct__requestItem_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="mip" type="xs:string"/>
 <xs:attribute name="tab" type="xs:string"/>
 <xs:attribute name="expt" type="xs:string"/>
@@ -105,13 +106,13 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord identifiertierMin;
+   aa:st__uidRecord identifiertierMin;
    xs:integerMinimum tier of experiments in groupntot;
    xs:integerTotal number of years</xs:documentation></xs:annotation>
 <xs:complexType name="ct__exptgroup_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="tierMin" type="xs:integer"/>
 <xs:attribute name="ntot" type="xs:integer"/>
 
@@ -130,7 +131,7 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titlelabel;
    xs:stringLabeluid;
-   xs:stringRecord identifiertitle;
+   aa:st__uidRecord identifiertitle;
    xs:stringTitledescription;
    xs:stringDescriptionfrequency;
    xs:stringFrequencyprov;
@@ -138,7 +139,7 @@
 <xs:complexType name="ct__miptable_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="frequency" type="xs:string"/>
 <xs:attribute name="prov" type="xs:string"/>
@@ -159,7 +160,7 @@
    xs:stringRecord Titlelabel;
    xs:stringCMOR Variable Nametitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord Identifiertitle;
+   aa:st__uidRecord Identifiertitle;
    xs:stringLong namestid;
    xs:stringLink to a record specifying the structure of the variable (dimensions and associated variable attributes).vid;
    xs:stringMIP Variablevalid_min;
@@ -187,7 +188,7 @@
 <xs:complexType name="ct__CMORvar_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="stid" type="xs:string"/>
 <xs:attribute name="vid" type="xs:string"/>
 <xs:attribute name="valid_min" type="xs:float"/>
@@ -228,13 +229,13 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord identifierdescription;
+   aa:st__uidRecord identifierdescription;
    xs:stringDescriptionmip;
    xs:stringEndorsed MIP</xs:documentation></xs:annotation>
 <xs:complexType name="ct__objective_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="mip" type="xs:string"/>
 
@@ -254,7 +255,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord Identifierdimensions;
+   aa:st__uidRecord Identifierdimensions;
    xs:stringList of spatial dimensionsdimids;
    aa:st__stringListIdentifiers for records in grids sectionshape;
    xs:stringShape - as used in input levels;
@@ -263,7 +264,7 @@
 <xs:complexType name="ct__spatialShape_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="dimensions" type="xs:string"/>
 <xs:attribute name="dimids" type="aa:st__stringList"/>
 <xs:attribute name="shape" type="xs:string"/>
@@ -286,7 +287,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord Identifiermip;
+   aa:st__uidRecord Identifiermip;
    xs:stringEndorsed MIP requesting the datatab;
    xs:stringRedundantobjective;
    xs:stringScience objectives associated with this requestgrid;
@@ -301,7 +302,7 @@
 <xs:complexType name="ct__requestLink_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="mip" type="xs:string"/>
 <xs:attribute name="tab" type="xs:string"/>
 <xs:attribute name="objective" type="xs:string"/>
@@ -330,7 +331,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord Identifiergpid;
+   aa:st__uidRecord Identifiergpid;
    xs:stringIdentifier for CMOR Tablesmip;
    xs:stringProjectref;
    xs:stringReferencerefNote;
@@ -338,7 +339,7 @@
 <xs:complexType name="ct__tableSection_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="gpid" type="xs:string"/>
 <xs:attribute name="mip" type="xs:string"/>
 <xs:attribute name="ref" type="xs:string"/>
@@ -360,7 +361,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord identifierMIPs;
+   aa:st__uidRecord identifierMIPs;
    xs:stringMIPs which make use of this featureusage;
    xs:stringHow the feature is relevant to the data requesttype;
    xs:stringType of modelrange;
@@ -368,7 +369,7 @@
 <xs:complexType name="ct__modelConfig_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_an"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="MIPs" type="xs:string"/>
 <xs:attribute name="usage" type="xs:string"/>
 <xs:attribute name="type" type="xs:string"/>
@@ -390,7 +391,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord identifiervid;
+   aa:st__uidRecord identifiervid;
    xs:stringVariablecfgid;
    xs:stringConfiguration Optioncfg;
    xs:booleanConfiguration Valuecid;
@@ -398,7 +399,7 @@
 <xs:complexType name="ct__varChoiceLinkC_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="vid" type="xs:string"/>
 <xs:attribute name="cfgid" type="xs:string"/>
 <xs:attribute name="cfg" type="xs:boolean"/>
@@ -420,13 +421,13 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord identifieroid;
+   aa:st__uidRecord identifieroid;
    xs:stringIdentifier for a scientific objectiverid;
    xs:stringIdentifier for a request link</xs:documentation></xs:annotation>
 <xs:complexType name="ct__objectiveLink_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="oid" type="xs:string"/>
 <xs:attribute name="rid" type="xs:string"/>
 
@@ -446,7 +447,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord identifiertid;
+   aa:st__uidRecord identifiertid;
    xs:stringTarget identifier: the record ID of the item this refers to.tattr;
    xs:stringTarget attribute: an attribute of the target item, or 'ALL'description;
    xs:stringFree text remarks -- unless there are specific restrictions associated with the class attribute of this remarkclass;
@@ -457,7 +458,7 @@
 <xs:complexType name="ct__remarks_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="tid" type="xs:string"/>
 <xs:attribute name="tattr" type="xs:string"/>
 <xs:attribute name="description" type="xs:string"/>
@@ -482,7 +483,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord identifierdescription;
+   aa:st__uidRecord identifierdescription;
    xs:stringDescriptionegid;
    xs:stringIdentifier for experiment groupmip;
    xs:stringMIP defining experimentmcfg;
@@ -498,7 +499,7 @@
 <xs:complexType name="ct__experiment_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="egid" type="xs:string"/>
 <xs:attribute name="mip" type="xs:string"/>
@@ -528,7 +529,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord identifierpriority;
+   aa:st__uidRecord identifierpriority;
    xs:integerVariable priorityvid;
    xs:stringIdentifier for MIP Output Variablevgid;
    xs:stringIdentifier for Variable Groupmip;
@@ -536,7 +537,7 @@
 <xs:complexType name="ct__requestVar_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="priority" type="xs:integer"/>
 <xs:attribute name="vid" type="xs:string"/>
 <xs:attribute name="vgid" type="xs:string"/>
@@ -558,13 +559,13 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringCF Standard Namedescription;
+   aa:st__uidCF Standard Namedescription;
    xs:stringRecord Descriptionunits;
    xs:stringCanonical Units</xs:documentation></xs:annotation>
 <xs:complexType name="ct__standardname_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_an"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="units" type="xs:string"/>
 
@@ -584,14 +585,14 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord identifiervid;
+   aa:st__uidRecord identifiervid;
    xs:stringVariablecid;
    xs:stringChoicerank;
    xs:integerFor ranked choices, the rank of this variable (higher rank makes lower ranks redundant)</xs:documentation></xs:annotation>
 <xs:complexType name="ct__varChoiceLinkR_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="vid" type="xs:string"/>
 <xs:attribute name="cid" type="xs:string"/>
 <xs:attribute name="rank" type="xs:integer"/>
@@ -618,7 +619,7 @@
    aa:st__stringListProcessing notesprocComment;
    xs:stringProcessing commentsprov;
    xs:stringProvenanceuid;
-   xs:stringRecord identifierprovmip;
+   aa:st__uidRecord identifierprovmip;
    xs:stringMIP defining this variablesunid;
    xs:stringLink to Units section</xs:documentation></xs:annotation>
 <xs:complexType name="ct__var_vocabItem">
@@ -630,7 +631,7 @@
 <xs:attribute name="procnote" type="aa:st__stringList"/>
 <xs:attribute name="procComment" type="xs:string"/>
 <xs:attribute name="prov" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="provmip" type="xs:string"/>
 <xs:attribute name="unid" type="xs:string"/>
 
@@ -650,13 +651,13 @@
    xs:stringRecord Titlelabel;
    xs:stringMIP short nametitle;
    xs:stringMIP titleuid;
-   xs:stringRecord identifierdescription;
+   aa:st__uidRecord identifierdescription;
    xs:stringDescription of the Model Intercomparison Projecturl;
    xs:stringProject Home Page</xs:documentation></xs:annotation>
 <xs:complexType name="ct__mip_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="url" type="xs:string"/>
 
@@ -676,7 +677,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord identifierclass;
+   aa:st__uidRecord identifierclass;
    xs:stringClass of choice: heirarchy|cfgdescription;
    xs:stringRecord descriptionvarList;
    xs:stringA colon separated list of variable namesoptionList;
@@ -684,7 +685,7 @@
 <xs:complexType name="ct__varChoice_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="class" type="xs:string"/>
 <xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="varList" type="xs:string"/>
@@ -706,14 +707,14 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord Identifierdimid;
+   aa:st__uidRecord Identifierdimid;
    xs:stringIdentifiers for record in grids sectiondimensions;
    xs:stringDimensionsdescription;
    xs:stringDescription</xs:documentation></xs:annotation>
 <xs:complexType name="ct__temporalShape_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="dimid" type="xs:string"/>
 <xs:attribute name="dimensions" type="xs:string"/>
 <xs:attribute name="description" type="xs:string"/>
@@ -734,7 +735,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord Identifierspid;
+   aa:st__uidRecord Identifierspid;
    xs:stringSpatial Shapetmid;
    xs:stringTemporal Shapeodims;
    xs:stringOther Dimensionsdids;
@@ -752,7 +753,7 @@
 <xs:complexType name="ct__structure_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="spid" type="xs:string"/>
 <xs:attribute name="tmid" type="xs:string"/>
 <xs:attribute name="odims" type="xs:string"/>
@@ -783,7 +784,7 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titletables;
    xs:stringCMOR table(s)uid;
-   xs:stringIdentifierlabel;
+   aa:st__uidIdentifierlabel;
    xs:stringCMOR dimensionaltLabel;
    xs:stringoutput dimension namedescription;
    xs:stringdescriptionstandardName;
@@ -809,7 +810,7 @@
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="tables" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="altLabel" type="xs:string"/>
 <xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="standardName" type="xs:string"/>
@@ -850,7 +851,7 @@
    xs:floatStep (years)sliceLen;
    xs:integerLength of slicenyears;
    xs:floatTotal number of yearsuid;
-   xs:stringUnique identifier</xs:documentation></xs:annotation>
+   aa:st__uidUnique identifier</xs:documentation></xs:annotation>
 <xs:complexType name="ct__timeSlice_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -860,7 +861,7 @@
 <xs:attribute name="step" type="xs:float"/>
 <xs:attribute name="sliceLen" type="xs:integer"/>
 <xs:attribute name="nyears" type="xs:float"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">cellMethods: Complex Type declaration
@@ -878,12 +879,12 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord Identifiercell_methods;
+   aa:st__uidRecord Identifiercell_methods;
    xs:stringCell Methods String</xs:documentation></xs:annotation>
 <xs:complexType name="ct__cellMethods_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="cell_methods" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
@@ -903,12 +904,12 @@
    xs:stringLabeltitle;
    xs:stringTitledescription;
    xs:stringDescriptionuid;
-   xs:stringIdentifier</xs:documentation></xs:annotation>
+   aa:st__uidIdentifier</xs:documentation></xs:annotation>
 <xs:complexType name="ct__tags_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="description" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">varRelations: Complex Type declaration
@@ -927,13 +928,13 @@
    xs:stringLabeltitle;
    xs:stringTitledescription;
    xs:stringDescriptionuid;
-   xs:stringIdentifierrelation;
+   aa:st__uidIdentifierrelation;
    xs:stringRelationship</xs:documentation></xs:annotation>
 <xs:complexType name="ct__varRelations_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_und"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="description" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="relation" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
@@ -952,13 +953,13 @@
    xs:stringRecord Titlelabel;
    xs:stringLabeltitle;
    xs:stringTitleuid;
-   xs:stringIdentifierrlid;
+   aa:st__uidIdentifierrlid;
    xs:stringRelationshiprid;
    xs:stringRecord</xs:documentation></xs:annotation>
 <xs:complexType name="ct__varRelLnk_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_und"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="rlid" type="xs:string"/>
 <xs:attribute name="rid" type="xs:string"/>
 

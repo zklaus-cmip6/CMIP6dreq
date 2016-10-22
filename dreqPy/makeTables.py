@@ -466,7 +466,7 @@ class makeJs(object):
         d = locals()
         for k in ['sn','ln','u','var','d']:
     
-          if  d[k].fin( '"' ) != -1:
+          if  d[k].find( '"' ) != -1:
             print ( "WARNING ... quote in %s .. %s [%s]" % (k,var,d[k]) )
             d[k] =  d[k].replace( '"', "'" )
             print ( d[k] )

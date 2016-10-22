@@ -430,7 +430,7 @@ class dreqItemBase(object):
                  v = tuple( v.split() )
                else:
                  v = (v,)
-             elif self._a[a].type not in [u'xs:string']:
+             elif self._a[a].type not in [u'xs:string', u'aa:st__uid']:
                print ('ERROR: Type %s not recognised [%s:%s]' % (self._a[a].type,self._h.label,a) )
 
              if erase:
