@@ -904,7 +904,7 @@ class dreqQuery(object):
       assert type(exptFilter) == type( set() ), 'Argument exptFilter must be None or a set: %s' % str(exptFilter)
     l1,ee = self.rvgByMip( mip, includePreset=True, returnLinks=True )
     if includeYears:
-      expys = self.exptYears( l1 )
+      expys = self.exptYears( l1, ex=exptFilter )
       cc = collections.defaultdict( set )
     ss = set()
     for pr in ee:
@@ -1557,6 +1557,20 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       mlab = makeTables.setMlab( self.adict['m'] )
     assert ok,'Available MIPs: %s' % str(self.sc.mips)
 
+    eid = None
+    ex = None
+    if 'e' in self.adict:
+      ex = self.adict['e']
+      if ex in self.sc.mips:
+        eid = set( self.dq.inx.iref_by_sect[ex].a['experiment'] )
+        self.sc.exptFilter = eid
+      else:
+        for i in self.dq.coll['experiment'].items:
+          if i.label == self.adict['e']:
+            eid = i.uid
+        assert eid != None, 'Experiment/MIP %s not found' % self.adict['e']
+        self.sc.exptFilter = set( [eid,] )
+
     if 'sf' in self.adict:
       import volsum
       vs = volsum.vsum( self.sc, odsz, npy, odir=xlsOdir )
@@ -1567,15 +1581,6 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       mlg.prnt( 'TOTAL volume: %8.2fTb' % ttl )
       return
 
-
-    eid = None
-    ex = None
-    if 'e' in self.adict:
-      ex = self.adict['e']
-      for i in self.dq.coll['experiment'].items:
-        if i.label == self.adict['e']:
-          eid = i.uid
-      assert eid != None, 'Experiment %s not found' % self.adict['e']
 
     adsCount = self.adict.get( 'count', False )
 
