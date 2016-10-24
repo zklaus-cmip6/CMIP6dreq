@@ -63,7 +63,6 @@ class vsum(object):
       self.infoRows.append( ll )
     ii.close()
 
-
   def analAll(self,pmax):
       volsmm={}
       volsmmt={}
