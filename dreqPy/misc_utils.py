@@ -299,7 +299,7 @@ class xlsTabs_xxxx(object):
     self.mips = ['AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
     self.mipsp = ['DECK','CMIP6',] + self.mips[:-4]
 
-    self.tabs = makeTables.tables( sc, self.mips, xls=xls, txt=txt, txtOpts=txtOpts, odir=odir )
+    self.tabs = makeTables.tables( sc, xls=xls, txt=txt, txtOpts=txtOpts, odir=odir )
 
   def run(self,m,colCallback=None,verb=False,mlab=None,exid=None):
       if m == 'TOTAL':
