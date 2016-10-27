@@ -1267,8 +1267,11 @@ class dreqQuery(object):
     #### The set of experiments/experiment groups:
     if exptid == None:
       exps = self.experiments
-    else:
+    elif type( exptid ) == type(''):
       exps = set( [exptid,] )
+    else:
+      assert type( exptid ) == type( set() ),'exptid arg to volByMip must be None, string or set: %s' % type( exptid )
+      exps = exptid
     
     self.volByE = {}
     vtot = 0
@@ -1561,7 +1564,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     ex = None
     if 'e' in self.adict:
       ex = self.adict['e']
-      if ex in self.sc.mips:
+      if ex in self.sc.mipsp:
         eid = set( self.dq.inx.iref_by_sect[ex].a['experiment'] )
         self.sc.exptFilter = eid
       else:
