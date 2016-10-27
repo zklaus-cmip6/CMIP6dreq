@@ -1,8 +1,14 @@
 scr = __name__ == '__main__'
-if scr:
+try:
   from __init__ import DOC_DIR
-else:
-  from .__init__ import DOC_DIR
+except:
+  from dreqPy.__init__ import DOC_DIR
+##if scr:
+  ##from __init__ import DOC_DIR
+##else:
+  ##from . import __init__
+  ##DOC_DIR = __init__.DOC_DIR
+
 import string, os, sys, collections
 
 try:
@@ -82,26 +88,26 @@ class checkbase(object):
        
 class check1(checkbase):
   def _ch01_importDreq(self):
-    if scr:
+    try:
       import dreq
-    else:
+    except:
       from . import dreq
     print ( 'Dreq software import checked' )
     self.ok = True
 
   def _ch02_importSample(self):
-    if scr:
+    try:
       import dreq
-    else:
+    except:
       from . import dreq
     self.dq = dreq.loadDreq( manifest='%s/dreqManifest.txt' % self.docdir  )
     print ( 'Dreq sample load checked' )
     self.ok = True
 
   def _ch03_linkCheck(self):
-    if scr:
+    try:
       import dreq
-    else:
+    except:
       from . import dreq
 
     nn = 0
