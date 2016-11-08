@@ -463,7 +463,8 @@ class dreqQuery(object):
                   thisns = this[-3]
                   thisny = this[-2]
                   thisne = this[-1]
-                  cc[ (rl.refid,e,grd) ].add( filter1( thisns*thisny*thisne, i.nymax) )
+                  ##cc[ (rl.refid,e,grd) ].add( filter1( thisns*thisny*thisne, i.nymax) )
+                  cc[ (rl.refid,e,grd) ].add( thisns*thisny*thisne )
     ee = collections.defaultdict( dict )
 
     revertToLast = True

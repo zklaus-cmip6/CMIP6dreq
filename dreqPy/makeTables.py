@@ -599,7 +599,6 @@ class tables(object):
       self.doXls = xls
       self.doTxt = txt
       self.txtOpts = txtOpts
-      self.odir = 'vs-xls'
 
   def accReset(self):
     self.acc = [0.,collections.defaultdict(int),collections.defaultdict( float ) ]
