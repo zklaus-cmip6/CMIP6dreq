@@ -1,11 +1,19 @@
 
-import scope
-import dreq
 import xlsxwriter
 from xlsxwriter.utility import xl_rowcol_to_cell
 import collections, os
-import makeTables
-import overviewTabs
+
+try:
+  import dreq
+
+  import scope
+  import makeTables
+  import overviewTabs
+except:
+  import dreqPy.dreq as dreq
+  import dreqPy.scope as scope
+  import dreqPy.makeTables as makeTables
+  import dreqPy.overviewTabs as overviewTabs
 
 ###cell = xl_rowcol_to_cell(1, 2)  # C2
  
