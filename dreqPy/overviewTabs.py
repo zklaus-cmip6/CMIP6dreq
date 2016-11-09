@@ -4,11 +4,9 @@ import xlsxwriter
 
 try:
   import dreq
-  import scope
   import makeTables
 except:
   import dreqPy.dreq as dreq
-  import dreqPy.scope as scope
   import dreqPy.makeTables as makeTables
 
 jsh='''
