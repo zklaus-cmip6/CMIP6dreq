@@ -1,6 +1,5 @@
 
 import collections, os, sys
-import volsum
 
 nt__charmeEnable = collections.namedtuple( 'charme', ['id','site'] )
 
@@ -9,7 +8,9 @@ try:
   import vrev
   import misc_utils
   import rvgExtraTable
+  import volsum
 except:
+  import dreqPy.volsum as volsum
   import dreqPy.dreq as dreq
   import dreqPy.vrev as vrev
   import dreqPy.misc_utils as misc_utils
