@@ -43,8 +43,9 @@ class xlsx(object):
       self.wb.close()
 
 class vsum(object):
-  def __init__(self,sc,odsz,npy,makeTab,exptFilter=None, odir='xls'):
+  def __init__(self,sc,odsz,npy,makeTab,mt_tables,exptFilter=None, odir='xls'):
     self.makeTab = makeTab
+    self.mt_tables = mt_tables
     idir = dreq.DOC_DIR
     self.sc = sc
     self.odsz=odsz
@@ -88,7 +89,7 @@ class vsum(object):
         if m == 'TOTAL':
           cmvTotal = self.sc.selectedCmv.copy()
           self.uniqueCmv =  {}
-      r1 = overviewTabs.r1( self.sc, pmax=pmax, vols=( volsmm, volsme, volsmmt,volsue ) )
+      r1 = overviewTabs.r1( self.sc, self.mt_tables, pmax=pmax, vols=( volsmm, volsme, volsmmt,volsue ) )
 
   def _analSelectedCmv(self,cmv):
     lex = collections.defaultdict( list )
