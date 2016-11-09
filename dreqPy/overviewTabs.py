@@ -283,6 +283,10 @@ class r1(object):
 
 
 if __name__ == "__main__":
+  try:
+    import scope
+  except:
+    import dreqPy.scope as scope
   sc = scope.dreqQuery()
   r = r1( sc, tiermax=1, pmax=1 )
   r = r1( sc, tiermax=3, pmax=3 )
