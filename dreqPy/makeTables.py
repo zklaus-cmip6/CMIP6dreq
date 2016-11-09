@@ -590,6 +590,22 @@ class styles(object):
     nlnk = len(targ._inx.iref_by_sect[targ.uid].a['requestLink'])
     return '<li>%s {%s}: %s variables, %s request links</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.mip, gpsz, nlnk )
 
+def obsolete_getTable(sc,m,m2,pmax,odsz,npy,odir='d1',txt=False,xls=False,txtOpts=None):
+     """replaces tables.getTable( self, m,m2,pmax,odsz,npy)"""
+##
+## this creates a new instance, and calls doTable ....
+## very messy ...
+##
+     vs = volsum.vsum( sc, odsz, npy, makeTab, tables )
+     mlab = setMlab( m )
+     vs.run( m, 'requestVol_%s_%s_%s' % (mlab,sc.tierMax,pmax), pmax=pmax )
+
+
+## collected=summed volumes by table for first page.
+     makeTab( sc.dq, subset=vs.thiscmvset, dest='%s/%s-%s_%s_%s' % (odir,mlab,mlab2,sc.tierMax,pmax), collected=collector[kkc].a,
+              mcfgNote=sc.mcfgNote,
+              txt=doTxt, xls=doXls, txtOpts=txtOpts )
+
 class tables(object):
   def __init__(self,sc, odir='xls',xls=True,txt=False,txtOpts=None):
       self.sc = sc
@@ -610,16 +626,6 @@ class tables(object):
        self.acc[2][k] += x[2][k]
 
 
-  def getTable(self,m,m2,pmax,odsz,npy):
-     vs = volsum.vsum( self.sc, odsz, npy, makeTab )
-     mlab = setMlab( m )
-     vs.run( m, 'requestVol_%s_%s_%s' % (mlab,self.sc.tierMax,pmax), pmax=pmax )
-
-
-## collected=summed volumes by table for first page.
-     makeTab( self.sc.dq, subset=vs.thiscmvset, dest='%s/%s-%s_%s_%s' % (self.odir,mlab,mlab2,self.sc.tierMax,pmax), collected=collector[kkc].a,
-              mcfgNote=self.sc.mcfgNote,
-              txt=self.doTxt, xls=self.doXls, txtOpts=self.txtOpts )
   def doTable(self,m,l1,m2,pmax,collector,acc=True, mlab=None,exptids=None,cc=None):
       """*acc* allows accumulation of values to be switched off when called in single expt mode"""
       

@@ -1537,15 +1537,15 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     if 'SF' in self.adict:
       import volsum
       self.sc.gridPolicyDefaultNative = True
-      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, odir=xlsOdir )
+      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir )
       vs.analAll(pmax)
 
       self.sc.gridPolicyDefaultNative = False
-      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, odir=xlsOdir )
+      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir )
       vs.analAll(pmax)
 
       self.sc.setTierMax( 3 )
-      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, odir=xlsOdir )
+      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir )
       vs.analAll(3)
       return
 

@@ -4,10 +4,8 @@ import xlsxwriter
 
 try:
   import dreq
-  import makeTables
 except:
   import dreqPy.dreq as dreq
-  import dreqPy.makeTables as makeTables
 
 jsh='''
 <link type="text/css" href="/css/dreq.css" rel="Stylesheet" />
@@ -38,7 +36,8 @@ class c2(object):
 
 hmap0 = {'CMIP6':'Historical'}
 class r1(object):
-  def __init__(self,sc,tiermax=1,pmax=1,only=False,vols=None,fnm='new'):
+  def __init__(self,sc,mt_tables,tiermax=1,pmax=1,only=False,vols=None,fnm='new'):
+    self.mt_tables = mt_tables
 
     self.fnm = fnm
     assert vols == None or type(vols) == type( () ), 'vols argument must be none or tuple of length 2: %s' % type(vols)
@@ -92,7 +91,7 @@ class r1(object):
 
     self.tiermax=tiermax
     sc.setTierMax( tiermax )
-    tabs = makeTables.tables( sc )
+    tabs = self.mt_tables( sc )
 
     mipsToDo = self.mips + ['TOTAL',]
     assert 'SolarMIP' not in mipsToDo, 'SolarMIP error: %s ' % str(mipsToDo)
@@ -282,9 +281,11 @@ class r1(object):
 
 if __name__ == "__main__":
   try:
+    import makeTables
     import scope
   except:
     import dreqPy.scope as scope
+    import dreqPy.makeTables as makeTables
   sc = scope.dreqQuery()
-  r = r1( sc, tiermax=1, pmax=1 )
-  r = r1( sc, tiermax=3, pmax=3 )
+  r = r1( sc, makeTables.tables, tiermax=1, pmax=1 )
+  r = r1( sc, makeTables.tables, tiermax=3, pmax=3 )
