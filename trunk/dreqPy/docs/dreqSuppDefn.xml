@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<defDoc 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="urn:w3id.org:cmip6.dreq.framework:a"
+xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd">
+<table label="qcranges" uid="SECTION:qcranges" title="Quality Control Ranges" id="" itemLabelMode="def" level="9" maxOccurs="1" labUnique="Yes" description="Data ranges for use in quality control">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="2f074f58-346f-11e6-8118-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="2f079698-346f-11e6-8118-5404a60d96b5" required="True"/>
+  <rowAttribute label="uid" type="xs:string" title="Record identifier" useClass="recordId" techNote="" description="" uid="2f07e490-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="" useClass="" techNote="" description="" uid="2f0833e6-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="2f087d56-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="url" type="xs:string" title="Link to review page" useClass="" techNote="" description="Link to a web page providing background information." uid="2f088670-346f-11e6-8118-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="comment" type="xs:string" title="" useClass="" techNote="" description="" uid="2f08897c-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="prov" type="xs:string" title="" useClass="" techNote="" description="" uid="2f088c60-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="vid" type="xs:string" title="Variable" useClass="internalLink" techNote="" description="Link to variable record" uid="2f088f44-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="valid_min" type="xs:float" title="Minimum expected value for this variable." useClass="" techNote="" description="The minimum expected value will be used, if set, in quality control tests, and files containing data values below this value will be marked as containing errors." uid="2f089278-346f-11e6-8118-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="valid_max" type="xs:float" title="Maximum expected value for this variable." useClass="" techNote="" description="The maximum expected value will be used, if set, in quality control tests, and files containing data values above this value will be marked as containing errors." uid="2f08955c-346f-11e6-8118-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="ok_min_mean_abs" type="xs:float" title="Minimum expected value of the mean absolute value at each point in time" useClass="" techNote="" description="This value, if set, will be used  in quality control tests, and files containing data values above this value will be marked as containing errors." uid="2f089868-346f-11e6-8118-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="ok_max_mean_abs" type="xs:float" title="Maximum expected value of the mean absolute value at each point in time" useClass="" techNote="" description="This value, if set, will be used  in quality control tests, and files containing data values above this value will be marked as containing errors." uid="2f089b60-346f-11e6-8118-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="valid_min_status" type="xs:string" title="Status of valid_min" useClass="" techNote="" description="Indicates the degree of confidence in the valid_min value provided." uid="2f089e12-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="valid_max_status" type="xs:string" title="Status of valid_max" useClass="" techNote="" description="" uid="2f08a0e2-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="ok_min_mean_abs_status" type="xs:string" title="Status of ok_min_mean_abs" useClass="" techNote="" description="" uid="2f08a380-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="ok_max_mean_abs_status" type="xs:string" title="Status of ok_mx_mean_abs" useClass="" techNote="" description="" uid="2f08a632-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+</table>
+<table label="places" uid="SECTION:places" title="Places, States or Reservoirs" id="" itemLabelMode="def" level="10" maxOccurs="1" labUnique="Yes" description="An abstract entity defining an extensive quantity of something, e.g. liquid water, suspended carbon.">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="2f08b38e-346f-11e6-8118-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="2f08b5f0-346f-11e6-8118-5404a60d96b5" required="True"/>
+  <rowAttribute label="uid" type="xs:string" title="" useClass="" techNote="" description="" uid="2f08b82a-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="" useClass="" techNote="" description="" uid="2f08bab4-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="2f08bd34-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="matter" type="xs:string" title="Substance " useClass="internalLink" techNote="" description="" uid="2f08bfe6-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="mip" type="xs:string" title="" useClass="internalLink" techNote="" description="" uid="2f08c270-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="vid" type="xs:string" title="" useClass="internalLink" techNote="" description="" uid="2f08c4f0-346f-11e6-8118-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="pid" type="xs:string" title="Parent Entity" useClass="internalLink" techNote="" description="A place, state or reservoir containing this one." uid="2f08c798-346f-11e6-8118-5404a60d96b5" superclass="" required="false"/>
+</table>
+<table label="transfers" uid="SECTION:transfers" title="Transfers of Material" id="" itemLabelMode="def" level="11" maxOccurs="1" labUnique="Yes" description="Quantities expressing the transfer of material from one 'place' to another.">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="2f08cebe-346f-11e6-8118-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="2f08d0bc-346f-11e6-8118-5404a60d96b5" required="True"/>
+  <rowAttribute label="uid" type="xs:string" title="" useClass="" techNote="" description="" uid="2f08d2b0-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="" useClass="" techNote="" description="" uid="2f08d4d6-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="2f08d706-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="frid" type="xs:string" title="" useClass="internalLink" techNote="" description="Identifier of the 'place' that the flux is from." uid="2f08d922-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="toid" type="xs:string" title="" useClass="internalLink" techNote="" description="Identifier of the 'place' that the flux is to." uid="2f08db5c-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="isOneWay" type="xs:boolean" title="" useClass="" techNote="" description="Set true if the flux is associated with a physical process which only transfers mass in one direction. E.g. " uid="2f08ddaa-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="signInverted" type="xs:boolean" title="" useClass="" techNote="" description="Sign Inverted should be set True for one way fluxes if the variable is defined to be negative definite. The competing constraints of CF Standard Name protocols and domain usage can cuase problems with the sign convention." uid="2f08dfe4-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="mip" type="xs:string" title="" useClass="internalLink" techNote="" description="" uid="2f08e232-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="vid" type="xs:string" title="" useClass="internalLink" techNote="" description="Identifier of the 'CMORvar' associated with the flux." uid="2f08e46c-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+</table>
+<table label="units" uid="SECTION:units" title="Units" id="" itemLabelMode="def" level="12" maxOccurs="1" labUnique="Yes" description="The units of the parameters in the var section">
+  <rowAttribute label="label" type="xs:string" title="Record Label" uid="2f08eb2e-346f-11e6-8118-5404a60d96b5" required="True"/>
+  <rowAttribute label="title" type="xs:string" title="Record Title" uid="2f08ed18-346f-11e6-8118-5404a60d96b5" required="True"/>
+  <rowAttribute label="uid" type="xs:string" title="" useClass="" techNote="" description="" uid="2f08ef02-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="label" type="xs:string" title="" useClass="" techNote="" description="" uid="2f08f11e-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="title" type="xs:string" title="" useClass="" techNote="" description="" uid="2f08f344-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+  <rowAttribute label="group" type="xs:string" title="" useClass="" techNote="" description="" uid="2f08f56a-346f-11e6-8118-5404a60d96b5" superclass="" required="false"/>
+  <rowAttribute label="text" type="xs:string" title="Text representation of units" useClass="" techNote="" description="Plain text representation with no special characters" uid="2f08f790-346f-11e6-8118-5404a60d96b5" superclass="" required=""/>
+</table>
+</defDoc>
