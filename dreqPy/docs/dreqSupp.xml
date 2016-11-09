@@ -1,11 +1,11 @@
 <?xml version="1.0" ?>
 <document xmlns="urn:w3id.org:cmip6.dreq.dreq:a" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:pav="http://purl.org/pav/2.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="out/dreqSchema.xsd">
 <prologue>
-<dc:title>CMIP6 Data Request Supplement [01.beta.40]</dc:title>
+<dc:title>CMIP6 Data Request Supplement [01.beta.41]</dc:title>
 <dc:description>The CMIP6 Data Request will specify the variables requested for the CMIP6 archive, and the detail the experiments and time slices for which they are required.</dc:description>
 <dc:creator>Martin Juckes</dc:creator>
 <dc:date>2016-11-09</dc:date>
-<pav:version>01.beta.40</pav:version>
+<pav:version>01.beta.41</pav:version>
 </prologue>
 <main>
 <qcranges id="" label="qcranges" title="Quality Control Ranges" uid="SECTION:qcranges" useClass="vocab">
