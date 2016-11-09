@@ -250,7 +250,7 @@ class dreqQuery(object):
         for k in szr:
           self.szg[k][i.uid] = self.szgss[k][i.spid]*s
       else:
-        print ('WARNING: spid has no size info: %s' % i.spid )
+        print ('WARNING: spid has no size info: %s [%s]' % (i.spid,i.uid) )
         self.sz[i.uid] = 0.
         for k in szr:
           self.szg[k][i.uid] = 0.
@@ -463,7 +463,8 @@ class dreqQuery(object):
                   thisns = this[-3]
                   thisny = this[-2]
                   thisne = this[-1]
-                  cc[ (rl.refid,e,grd) ].add( filter1( thisns*thisny*thisne, i.nymax) )
+                  ##cc[ (rl.refid,e,grd) ].add( filter1( thisns*thisny*thisne, i.nymax) )
+                  cc[ (rl.refid,e,grd) ].add( thisns*thisny*thisne )
     ee = collections.defaultdict( dict )
 
     revertToLast = True
