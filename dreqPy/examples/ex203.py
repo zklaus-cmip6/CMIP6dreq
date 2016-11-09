@@ -15,6 +15,7 @@ else:
   from dreqPy import scope
 
 sc = scope.dreqQuery()
+print ('DREQ VERSION: %s' % str(sc.dq.version) )
 
 ## set bytes per floating point number to be 2, assuming 50% compression
 bytesPerFloat = 2.

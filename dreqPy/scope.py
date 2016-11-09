@@ -250,7 +250,7 @@ class dreqQuery(object):
         for k in szr:
           self.szg[k][i.uid] = self.szgss[k][i.spid]*s
       else:
-        print ('WARNING: spid has no size info: %s' % i.spid )
+        print ('WARNING: spid has no size info: %s [%s]' % (i.spid,i.uid) )
         self.sz[i.uid] = 0.
         for k in szr:
           self.szg[k][i.uid] = 0.
