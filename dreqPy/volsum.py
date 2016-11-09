@@ -1,11 +1,14 @@
 
-import scope
-import dreq
 import xlsxwriter
 from xlsxwriter.utility import xl_rowcol_to_cell
 import collections, os
-import makeTables
-import overviewTabs
+
+try:
+  import dreq
+  import overviewTabs
+except:
+  import dreqPy.dreq as dreq
+  import dreqPy.overviewTabs as overviewTabs
 
 ###cell = xl_rowcol_to_cell(1, 2)  # C2
  
@@ -40,7 +43,8 @@ class xlsx(object):
       self.wb.close()
 
 class vsum(object):
-  def __init__(self,sc,odsz,npy,exptFilter=None, odir='xls'):
+  def __init__(self,sc,odsz,npy,makeTab,exptFilter=None, odir='xls'):
+    self.makeTab = makeTab
     idir = dreq.DOC_DIR
     self.sc = sc
     self.odsz=odsz
@@ -176,12 +180,12 @@ class vsum(object):
           cct[t] += cc[m][t]
         ss = ss.union( lm[m] )
         if makeTabs:
-          makeTables.makeTab(self.sc.dq, subset=lm[m], dest='%s/cmvmm_%s_%s_%s_%s%s' % (self.odir,olab,m,self.sc.tierMax,self.pmax,self.efnsfx), collected=cc[m])
+          self.makeTab(self.sc.dq, subset=lm[m], dest='%s/cmvmm_%s_%s_%s_%s%s' % (self.odir,olab,m,self.sc.tierMax,self.pmax,self.efnsfx), collected=cc[m])
 
     if olab != None and makeTabs:
-        makeTables.makeTab(self.sc.dq, subset=ss, dest='%s/cmvmm_%s_%s_%s_%s%s' % (self.odir,olab,'TOTAL',self.sc.tierMax,self.pmax,self.efnsfx), collected=cct)
+        self.makeTab(self.sc.dq, subset=ss, dest='%s/cmvmm_%s_%s_%s_%s%s' % (self.odir,olab,'TOTAL',self.sc.tierMax,self.pmax,self.efnsfx), collected=cct)
         if olab != 'TOTAL' and doUnique:
-          makeTables.makeTab(self.sc.dq, subset=s_lm, dest='%s/cmvmm_%s_%s_%s_%s%s' % (self.odir,olab,'Unique',self.sc.tierMax,self.pmax,self.efnsfx), collected=s_cc)
+          self.makeTab(self.sc.dq, subset=s_lm, dest='%s/cmvmm_%s_%s_%s_%s%s' % (self.odir,olab,'Unique',self.sc.tierMax,self.pmax,self.efnsfx), collected=s_cc)
 
     cc = collections.defaultdict( dict )
     ucc = collections.defaultdict( dict )
@@ -191,7 +195,7 @@ class vsum(object):
     for e in sorted( ve.keys() ):
       if olab != None and makeTabs:
         el = self.sc.dq.inx.uid[e].label
-        makeTables.makeTab(self.sc.dq, subset=lex[e], dest='%s/cmvme_%s_%s_%s_%s%s' % (self.odir,olab,el,self.sc.tierMax,self.pmax,self.efnsfx), collected=cc[e])
+        self.makeTab(self.sc.dq, subset=lex[e], dest='%s/cmvme_%s_%s_%s_%s%s' % (self.odir,olab,el,self.sc.tierMax,self.pmax,self.efnsfx), collected=cc[e])
 
     if olab != 'TOTAL' and doUnique:
       for e,t in s_vet:
@@ -199,7 +203,7 @@ class vsum(object):
       for e in sorted( uve.keys() ):
         if olab != None and makeTabs:
           el = self.sc.dq.inx.uid[e].label
-          makeTables.makeTab(self.sc.dq, subset=s_lex[e], dest='%s/cmvume_%s_%s_%s_%s%s' % (self.odir,olab,el,self.sc.tierMax,self.pmax,self.efnsfx), collected=ucc[e])
+          self.makeTab(self.sc.dq, subset=s_lex[e], dest='%s/cmvume_%s_%s_%s_%s%s' % (self.odir,olab,el,self.sc.tierMax,self.pmax,self.efnsfx), collected=ucc[e])
 
     self.res = { 'vmt':vmt, 'vet':vet, 'vm':vm, 'uve':uve, 've':ve, 'lm':lm, 'lex':lex, 'vu':vu, 'cc':cc, 'cct':cct}
     cc8 = collections.defaultdict( int )

@@ -611,7 +611,7 @@ class tables(object):
 
 
   def getTable(self,m,m2,pmax,odsz,npy):
-     vs = volsum.vsum( self.sc, odsz, npy )
+     vs = volsum.vsum( self.sc, odsz, npy, makeTab )
      mlab = setMlab( m )
      vs.run( m, 'requestVol_%s_%s_%s' % (mlab,self.sc.tierMax,pmax), pmax=pmax )
 
