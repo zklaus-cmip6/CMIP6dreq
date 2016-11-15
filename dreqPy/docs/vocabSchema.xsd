@@ -1,14 +1,20 @@
 <?xml version="1.0"?>
-<xs:schema xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:aa="urn:w3id.org:cmip6.dreq.dreq:a" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:a="urn:w3id.org:cmip6.dreq.framework:a" xmlns:xd="http://www.pnp-software.com/XSLTdoc" targetNamespace="urn:w3id.org:cmip6.dreq.dreq:a" elementFormDefault="qualified">
+<xs:schema xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:pav="http://purl.org/pav/2.3" xmlns:aa="urn:w3id.org:cmip6.dreq.dreq:a" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:a="urn:w3id.org:cmip6.dreq.framework:a" xmlns:xd="http://www.pnp-software.com/XSLTdoc" targetNamespace="urn:w3id.org:cmip6.dreq.dreq:a" elementFormDefault="qualified">
 <xs:import namespace="http://purl.org/dc/elements/1.1/" schemaLocation="dc1.xsd"/>
+<xs:import namespace="http://purl.org/pav/2.3" schemaLocation="pav.xsd"/>
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
        Some specialised string types
     </xs:documentation></xs:annotation>
+<xs:simpleType name="st__uid"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9:_.+-])+"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="st__attLabel_def"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9-])+"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="st__attLabel_und"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9_])+"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="st__attLabel_int"><xs:restriction base="xs:integer"/></xs:simpleType>
 <xs:simpleType name="st__attLabel_an"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9])+"/></xs:restriction></xs:simpleType>
-<xs:simpleType name="st__floatList"><xs:restriction base="aa:base__floatList"><xs:minLength value="0"/></xs:restriction></xs:simpleType><xs:simpleType name="base__floatList"><xs:list itemType="xs:float"/></xs:simpleType><xs:complexType name="ct__info" mixed="true"><xs:attribute name="srcType" type="xs:string"/><xs:attribute name="srcRef" type="xs:string"/></xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
+<xs:simpleType name="st__stringList"><xs:restriction base="aa:base__stringList"><xs:minLength value="0"/></xs:restriction></xs:simpleType><xs:simpleType name="base__stringList"><xs:list itemType="xs:string"/></xs:simpleType>
+<xs:simpleType name="st__integerList"><xs:restriction base="aa:base__integerList"><xs:minLength value="0"/></xs:restriction></xs:simpleType><xs:simpleType name="base__integerList"><xs:list itemType="xs:integer"/></xs:simpleType>
+<xs:simpleType name="st__integerListMonInc"><xs:restriction base="aa:st__integerList"/></xs:simpleType>
+<xs:simpleType name="st__floatList"><xs:restriction base="aa:base__floatList"><xs:minLength value="0"/></xs:restriction></xs:simpleType><xs:simpleType name="base__floatList"><xs:list itemType="xs:float"/></xs:simpleType>
+<xs:complexType name="ct__info" mixed="true"><xs:attribute name="srcType" type="xs:string"/><xs:attribute name="srcRef" type="xs:string"/></xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">institute: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__institute">
@@ -25,14 +31,14 @@
    xs:stringHome pageisni;
    xs:stringInternational Standard Name Identifier (ISO 27729)description;
    xs:stringuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__institute_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="url" type="xs:string"/>
 <xs:attribute name="isni" type="xs:string"/>
 <xs:attribute name="description" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">model: Complex Type declaration
@@ -52,7 +58,7 @@
    xs:stringaltUrl;
    xs:stringsource;
    xs:stringList of major model componentsuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__model_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -60,7 +66,7 @@
 <xs:attribute name="url" type="xs:string"/>
 <xs:attribute name="altUrl" type="xs:string"/>
 <xs:attribute name="source" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">physicsvers: Complex Type declaration
@@ -77,12 +83,12 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titledescription;
    xs:stringuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__physicsvers_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="description" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">initialisationmethod: Complex Type declaration
@@ -99,12 +105,12 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titledescription;
    xs:stringuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__initialisationmethod_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="description" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">modelComp: Complex Type declaration
@@ -123,14 +129,14 @@
    xs:stringsizeH;
    xs:stringsizeV;
    xs:stringuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__modelComp_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="componentType" type="xs:string"/>
 <xs:attribute name="sizeH" type="xs:string"/>
 <xs:attribute name="sizeV" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">activity: Complex Type declaration
@@ -148,14 +154,14 @@
    xs:stringRecord Titleurl;
    xs:stringstatus;
    xs:stringStatus and role within the CMIP6 processuid;
-   xs:stringproject;
+   aa:st__uidproject;
    xs:stringProject which is sponsoring the CMIP6 contribution, if applicable</xs:documentation></xs:annotation>
 <xs:complexType name="ct__activity_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="url" type="xs:string"/>
 <xs:attribute name="status" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="project" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
@@ -172,11 +178,11 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__product_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">experiment: Complex Type declaration
@@ -196,7 +202,7 @@
    xs:stringurl;
    xs:stringsponsor;
    xs:stringuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__experiment_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -204,7 +210,7 @@
 <xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="url" type="xs:string"/>
 <xs:attribute name="sponsor" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">frequency: Complex Type declaration
@@ -221,13 +227,13 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleiso;
    xs:stringuid;
-   xs:stringisClimatology;
+   aa:st__uidisClimatology;
    xs:booleanTrue if term is a climatology label</xs:documentation></xs:annotation>
 <xs:complexType name="ct__frequency_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="iso" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="isClimatology" type="xs:boolean"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
@@ -244,11 +250,11 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__realm_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">grid: Complex Type declaration
@@ -264,11 +270,11 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__grid_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">dimensions: Complex Type declaration
@@ -287,14 +293,14 @@
    xs:stringsn;
    xs:stringsize;
    xs:integeruid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__dimensions_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_an"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="altLabel" type="xs:string"/>
 <xs:attribute name="sn" type="xs:string"/>
 <xs:attribute name="size" type="xs:integer"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">forcings: Complex Type declaration
@@ -310,11 +316,11 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__forcings_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">table: Complex Type declaration
@@ -333,14 +339,14 @@
    xs:stringcomment;
    xs:stringfrequency;
    xs:stringuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__table_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="comment" type="xs:string"/>
 <xs:attribute name="frequency" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">cref: Complex Type declaration
@@ -357,11 +363,11 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titlelabel;
    xs:stringuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__cref_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">areaType: Complex Type declaration
@@ -378,12 +384,12 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord TitleinCF;
    xs:stringuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__areaType_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="inCF" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">timeSlice: Complex Type declaration
@@ -399,23 +405,29 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringtype;
+   aa:st__uidtype;
    xs:stringstart;
    xs:stringend;
    xs:stringstep;
    xs:stringsliceLen;
    xs:stringnyears;
+   xs:stringdescription;
+   xs:stringchild;
+   xs:stringitems;
    xs:string</xs:documentation></xs:annotation>
 <xs:complexType name="ct__timeSlice_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="type" type="xs:string"/>
 <xs:attribute name="start" type="xs:string"/>
 <xs:attribute name="end" type="xs:string"/>
 <xs:attribute name="step" type="xs:string"/>
 <xs:attribute name="sliceLen" type="xs:string"/>
 <xs:attribute name="nyears" type="xs:string"/>
+<xs:attribute name="description" type="xs:string"/>
+<xs:attribute name="child" type="xs:string"/>
+<xs:attribute name="items" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">modelFamily: Complex Type declaration
@@ -431,11 +443,11 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__modelFamily_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">priority: Complex Type declaration
@@ -452,12 +464,12 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titledescription;
    xs:stringuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__priority_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_int"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="description" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">qcLevel: Complex Type declaration
@@ -473,11 +485,11 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__qcLevel_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_int"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">complianceCode: Complex Type declaration
@@ -493,11 +505,11 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__complianceCode_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">glossary: Complex Type declaration
@@ -516,14 +528,14 @@
    xs:stringdescription;
    xs:stringurl;
    xs:stringuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__glossary_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="fullName" type="xs:string"/>
 <xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="url" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">modelCompType: Complex Type declaration
@@ -539,11 +551,11 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__modelCompType_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">modelType: Complex Type declaration
@@ -559,11 +571,11 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__modelType_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">index: Complex Type declaration
@@ -582,13 +594,13 @@
    xs:stringtitle;
    xs:stringdescription;
    xs:stringuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__index_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="table" type="xs:string"/>
 <xs:attribute name="description" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">cmorDimAttr: Complex Type declaration
@@ -605,13 +617,13 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titledescription;
    xs:stringuid;
-   xs:stringCMORattr;
+   aa:st__uidCMORattr;
    xs:stringCorresponding label in the CMOR MIP tables, if different</xs:documentation></xs:annotation>
 <xs:complexType name="ct__cmorDimAttr_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_und"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="description" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="CMORattr" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
@@ -629,12 +641,12 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titledescription;
    xs:stringuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__processingOptions_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_an"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="description" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">coordinateReference: Complex Type declaration
@@ -653,13 +665,13 @@
    xs:stringogc_wkt;
    xs:stringurl;
    xs:stringuid;
-   xs:string</xs:documentation></xs:annotation>
+   aa:st__uid</xs:documentation></xs:annotation>
 <xs:complexType name="ct__coordinateReference_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_an"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="ogc_wkt" type="xs:string"/>
 <xs:attribute name="url" type="xs:string"/>
-<xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="uid" type="aa:st__uid"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">modelConfig: Complex Type declaration
@@ -691,7 +703,7 @@
 </xs:complexType><xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
        This schema is automatically generated by xsltproc.
     </xs:documentation></xs:annotation>
-<xs:element name="document"><xs:complexType><xs:all><xs:element name="prologue"><xs:complexType><xs:group ref="dc:elementsGroup" maxOccurs="20"/></xs:complexType></xs:element><xs:element name="main"><xs:complexType><xs:all>
+<xs:element name="document"><xs:complexType><xs:all><xs:element name="prologue"><xs:complexType><xs:sequence><xs:group ref="dc:elementsGroup" maxOccurs="20"/><xs:group ref="pav:elementsGroup" maxOccurs="20"/></xs:sequence></xs:complexType></xs:element><xs:element name="main"><xs:complexType><xs:all>
 <!--[applying elem main] institute-->
 <xs:element name="institute" type="aa:ct__institute"/>
 <!--[applying elem main] model-->
@@ -751,9 +763,12 @@
 <!--[applying elem main] modelConfig-->
 <xs:element name="modelConfig" type="aa:ct__modelConfig"/>
 </xs:all></xs:complexType>
-<xs:unique name="uniqueIdentifierConstraint"><xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
+</xs:element>
+<xs:element name="annex"><xs:complexType><xs:all>
+</xs:all></xs:complexType>
+</xs:element>
+</xs:all></xs:complexType><xs:unique name="uniqueIdentifierConstraint"><xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
        The uniqueIdentifierConstraint imposes the condition that the uid attribute on "item" elements should have a unique value.
         </xs:documentation></xs:annotation>
 <xs:selector xpath=".//aa:item"/><xs:field xpath="@uid"/></xs:unique>
-</xs:element>
-</xs:all></xs:complexType></xs:element></xs:schema>
+</xs:element></xs:schema>

@@ -333,6 +333,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="startList" type="aa:st__integerList" title="Optional list of start times." useClass="" techNote="" description="If type is 'sliceListExt' a list of (month,day) pairs can be specified. E.g. '01 01 04 01 07 01 10 01' for first Jan, March etc." uid="ATTRIBUTE::timeSlice.startList" superclass="" required="false"/>
   <rowAttribute label="sliceLenUnit" type="xs:string" title="Units of slice length" useClass="" techNote="" description="" uid="ATTRIBUTE::timeSlice.sliceLenUnit" superclass="" required="false"/>
   <rowAttribute label="description" type="xs:string" title="Description" useClass="" techNote="" description="" uid="ATTRIBUTE::timeSlice.description" superclass="" required="false"/>
+  <rowAttribute label="child" type="xs:string" title="Child experiment" useClass="" techNote="" description="For type branchOffsetRange, the child attribute carries the name of the experiment which is branched. The time range is then specified in terms of the years in the child experiment." uid="ATTRIBUTE::timeSlice.child" superclass="" required="true"/>
 </table>
 <table label="cellMethods" uid="SECTION:cellMethods" title="7.1 Cell Methods" id="cmth" itemLabelMode="def" level="6" maxOccurs="1" labUnique="Yes" description="Description of cell methods entries">
   <rowAttribute label="label" type="xs:string" title="Record Label" description="Mnemonic label for record" uid="ATTRIBUTE::cellMethods.label" required="True"/>

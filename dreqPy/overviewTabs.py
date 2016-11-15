@@ -42,8 +42,8 @@ class r1(object):
     self.fnm = fnm
     assert vols == None or type(vols) == type( () ), 'vols argument must be none or tuple of length 2: %s' % type(vols)
     self.dq = sc.dq
-    self.mips = ['AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
-    self.mipsp = ['DECK','CMIP6',] + self.mips[:-4]
+    self.mips = ['CMIP','AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
+    self.mipsp = self.mips[:-4]
     self.sc = sc
     self.pmax=pmax
     self.efnsfx = ''
