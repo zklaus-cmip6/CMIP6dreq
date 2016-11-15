@@ -35,9 +35,10 @@ def main_entry():
         from . import simpleCheck
       print( "Starting test suite 2" )
       if scr:
-        import examples.ex203
+        import examples.ex203 as ex203
       else:
         from .examples import ex203
+      ex203.main( scope )
       print( "Tests completed" )
   else:
      x = scope.dreqUI(sys.argv[1:])

@@ -11,17 +11,12 @@ if len(sys.argv) > 1 and __name__ == '__main__':
   else:
     print ( 'Specified directory does not exist: %s' % sys.argv[1] )
     sys.exit(0)
-else:
-  from dreqPy import scope
-
-sc = scope.dreqQuery()
-print ('DREQ VERSION: %s' % str(sc.dq.version) )
 
 ## set bytes per floating point number to be 2, assuming 50% compression
 bytesPerFloat = 2.
 
 priorityMax = 3
-def runExample( priorityMax ):
+def runExample( sc, priorityMax ):
     ll = ['C4MIP','CFMIP','LUMIP']
     ee = {}
     ss = 0.
@@ -42,9 +37,16 @@ def runExample( priorityMax ):
     print ( 'Combined, tier 1 only:  %5.1fTb'  % z1 )
     print ( 'Combined, tier 1+2 only:  %5.1fTb'  % z2 )
 
-print ( '######### All variables ###########' )
-priorityMax = 3
-runExample( priorityMax )
-print ( '######### Top priority variables ###########' )
-priorityMax = 1
-runExample( priorityMax )
+def main(scope):
+
+  sc = scope.dreqQuery()
+  print ('DREQ VERSION: %s' % str(sc.dq.version) )
+  print ( '######### All variables ###########' )
+  priorityMax = 3
+  runExample( sc, priorityMax )
+  print ( '######### Top priority variables ###########' )
+  priorityMax = 1
+  runExample( sc, priorityMax )
+
+if __name__ == '__main__':
+  main( scope )

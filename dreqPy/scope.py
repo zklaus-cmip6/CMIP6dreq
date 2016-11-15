@@ -14,7 +14,9 @@ if imm == 1:
   from utilities import cmvFilter 
   import makeTables
   import fgrid
+  import volsum
 else:
+  import dreqPy.volsum as volsum
   import dreqPy.fgrid as fgrid
   from dreqPy.utilities import cmvFilter 
   import dreqPy.makeTables as makeTables
@@ -136,11 +138,12 @@ class dreqQuery(object):
     self.gridPolicyDefaultNative = False
     self.gridPolicyTopOnly = True
     self.exptFilter = None
+    self.exptFilterBlack = None
     self.uniqueRequest = False
 
     self.mips = set( [x.label for x in self.dq.coll['mip'].items ] )
-    self.mips = ['AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
-    self.mipsp = ['DECK','CMIP6',] + self.mips[:-4]
+    self.mips = ['CMIP','AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
+    self.mipsp = self.mips[:-4]
     self.cmvGridId, i4 = fgrid.fgrid( self.dq )
     assert len(i4) == 0
 
@@ -432,7 +435,7 @@ class dreqQuery(object):
 
       return thisvars
 
-  def exptYears( self, rqll, ex=None):
+  def exptYears( self, rqll, ex=None, exBlack=None):
     """Parse a set of request links, and get years requested for each (varGroup, expt, grid) tuple """
       
     cc = collections.defaultdict( set )
@@ -457,7 +460,7 @@ class dreqQuery(object):
           i = self.dq.inx.uid[iu]
           if iu in self.rqiExp:
             for e in self.rqiExp[iu][1]:
-              if ex == None or e in ex:
+              if (ex == None or e in ex) and (exBlack == None or e not in exBlack):
                 this = self.rqiExp[iu][1][e]
                 if this != None:
                   thisns = this[-3]
@@ -900,12 +903,17 @@ class dreqQuery(object):
 
     return self.cmvByMip( mips,pmax=pmax,includeYears=includeYears, exptFilter=exptFilter )
 
-  def cmvByMip( self, mip,pmax=1,includeYears=False, exptFilter=None ):
+  def cmvByMip( self, mip,pmax=1,includeYears=False, exptFilter=None, exptFilterBlack=None ):
     if exptFilter != None:
       assert type(exptFilter) == type( set() ), 'Argument exptFilter must be None or a set: %s' % str(exptFilter)
+    if exptFilterBlack != None:
+      assert type(exptFilterBlack) == type( set() ), 'Argument exptFilterBlack must be None or a set: %s' % str(exptFilterBlack)
+      if exptFilter != None:
+        assert len( exptFilter.difference( exptFilterBlack ) ) > 0, 'If exptFilter and exptFilterBlack are both set, exptFilter must have non-black listed elements' 
+
     l1,ee = self.rvgByMip( mip, includePreset=True, returnLinks=True )
     if includeYears:
-      expys = self.exptYears( l1, ex=exptFilter )
+      expys = self.exptYears( l1, ex=exptFilter, exBlack=exptFilterBlack )
       cc = collections.defaultdict( set )
     ss = set()
     for pr in ee:
@@ -917,6 +925,8 @@ class dreqQuery(object):
 #
           for x in self.dq.inx.iref_by_sect[i.uid].a['requestVar']:
             i1 = self.dq.inx.uid[x]
+            if i1.vid == 'baa586e6-e5dd-11e5-8482-ac72891c3257':
+               print 'INFO.cmv.00055: ',i1.vid, i1.priority, i1.mip, i1.title
             if (pr == -1 and i1.priority <= pmax) or (pr > 0 and pr <= pmax):
               if includeYears and i1.vid in self.cmvGridId:
                 ##assert i.uid in expys, 'No experiment info found for requestVarGroup: %s' % i.uid
@@ -925,6 +935,8 @@ class dreqQuery(object):
                 assert self.cmvGridId[i1.vid] in ['a','o','si','li'], 'Unexpected grid id: %s: %s:: %s' % (i1.label,i1.vid, self.cmvGridId[i1.vid])
                 gflg = {'si':'','li':''}.get( self.cmvGridId[i1.vid], self.cmvGridId[i1.vid] )
                 rtl = True
+                if i1.vid == 'baa586e6-e5dd-11e5-8482-ac72891c3257':
+                  print 'INFO.cmv.00056: ',i1.vid, gflg, expys[i.uid]
                 if i.uid in expys:
                   if rtl:
                     for e,grd in expys[i.uid]:
@@ -936,6 +948,8 @@ class dreqQuery(object):
                               grd1 = 'native'
                           else:
                             grd1 = grd
+                          if i1.vid == 'baa586e6-e5dd-11e5-8482-ac72891c3257':
+                             print 'INFO.cmv.0002: ',e,grd1,grd
                           cc[(i1.vid,e,grd1)].add( expys[i.uid][e,grd] )
                   else:
                    for gf in expys[i.uid]:
@@ -1007,10 +1021,10 @@ class dreqQuery(object):
 ## get a dictionary keyed on CMORvar uid, containing dictionary keyed on (experiment, grid) with value as number of years.
 ##
     if not self.uniqueRequest:
-      cmv = self.cmvByMip(mip,pmax=pmax,includeYears=True,exptFilter=self.exptFilter)
+      cmv = self.cmvByMip(mip,pmax=pmax,includeYears=True,exptFilter=self.exptFilter,exptFilterBlack=self.exptFilterBlack)
     else:
-      cmv1 = self.cmvByInvMip(mip,pmax=pmax,includeYears=True,exptFilter=self.exptFilter)
-      cmv2 = self.cmvByMip('TOTAL',pmax=pmax,includeYears=True,exptFilter=self.exptFilter)
+      cmv1 = self.cmvByInvMip(mip,pmax=pmax,includeYears=True,exptFilter=self.exptFilter,exptFilterBlack=self.exptFilterBlack)
+      cmv2 = self.cmvByMip('TOTAL',pmax=pmax,includeYears=True,exptFilter=self.exptFilter,exptFilterBlack=self.exptFilterBlack)
       cmv = self.differenceSelectedCmvDict(  cmv1, cmv2 )
  
     self.selectedCmv = cmv
@@ -1038,9 +1052,14 @@ class dreqQuery(object):
             cmv[i] = eei
       return cmv
 
-  def cmvByFreqStr(self,cmv,asDict=True,exptFilter=None):
+  def cmvByFreqStr(self,cmv,asDict=True,exptFilter=None,exptFilterBlack=None):
     if exptFilter != None:
       assert type(exptFilter) == type( set() ), 'Argument exptFilter must be None or a set: %s' % str(exptFilter)
+    if exptFilterBlack != None:
+      assert type(exptFilterBlack) == type( set() ), 'Argument exptFilterBlack must be None or a set: %s' % str(exptFilterBlack)
+      if exptFilter != None:
+        assert len( exptFilter.difference( exptFilterBlack ) ) > 0, 'If exptFilter and exptFilterBlack are both set, exptFilter must have non-black listed elements' 
+
     cc = collections.defaultdict( list )
     for i in cmv:
       if asDict:
@@ -1050,6 +1069,8 @@ class dreqQuery(object):
           cc0 = collections.defaultdict( float )
           cc1 = collections.defaultdict( int )
           se = collections.defaultdict( set )
+          if i == 'baa586e6-e5dd-11e5-8482-ac72891c3257':
+             print 'INFO.vo.00001: ',cmv[i]
           for e,g in cmv[i]:
             cc0[g] += cmv[i][(e,g)]
             cc1[g] += 1
@@ -1122,6 +1143,8 @@ class dreqQuery(object):
 
               if exptFilter != None:
                 expts = exptFilter.intersection( expts )
+              if exptFilterBlack != None:
+                expts = expts.difference( exptFilterBlack )
 
               if len(expts) > 0:
                 lab = self.dq.inx.uid[cmvi].label
@@ -1191,45 +1214,6 @@ class dreqQuery(object):
       return (self.strSz[ (s,o,g) ], (s,o,g1) )
     else:
       return self.strSz[ (s,o,g) ]
-
-  def xxx__csvFreqStrSummary(self,mip,records=False,pmax=1):
-    sf, c3 = self.getFreqStrSummary(mip,pmax=pmax)
-    lf = sorted( list(sf) )
-    hdr = ['','','']
-    for f in lf:
-      hdr += [f,'','',str( npy.get( f, '****') )]
-    orecs = [hdr,]
-    crecs = [None,]
-    for tt in sorted( c3.keys() ):
-      s,o,g = tt
-      i = self.dq.inx.uid[ s ]
-      if o != '':
-        msg = '%48.48s [%s]' % (i.title,o)
-      else:
-        msg = '%48.48s' % i.title
-      if g != 'native':
-        msg += '{%s}' % g
-      szg = self.getStrSz( g, s=s, o=o )[1]
-
-      rec = [msg,szg,2]
-      crec = ['','','']
-      for f in lf:
-        if f in c3[tt]:
-            nn,ny,ne,labs = c3[tt][f]
-            rec += [nn,ny,ne,'']
-            crec += [labs,'','','']
-        else:
-            rec += ['','','','']
-            crec += ['','','','']
-      orecs.append( rec )
-      crecs.append( crec )
-
-    if records:
-      return (orecs, crecs)
-    oo = open( 'text.csv', 'w' )
-    for rec in orecs:
-      oo.write( '\t'.join( [str(x) for x in rec] ) + '\n' )
-    oo.close()
 
   def rvgByMip( self, mip, years=False, includePreset=False, returnLinks=False ):
     l1 = self.rqlByMip( mip )
@@ -1535,7 +1519,6 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       self.sc.checkDir( xlsOdir, 'xls files' )
 
     if 'SF' in self.adict:
-      import volsum
       self.sc.gridPolicyDefaultNative = True
       vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir )
       vs.analAll(pmax)
@@ -1575,11 +1558,16 @@ drq -m HighResMIP:Ocean.DiurnalCycle
         assert eid != None, 'Experiment/MIP %s not found' % self.adict['e']
         self.sc.exptFilter = set( [eid,] )
 
+    ss = set()
+    for e in ['esm-hist','esm-hist-ext','esm-piControl','piControl-spinup','esm-piControl-spinup']:
+      ss.add( self.sc.exptByLabel[ e ] )
+    self.sc.exptFilterBlack = ss
+
     if 'sf' in self.adict:
-      import volsum
-      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, odir=xlsOdir )
+      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir )
       vs.run( self.adict['m'], 'requestVol_%s_%s_%s' % (mlab,tierMax,pmax), pmax=pmax ) 
       vs.anal(olab=mlab,doUnique=False)
+      vs.analAll(pmax,mips=self.adict['m'])
       ttl = sum( [x for k,x in vs.res['vu'].items()] )*2.*1.e-12
       ttl2 = sum( [x for k,x in vs.res['vu'].items()] )*2.*1.e-12
       mlg.prnt( 'TOTAL volume: %8.2fTb' % ttl )

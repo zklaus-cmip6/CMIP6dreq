@@ -854,7 +854,8 @@
    aa:st__uidUnique identifierstartList;
    aa:st__integerListOptional list of start times.sliceLenUnit;
    xs:stringUnits of slice lengthdescription;
-   xs:stringDescription</xs:documentation></xs:annotation>
+   xs:stringDescriptionchild;
+   xs:stringChild experiment</xs:documentation></xs:annotation>
 <xs:complexType name="ct__timeSlice_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -868,6 +869,7 @@
 <xs:attribute name="startList" type="aa:st__integerList"/>
 <xs:attribute name="sliceLenUnit" type="xs:string"/>
 <xs:attribute name="description" type="xs:string"/>
+<xs:attribute name="child" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">cellMethods: Complex Type declaration

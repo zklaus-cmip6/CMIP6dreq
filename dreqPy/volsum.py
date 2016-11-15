@@ -68,18 +68,22 @@ class vsum(object):
       self.infoRows.append( ll )
     ii.close()
 
-  def analAll(self,pmax):
+  def analAll(self,pmax,mips=None):
       volsmm={}
       volsmmt={}
       volsme={}
       volsue={}
-      for m in ['TOTAL',] + self.sc.mips:
-        if m != 'TOTAL':
+      if mips == None:
+        theseMips =  ['TOTAL',] + self.sc.mips
+      else:
+        theseMips = mips
+      for m in theseMips:
+        if m != 'TOTAL' and 'TOTAL' in theseMips:
           cmv1 = self.sc.cmvByInvMip(m,pmax=pmax,includeYears=True)
           self.uniqueCmv = self.sc.differenceSelectedCmvDict(  cmv1, cmvTotal )
         self.run( m, '%s/requestVol_%s_%s_%s' % (self.odir,m,self.sc.tierMax,pmax), pmax=pmax )
 
-        self.anal(olab=m,doUnique=True, makeTabs=True)
+        self.anal(olab=m,doUnique='TOTAL' in theseMips, makeTabs=True)
         ttl = sum( [x for k,x in self.res['vu'].items()] )*2.*1.e-12
         print ( '%s volume: %8.2fTb' % (m,ttl) )
         volsmm[m] = self.res['vm']
@@ -275,6 +279,7 @@ class vsum(object):
     if mip == '_all_':
       mip = set(self.sc.mips )
     self.mip = mip
+    print 'Writing %s' % fn
     self.x = xlsx( fn )
     self.sht = self.x.newSheet( 'Volume' )
     orecs, crecs = self.csvFreqStrSummary(mip,pmax=pmax)
