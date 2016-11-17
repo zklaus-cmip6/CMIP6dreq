@@ -1,6 +1,4 @@
-
 import collections, os, sys
-
 nt__charmeEnable = collections.namedtuple( 'charme', ['id','site'] )
 
 try:
@@ -15,6 +13,14 @@ except:
   import dreqPy.vrev as vrev
   import dreqPy.misc_utils as misc_utils
   import dreqPy.rvgExtraTable as rvgExtraTable
+
+
+def realmFlt( ss ):
+  if ss == '':
+    return ss
+  if ss.find( ' ' ) == -1:
+    return ss
+  return ss.split( ' ' )[0]
 
 python2 = True
 if sys.version_info[0] == 3:
@@ -289,17 +295,29 @@ class makePurl(object):
     oo.close()
       
 class makeTab(object):
-  def __init__(self, dq, subset=None, mcfgNote=None, dest='tables/test', skipped=set(), collected=None,xls=True,txt=False,txtOpts=None):
+  def __init__(self, dq, subset=None, mcfgNote=None, dest='tables/test', skipped=set(), collected=None,xls=True,txt=False,txtOpts=None,byFreqRealm=False):
     """txtOpts: gives option to list MIP variables instead of CMOR variables"""
     if subset != None:
       cmv = [x for x in dq.coll['CMORvar'].items if x.uid in subset]
     else:
       cmv = dq.coll['CMORvar'].items
 
-    if oldpython:
-      tables = sorted( list( set( [i.mipTable for i in cmv] ) ), cmp=cmpAnnex )
+    ixt = collections.defaultdict(list)
+    if not byFreqRealm:
+      ##if oldpython:
+        ##tables = sorted( list( set( [i.mipTable for i in cmv] ) ), cmp=cmpAnnex )
+      ##else:
+        ##tables = sorted( list( set( [i.mipTable for i in cmv] ) ), key=kAnnex )
+      for i in cmv:
+        ixt[i.mipTable].append( i.uid )
     else:
-      tables = sorted( list( set( [i.mipTable for i in cmv] ) ), key=kAnnex )
+      for i in cmv:
+        ixt['%s.%s' % (i.frequency,realmFlt( i.modeling_realm) )].append( i.uid )
+
+    if oldpython:
+        tables = sorted( ixt.keys(), cmp=cmpAnnex )
+    else:
+        tables = sorted( ixt.keys(), key=kAnnex )
 
     addMips = True
     if addMips:
@@ -334,7 +352,7 @@ class makeTab(object):
         wb.cmvtab(t,addMips,mode='c')
 
         j = 0
-        thiscmv =  sorted( [v for v in cmv if v.mipTable == t], cmp=cmpdn(['prov','rowIndex','label']).cmp )
+        thiscmv =  sorted( [dq.inx.uid[u] for u in ixt[t]], cmp=cmpdn(['prov','rowIndex','label']).cmp )
 
         for v in thiscmv:
           cv = dq.inx.uid[ v.vid ]

@@ -43,7 +43,8 @@ class xlsx(object):
       self.wb.close()
 
 class vsum(object):
-  def __init__(self,sc,odsz,npy,makeTab,mt_tables,exptFilter=None, odir='xls'):
+  def __init__(self,sc,odsz,npy,makeTab,mt_tables,exptFilter=None, odir='xls', tabByFreqRealm=False):
+    self.tabByFreqRealm = tabByFreqRealm
     self.makeTab = makeTab
     self.mt_tables = mt_tables
     idir = dreq.DOC_DIR
@@ -60,6 +61,12 @@ class vsum(object):
     if not os.path.isdir( odir ):
       print ( 'Creating new directory for xlsx output: %s' % odir )
       os.mkdir( odir )
+
+    self.xlsPrefixM = 'cmvmm'
+    self.xlsPrefixE = 'cmvme'
+    if tabByFreqRealm:
+      self.xlsPrefixM += 'fr'
+      self.xlsPrefixE += 'fr'
     ii = open( '%s/sfheadings.csv' % idir, 'r' )
     self.infoRows = []
     for l in ii.readlines():
@@ -128,6 +135,12 @@ class vsum(object):
 
     return lex, vet, vf, vu, mvol
 
+  def xlsDest(self,mode,olab,lab2):
+    if mode == 'e':
+      return '%s/%s_%s_%s_%s_%s%s' % (self.odir,self.xlsPrefixE,olab,lab2,self.sc.tierMax,self.pmax,self.efnsfx)
+    else:
+      return '%s/%s_%s_%s_%s_%s%s' % (self.odir,self.xlsPrefixM,olab,lab2,self.sc.tierMax,self.pmax,self.efnsfx)
+
   def anal(self,olab=None,doUnique=False,makeTabs=False):
     vmt = collections.defaultdict( int )
     vm = collections.defaultdict( int )
@@ -185,12 +198,12 @@ class vsum(object):
           cct[t] += cc[m][t]
         ss = ss.union( lm[m] )
         if makeTabs:
-          self.makeTab(self.sc.dq, subset=lm[m], dest='%s/cmvmm_%s_%s_%s_%s%s' % (self.odir,olab,m,self.sc.tierMax,self.pmax,self.efnsfx), collected=cc[m])
+          self.makeTab(self.sc.dq, subset=lm[m], dest=self.xlsDest('m',olab,m), collected=cc[m])
 
     if olab != None and makeTabs:
-        self.makeTab(self.sc.dq, subset=ss, dest='%s/cmvmm_%s_%s_%s_%s%s' % (self.odir,olab,'TOTAL',self.sc.tierMax,self.pmax,self.efnsfx), collected=cct)
+        self.makeTab(self.sc.dq, subset=ss, dest=self.xlsDest('m',olab,'TOTAL'), collected=cct)
         if olab != 'TOTAL' and doUnique:
-          self.makeTab(self.sc.dq, subset=s_lm, dest='%s/cmvmm_%s_%s_%s_%s%s' % (self.odir,olab,'Unique',self.sc.tierMax,self.pmax,self.efnsfx), collected=s_cc)
+          self.makeTab(self.sc.dq, subset=s_lm, dest=self.xlsDest('m',olab,'Unique'), collected=s_cc)
 
     cc = collections.defaultdict( dict )
     ucc = collections.defaultdict( dict )
@@ -200,7 +213,7 @@ class vsum(object):
     for e in sorted( ve.keys() ):
       if olab != None and makeTabs:
         el = self.sc.dq.inx.uid[e].label
-        self.makeTab(self.sc.dq, subset=lex[e], dest='%s/cmvme_%s_%s_%s_%s%s' % (self.odir,olab,el,self.sc.tierMax,self.pmax,self.efnsfx), collected=cc[e])
+        self.makeTab(self.sc.dq, subset=lex[e], dest=self.xlsDest('e',olab,el), collected=cc[e],byFreqRealm=self.tabByFreqRealm)
 
     if olab != 'TOTAL' and doUnique:
       for e,t in s_vet:
@@ -208,7 +221,7 @@ class vsum(object):
       for e in sorted( uve.keys() ):
         if olab != None and makeTabs:
           el = self.sc.dq.inx.uid[e].label
-          self.makeTab(self.sc.dq, subset=s_lex[e], dest='%s/cmvume_%s_%s_%s_%s%s' % (self.odir,olab,el,self.sc.tierMax,self.pmax,self.efnsfx), collected=ucc[e])
+          self.makeTab(self.sc.dq, subset=s_lex[e], dest=self.xlsDest('e',olab,el), collected=ucc[e])
 
     self.res = { 'vmt':vmt, 'vet':vet, 'vm':vm, 'uve':uve, 've':ve, 'lm':lm, 'lex':lex, 'vu':vu, 'cc':cc, 'cct':cct}
     cc8 = collections.defaultdict( int )

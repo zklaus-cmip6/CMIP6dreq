@@ -726,12 +726,25 @@ class dreqQuery(object):
   def requestItemExpAll( self ):
     self.rqiExp = {}
     for rqi in self.dq.coll['requestItem'].items:
-      a,b,c,d = self.requestItemExp( rqi )
+      a,b,c,d,e = self.requestItemExp( rqi )
       if a != None:
         self.rqiExp[rqi.uid] = (a,b,c,d)
 
   def requestItemExp( self, rqi ):
     assert rqi._h.label == "requestItem", 'Argument to requestItemExp must be a requestItem'
+    tsl = None
+    if 'tslice' in rqi.__dict__:
+      ts = self.dq.inx.uid[ rqi.tslice ]
+      if ts._h.label == 'timeSlice':
+        if ts.type == 'simpleRange':
+          tsl = (ts.label,'simpleRange', ts.start,ts.end)
+        elif ts.type == 'branchOffsetRange':
+          tsl = (ts.label,'%s:%s' % (ts.type,ts.child), ts.start,ts.end)
+        else:
+          tsl = (ts.label, ts.type, None, None )
+        print 'TIME SLICE: ',tsl
+
+      
     u = rqi.esid
     if self.dq.inx.uid[u]._h.label == 'experiment':
       expts = [u,]
@@ -741,7 +754,7 @@ class dreqQuery(object):
       else:
         expts = []
     else:
-      return (None, None, None, None)
+      return (None, None, None, None,None)
 
     if self.tierMax > 0:
       expts = [i for i in expts if self.dq.inx.uid[i].tier[0] <= self.tierMax]
@@ -756,7 +769,6 @@ class dreqQuery(object):
       for i in e:
         if i._h.label != 'experiment':
           mlg.prnt ( 'ERROR: %s, %s, %s ' % ( u,i._h.label, i.label, i.title ) )
-      ##dat = [ (i.ntot, i.yps, i.ensz, i.tier, i.nstart, filter1(i.yps,rqi.nymax), filter2(i.ensz,rqi.nenmax,i.tier,self.tierMax) ) for i in e]
       dat2 = {}
       for i in e:
         dat2[i.uid] = (i.ntot, i.yps, i.ensz, i.tier, i.nstart, filter1(i.yps,rqi.nymax), filter2(i.ensz,rqi.nenmax,i.tier,self.tierMax) )
@@ -772,7 +784,7 @@ class dreqQuery(object):
 ## to get list of years per expt for each requestLink ... expts is union of all dat2 keys, 
 ## and want max of dat2[x][0] for each experiment x.
 ##
-    return (expts, dat2, nytot, netot )
+    return (expts, dat2, nytot, netot, tsl )
 
   def setTierMax( self, tierMax ):
     """Set the maxium tier and recompute request sizes"""
@@ -885,7 +897,6 @@ class dreqQuery(object):
             print ( '\n\n' )
             raise
          print ('Created directory %s for: %s' % (odir,msg) )
-
 
   def xlsByMipExpt(self,m,ex,pmax,odir='xls',xls=True,txt=False,txtOpts=None):
     import scope_utils
@@ -1337,6 +1348,7 @@ class dreqUI(object):
       -p <priority>  maximum priority;
       --xls : Create Excel file with requested variables;
       --sf : Print summary of variable count by structure and frequency;
+      --xfr : Output variable lists in sheets organised by frequency and realm instead of by MIP table;
       --SF : Print summary of variable count by structure and frequency for all MIPs;
       --grdpol <native|1deg> :  policy for default grid, if MIPs have not expressed a preference;
       --allgrd :  When a variable is requested on multiple grids, archive all grids requested (default: only the finest resolution);
@@ -1368,6 +1380,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
                       '--count':('count',False), \
                       '--txt':('txt',False), \
                       '--sf':('sf',False), \
+                      '--xfr':('xfr',False), \
                       '--SF':('SF',False), \
                       '--grdpol':('grdpol',True), \
                       '--allgrd':('allgrd',False), \
@@ -1518,17 +1531,18 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       xlsOdir = self.adict.get( 'xlsdir', 'xls' )
       self.sc.checkDir( xlsOdir, 'xls files' )
 
+    tabByFreqRealm = self.adict.get( 'xfr', False )
     if 'SF' in self.adict:
       self.sc.gridPolicyDefaultNative = True
-      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir )
+      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
       vs.analAll(pmax)
 
       self.sc.gridPolicyDefaultNative = False
-      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir )
+      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
       vs.analAll(pmax)
 
       self.sc.setTierMax( 3 )
-      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir )
+      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
       vs.analAll(3)
       return
 
@@ -1564,7 +1578,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     self.sc.exptFilterBlack = ss
 
     if 'sf' in self.adict:
-      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir )
+      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
       vs.run( self.adict['m'], 'requestVol_%s_%s_%s' % (mlab,tierMax,pmax), pmax=pmax ) 
       vs.anal(olab=mlab,doUnique=False)
       vs.analAll(pmax,mips=self.adict['m'])
