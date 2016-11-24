@@ -1,17 +1,17 @@
-
 import xlsxwriter
 from xlsxwriter.utility import xl_rowcol_to_cell
 import collections, os
 
 try:
   import dreq
+  import misc_utils
   import overviewTabs
 except:
   import dreqPy.dreq as dreq
+  import dreqPy.misc_utils as misc_utils
   import dreqPy.overviewTabs as overviewTabs
 
 ###cell = xl_rowcol_to_cell(1, 2)  # C2
- 
 
 class xlsx(object):
   def __init__(self,fn,txtOpts=None):
@@ -64,9 +64,11 @@ class vsum(object):
 
     self.xlsPrefixM = 'cmvmm'
     self.xlsPrefixE = 'cmvme'
+    self.xlsPrefixU = 'cmvume'
     if tabByFreqRealm:
       self.xlsPrefixM += 'fr'
       self.xlsPrefixE += 'fr'
+      self.xlsPrefixU += 'fr'
     ii = open( '%s/sfheadings.csv' % idir, 'r' )
     self.infoRows = []
     for l in ii.readlines():
@@ -75,7 +77,7 @@ class vsum(object):
       self.infoRows.append( ll )
     ii.close()
 
-  def analAll(self,pmax,mips=None):
+  def analAll(self,pmax,mips=None,html=True):
       volsmm={}
       volsmmt={}
       volsme={}
@@ -85,12 +87,26 @@ class vsum(object):
       else:
         theseMips = mips
       for m in theseMips:
-        if m != 'TOTAL' and 'TOTAL' in theseMips:
-          cmv1 = self.sc.cmvByInvMip(m,pmax=pmax,includeYears=True)
-          self.uniqueCmv = self.sc.differenceSelectedCmvDict(  cmv1, cmvTotal )
-        self.run( m, '%s/requestVol_%s_%s_%s' % (self.odir,m,self.sc.tierMax,pmax), pmax=pmax )
+        olab = m
+        if m == '*TOTAL':
+            thism = theseMips.copy()
+            if type( thism ) == type( set() ):
+              thism.remove( '*TOTAL' )
+            else:
+              thism.pop( '*TOTAL' )
+            olab = misc_utils.setMlab( thism )
+        elif type( theseMips ) == type( dict() ):
+            thism = {m:theseMips[m]}
+        else:
+            thism = m
 
-        self.anal(olab=m,doUnique='TOTAL' in theseMips, makeTabs=True)
+        if m != 'TOTAL' and 'TOTAL' in theseMips:
+          cmv1, cmvts = self.sc.cmvByInvMip(thism,pmax=pmax,includeYears=True)
+          self.uniqueCmv = self.sc.differenceSelectedCmvDict(  cmv1, cmvTotal )
+
+        self.run( thism, '%s/requestVol_%s_%s_%s' % (self.odir,olab,self.sc.tierMax,pmax), pmax=pmax )
+
+        self.anal(olab=olab,doUnique='TOTAL' in theseMips, makeTabs=True)
         ttl = sum( [x for k,x in self.res['vu'].items()] )*2.*1.e-12
         print ( '%s volume: %8.2fTb' % (m,ttl) )
         volsmm[m] = self.res['vm']
@@ -100,7 +116,8 @@ class vsum(object):
         if m == 'TOTAL':
           cmvTotal = self.sc.selectedCmv.copy()
           self.uniqueCmv =  {}
-      r1 = overviewTabs.r1( self.sc, self.mt_tables, pmax=pmax, vols=( volsmm, volsme, volsmmt,volsue ) )
+      if html:
+        r1 = overviewTabs.r1( self.sc, self.mt_tables, pmax=pmax, vols=( volsmm, volsme, volsmmt,volsue ) )
 
   def _analSelectedCmv(self,cmv):
     lex = collections.defaultdict( list )
@@ -133,11 +150,13 @@ class vsum(object):
         if i.frequency == 'mon':
             mvol[tt][u] = c1
 
-    return lex, vet, vf, vu, mvol
+    return dict(lex), dict(vet), dict(vf), dict(vu), dict(mvol)
 
   def xlsDest(self,mode,olab,lab2):
     if mode == 'e':
       return '%s/%s_%s_%s_%s_%s%s' % (self.odir,self.xlsPrefixE,olab,lab2,self.sc.tierMax,self.pmax,self.efnsfx)
+    elif mode == 'u':
+      return '%s/%s_%s_%s_%s_%s%s' % (self.odir,self.xlsPrefixU,olab,lab2,self.sc.tierMax,self.pmax,self.efnsfx)
     else:
       return '%s/%s_%s_%s_%s_%s%s' % (self.odir,self.xlsPrefixM,olab,lab2,self.sc.tierMax,self.pmax,self.efnsfx)
 
@@ -178,8 +197,6 @@ class vsum(object):
 
     for e,t in vet:
       ee = self.sc.dq.inx.uid[e]
-      if ee.mip == 'SolarMIP':
-        print ('ERROR.solarmip: %s,%s,%s' % (ee.label, ee.title, ee.uid) )
       vmt[(ee.mip,t)] += vet[(e,t)]
       vm[ee.mip] += vet[(e,t)]
       ve[e] += vet[(e,t)]
@@ -213,7 +230,13 @@ class vsum(object):
     for e in sorted( ve.keys() ):
       if olab != None and makeTabs:
         el = self.sc.dq.inx.uid[e].label
-        self.makeTab(self.sc.dq, subset=lex[e], dest=self.xlsDest('e',olab,el), collected=cc[e],byFreqRealm=self.tabByFreqRealm)
+        tslice = {}
+        for v in self.sc.cmvts:
+          if e in self.sc.cmvts[v]:
+            tslice[v] = self.sc.cmvts[v][e]
+        dest = self.xlsDest('e',olab,el)
+        self.makeTab(self.sc.dq, subset=lex[e], dest=self.xlsDest('e',olab,el), collected=cc[e],byFreqRealm=self.tabByFreqRealm, tslice=tslice)
+        ##self.makeTab(self.sc.dq, subset=lex[e], dest=self.xlsDest('e',olab,el), collected=cc[e],byFreqRealm=self.tabByFreqRealm)
 
     if olab != 'TOTAL' and doUnique:
       for e,t in s_vet:
@@ -221,7 +244,7 @@ class vsum(object):
       for e in sorted( uve.keys() ):
         if olab != None and makeTabs:
           el = self.sc.dq.inx.uid[e].label
-          self.makeTab(self.sc.dq, subset=s_lex[e], dest=self.xlsDest('e',olab,el), collected=ucc[e])
+          self.makeTab(self.sc.dq, subset=s_lex[e], dest=self.xlsDest('u',olab,el), collected=ucc[e])
 
     self.res = { 'vmt':vmt, 'vet':vet, 'vm':vm, 'uve':uve, 've':ve, 'lm':lm, 'lex':lex, 'vu':vu, 'cc':cc, 'cct':cct}
     cc8 = collections.defaultdict( int )
@@ -244,7 +267,6 @@ class vsum(object):
     crecs = [None,None,]
     self.mvol = collections.defaultdict( dict )
     self.rvol = dict()
-
     ix = 3
     for tt in sorted( c3.keys() ):
       s,o,g = tt
@@ -292,7 +314,7 @@ class vsum(object):
     if mip == '_all_':
       mip = set(self.sc.mips )
     self.mip = mip
-    print 'Writing %s' % fn
+    print ('Writing %s' % fn )
     self.x = xlsx( fn )
     self.sht = self.x.newSheet( 'Volume' )
     orecs, crecs = self.csvFreqStrSummary(mip,pmax=pmax)
