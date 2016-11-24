@@ -1,5 +1,5 @@
 
-import collections, string
+import collections, string, os
 import xlsxwriter
 
 try:
@@ -135,6 +135,9 @@ class r1(object):
     print ('INFO.mmhtml.00001: %s, %s' % (kc,len( self.cc[kc].a.keys() ) ) )
     if len( self.cc[kc].a.keys() ) == 0:
       return
+    if not os.path.isdir( 'tabs03' ):
+      print ( 'WARNING.makeMMhtml: creating directory for html files: tabs03' )
+      os.mkdir( 'tabs03' )
     oo = open( 'tabs03/%s' % fss, 'w' )
     ttl = 'Date requested by %s from %s experiments (tier %s, priority %s)' % (m,m2,self.tiermax,self.pmax)
     jsh = ''

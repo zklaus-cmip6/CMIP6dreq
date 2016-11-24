@@ -1,6 +1,4 @@
-
 import collections, os, sys
-
 nt__charmeEnable = collections.namedtuple( 'charme', ['id','site'] )
 
 try:
@@ -15,6 +13,14 @@ except:
   import dreqPy.vrev as vrev
   import dreqPy.misc_utils as misc_utils
   import dreqPy.rvgExtraTable as rvgExtraTable
+
+
+def realmFlt( ss ):
+  if ss == '':
+    return ss
+  if ss.find( ' ' ) == -1:
+    return ss
+  return ss.split( ' ' )[0]
 
 python2 = True
 if sys.version_info[0] == 3:
@@ -40,7 +46,8 @@ except:
 
 ##NT_txtopts = collections.namedtuple( 'txtopts', ['mode'] )
 
-def setMlab( m ):
+setMlab = misc_utils.setMlab
+def setMlab_xx( m ):
       if type(m) == type(''):
         if m == '_all_':
           mlab = 'TOTAL'
@@ -114,7 +121,11 @@ class xlsx(object):
   def cmvtabrec(self,j,t,orec):
      if self.xls:
         for i in range(len(orec)):
-           self.sht.write( j,i, orec[i], self.cell_format )
+           if str( type(orec[i]) ) == "<class 'dreq.dreqItem_CoreAttributes'>":
+             self.sht.write( j,i, '', self.cell_format )
+           else:
+             ##print i, orec[i], type( orec[i] )
+             self.sht.write( j,i, orec[i], self.cell_format )
 
      if self.txt:
         self.oo.write( '\t'.join( [t,] + orec) + '\n' )
@@ -148,7 +159,7 @@ class xlsx(object):
           self.oo.write( hrec[i] + '\t' )
         self.oo.write( '\n' )
 
-  def cmvtab(self,t,addMips,mode='c'):
+  def cmvtab(self,t,addMips,mode='c',tslice=False,byFreqRealm=False):
       if self.xls:
         self.sht = self.newSheet( t )
       j = 0
@@ -167,10 +178,16 @@ class xlsx(object):
           self.sht.set_column(1,19,40)
       else:
         hrec = ['','Long name', 'units', 'description', '', 'Variable Name', 'CF Standard Name', '','', 'cell_methods', 'valid_min', 'valid_max', 'ok_min_mean_abs', 'ok_max_mean_abs', 'positive', 'type', 'dimensions', 'CMOR name', 'modeling_realm', 'frequency', 'cell_measures', 'flag_values', 'flag_meanings', 'prov', 'provNote','rowIndex','UID']
-
       if addMips:
         hrec.append( 'MIPs (requesting)' )
         hrec.append( 'MIPs (by experiment)' )
+
+      if byFreqRealm:
+        hrec = ['Table',] + hrec
+        hcmt = ['CMOR table',] + hcmt
+      if tslice:
+          hrec += ['Number of Years','Slice Type','Years']
+          hcmt += ['','','']
 
       if self.xls:
         for i in range(len(hrec)):
@@ -289,17 +306,26 @@ class makePurl(object):
     oo.close()
       
 class makeTab(object):
-  def __init__(self, dq, subset=None, mcfgNote=None, dest='tables/test', skipped=set(), collected=None,xls=True,txt=False,txtOpts=None):
+  def __init__(self, dq, subset=None, mcfgNote=None, dest='tables/test', skipped=set(), collected=None,xls=True,txt=False,txtOpts=None,byFreqRealm=False, tslice=None):
     """txtOpts: gives option to list MIP variables instead of CMOR variables"""
     if subset != None:
       cmv = [x for x in dq.coll['CMORvar'].items if x.uid in subset]
     else:
       cmv = dq.coll['CMORvar'].items
+    self.byFreqRealm=byFreqRealm
+
+    ixt = collections.defaultdict(list)
+    if not byFreqRealm:
+      for i in cmv:
+        ixt[i.mipTable].append( i.uid )
+    else:
+      for i in cmv:
+        ixt['%s.%s' % (i.frequency,realmFlt( i.modeling_realm) )].append( i.uid )
 
     if oldpython:
-      tables = sorted( list( set( [i.mipTable for i in cmv] ) ), cmp=cmpAnnex )
+        tables = sorted( ixt.keys(), cmp=cmpAnnex )
     else:
-      tables = sorted( list( set( [i.mipTable for i in cmv] ) ), key=kAnnex )
+        tables = sorted( ixt.keys(), key=kAnnex )
 
     addMips = True
     if addMips:
@@ -331,10 +357,10 @@ class makeTab(object):
       for t in tables:
         if withoo:
           oo = open( 'tables/test_%s.csv' % t, 'w' )
-        wb.cmvtab(t,addMips,mode='c')
+        wb.cmvtab(t,addMips,mode='c',tslice=tslice != None,byFreqRealm=byFreqRealm)
 
         j = 0
-        thiscmv =  sorted( [v for v in cmv if v.mipTable == t], cmp=cmpdn(['prov','rowIndex','label']).cmp )
+        thiscmv =  sorted( [dq.inx.uid[u] for u in ixt[t]], cmp=cmpdn(['prov','rowIndex','label']).cmp )
 
         for v in thiscmv:
           cv = dq.inx.uid[ v.vid ]
@@ -368,12 +394,32 @@ class makeTab(object):
               orec = [str(v.defaultPriority),cv.title, cv.units, cv.description, v.description, cv.label, cv.sn, strc.cell_methods, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, v.prov,v.provNote,str(v.rowIndex),v.uid,v.vid,v.stid,strc.title]
             else:
               orec = ['',cv.title, cv.units, v.description, '', cv.label, cv.sn, '','', strc.cell_methods, v.valid_min, v.valid_max, v.ok_min_mean_abs, v.ok_max_mean_abs, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, strc.flag_values, strc.flag_meanings,v.prov,v.provNote,str(v.rowIndex),cv.uid]
+
+            if byFreqRealm:
+              orec = [v.mipTable,] + orec
+
             if addMips:
               thismips = c.chkCmv( v.uid )
               thismips2 = c.chkCmv( v.uid, byExpt=True )
               orec.append( ','.join( sorted( list( thismips) ) ) )
               orec.append( ','.join( sorted( list( thismips2) ) ) )
 
+            if tslice != None:
+              if v.uid not in tslice:
+                orec += ['All', '','']
+              else:
+                tslab,tsmode,a,b = tslice[v.uid]
+                if tsmode[:4] in ['simp','bran']:
+                   nys = b + 1 - a
+                   ys = range(a,b+1)
+                   orec += [str(nys), '',str(ys)]
+                elif tsmode[:4] in ['YEAR']:
+                   nys = a
+                   ys = b
+                   orec += [str(nys), '',str(ys)]
+                else:
+                   orec += ['slice', tslab,'']
+                
             if withoo:
               oo.write( '\t'.join(orec ) + '\n' )
             j+=1
