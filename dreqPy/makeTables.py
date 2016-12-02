@@ -287,9 +287,10 @@ def cmpAnnex( x, y ):
   else:
     return cmp(0,1)
 
-
 if not oldpython:
   kAnnex = cmp_to_key( cmpAnnex )
+  kCmpdn = cmp_to_key( cmpdn(['sn','label']).cmp )
+  kCmpdnPrl = cmp_to_key( cmpdn(['prov','rowIndex','label']).cmp )
 
 import re
 
@@ -343,7 +344,10 @@ class makeTab(object):
     if txtOpts != None and txtOpts.mode == 'var':
       vl =  list( set( [v.vid for v in cmv] )  )
       vli = [dq.inx.uid[i] for i in vl]
-      thisvli =  sorted( vli, cmp=cmpdn(['sn','label']).cmp )
+      if oldpython:
+        thisvli =  sorted( vli, cmp=cmpdn(['sn','label']).cmp )
+      else:
+        thisvli = sorted( vli, key=kCmpdn )
       wb.var()
       
       j = 0
@@ -360,7 +364,10 @@ class makeTab(object):
         wb.cmvtab(t,addMips,mode='c',tslice=tslice != None,byFreqRealm=byFreqRealm)
 
         j = 0
-        thiscmv =  sorted( [dq.inx.uid[u] for u in ixt[t]], cmp=cmpdn(['prov','rowIndex','label']).cmp )
+        if oldpython:
+          thiscmv =  sorted( [dq.inx.uid[u] for u in ixt[t]], cmp=cmpdn(['prov','rowIndex','label']).cmp )
+        else:
+          thiscmv = sorted( [dq.inx.uid[u] for u in ixt[t]], key=kCmpdnPrl )
 
         for v in thiscmv:
           cv = dq.inx.uid[ v.vid ]

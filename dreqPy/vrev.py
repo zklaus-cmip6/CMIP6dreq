@@ -50,7 +50,7 @@ Class to analyse the usage of variables in the data request.
 #for i in s1:
   #for j in dq.inx.iref_by_sect[i].a['requestLink']:
     #s2.add(j)
-    s2 = reduce( operator.or_, [set(dq.inx.iref_by_sect[i].a['requestLink']) for i in s1 if dq.inx.iref_by_sect[i].a.has_key('requestLink')] )
+    s2 = reduce( operator.or_, [set(dq.inx.iref_by_sect[i].a['requestLink']) for i in s1 if 'requestLink' in dq.inx.iref_by_sect[i].a] )
 
     mips = set( [dq.inx.uid[i].mip for i in s2 ] )
     self.missing = self.mips.difference( mips )
@@ -78,7 +78,7 @@ Class to analyse the usage of variables in the data request.
     
     s2 = set()
     for i in cc1:
-      if dq.inx.iref_by_sect[i].a.has_key('requestLink'):
+      if 'requestLink' in dq.inx.iref_by_sect[i].a:
         for l in dq.inx.iref_by_sect[i].a['requestLink']:
           lr = dq.inx.uid[l]
           if lr.opt == 'priority':
@@ -87,7 +87,7 @@ Class to analyse the usage of variables in the data request.
               s2.add(l)
           else:
             s2.add( l )
-    ##ll = [set(dq.inx.iref_by_sect[i].a['requestLink']) for i in cc1 if dq.inx.iref_by_sect[i].a.has_key('requestLink')]
+    ##ll = [set(dq.inx.iref_by_sect[i].a['requestLink']) for i in cc1 if 'requestLink' in dq.inx.iref_by_sect[i].a]
     ##if len(ll) == 0:
       ##return set()
 ##

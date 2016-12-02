@@ -18,7 +18,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">requestVarGroup: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__requestVarGroup">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__requestVarGroup_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__requestVarGroup_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="requestVarGroup"/>
 <xs:attribute name="title" type="xs:string" fixed="3.1 Request variable group: a collection of request variables"/>
 <xs:attribute name="id" type="xs:string" fixed="rqvg"/>
@@ -46,7 +46,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">requestItem: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__requestItem">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__requestItem_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__requestItem_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="requestItem"/>
 <xs:attribute name="title" type="xs:string" fixed="3.2 Request Item: specifying the number of years for an experiment"/>
 <xs:attribute name="id" type="xs:string" fixed="rqi"/>
@@ -94,7 +94,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">exptgroup: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__exptgroup">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__exptgroup_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__exptgroup_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="exptgroup"/>
 <xs:attribute name="title" type="xs:string" fixed="1.9 Experiment Group"/>
 <xs:attribute name="id" type="xs:string" fixed="exg"/>
@@ -120,7 +120,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">miptable: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__miptable">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__miptable_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__miptable_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="miptable"/>
 <xs:attribute name="title" type="xs:string" fixed="2.4 MIP tables"/>
 <xs:attribute name="id" type="xs:string" fixed="mtb"/>
@@ -148,7 +148,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">CMORvar: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__CMORvar">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__CMORvar_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__CMORvar_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="CMORvar"/>
 <xs:attribute name="title" type="xs:string" fixed="1.3 CMOR Variable"/>
 <xs:attribute name="id" type="xs:string" fixed="cmv"/>
@@ -217,7 +217,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">objective: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__objective">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__objective_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__objective_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="objective"/>
 <xs:attribute name="title" type="xs:string" fixed="1.6 Scientific objectives"/>
 <xs:attribute name="id" type="xs:string" fixed="obj"/>
@@ -243,7 +243,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">spatialShape: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__spatialShape">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__spatialShape_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__spatialShape_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="spatialShape"/>
 <xs:attribute name="title" type="xs:string" fixed="2.1 Spatial dimensions"/>
 <xs:attribute name="id" type="xs:string" fixed="ss"/>
@@ -275,7 +275,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">requestLink: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__requestLink">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__requestLink_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__requestLink_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="requestLink"/>
 <xs:attribute name="title" type="xs:string" fixed="3.3 Request link: linking a set of variables and a set of experiments"/>
 <xs:attribute name="id" type="xs:string" fixed="rql"/>
@@ -319,7 +319,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">tableSection: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__tableSection">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__tableSection_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__tableSection_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="tableSection"/>
 <xs:attribute name="title" type="xs:string" fixed="3.4 CMOR Table Sections"/>
 <xs:attribute name="id" type="xs:string" fixed="tbs"/>
@@ -349,7 +349,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">modelConfig: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__modelConfig">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__modelConfig_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__modelConfig_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="modelConfig"/>
 <xs:attribute name="title" type="xs:string" fixed="3.5 Model configuration options"/>
 <xs:attribute name="id" type="xs:string" fixed="mcfg"/>
@@ -379,7 +379,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">varChoiceLinkC: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__varChoiceLinkC">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__varChoiceLinkC_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__varChoiceLinkC_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="varChoiceLinkC"/>
 <xs:attribute name="title" type="xs:string" fixed="3.6 Links a variable to a choice element"/>
 <xs:attribute name="id" type="xs:string" fixed="vclc"/>
@@ -409,7 +409,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">objectiveLink: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__objectiveLink">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__objectiveLink_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__objectiveLink_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="objectiveLink"/>
 <xs:attribute name="title" type="xs:string" fixed="3.7 Link between scientific objectives and requests"/>
 <xs:attribute name="id" type="xs:string" fixed="objl"/>
@@ -435,7 +435,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">remarks: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__remarks">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__remarks_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__remarks_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="remarks"/>
 <xs:attribute name="title" type="xs:string" fixed="3.8 Remarks about other items"/>
 <xs:attribute name="id" type="xs:string" fixed="rmk"/>
@@ -471,7 +471,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">experiment: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__experiment">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__experiment_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__experiment_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="experiment"/>
 <xs:attribute name="title" type="xs:string" fixed="1.5 Experiments"/>
 <xs:attribute name="id" type="xs:string" fixed="exp"/>
@@ -517,7 +517,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">requestVar: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__requestVar">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__requestVar_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__requestVar_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="requestVar"/>
 <xs:attribute name="title" type="xs:string" fixed="1.4 Request variable (carrying priority and link to group)"/>
 <xs:attribute name="id" type="xs:string" fixed="rqv"/>
@@ -547,7 +547,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">standardname: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__standardname">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__standardname_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__standardname_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="standardname"/>
 <xs:attribute name="title" type="xs:string" fixed="1.8 CF Standard Names"/>
 <xs:attribute name="id" type="xs:string" fixed="sn"/>
@@ -573,7 +573,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">varChoiceLinkR: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__varChoiceLinkR">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__varChoiceLinkR_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__varChoiceLinkR_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="varChoiceLinkR"/>
 <xs:attribute name="title" type="xs:string" fixed="3.9 Links a variable to a choice element"/>
 <xs:attribute name="id" type="xs:string" fixed="vclr"/>
@@ -601,7 +601,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">var: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__var">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__var_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__var_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="var"/>
 <xs:attribute name="title" type="xs:string" fixed="1.2 MIP Variable"/>
 <xs:attribute name="id" type="xs:string" fixed="var"/>
@@ -639,7 +639,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">mip: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__mip">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__mip_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__mip_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="mip"/>
 <xs:attribute name="title" type="xs:string" fixed="1.1 Model Intercomparison Project"/>
 <xs:attribute name="id" type="xs:string" fixed="mip"/>
@@ -665,7 +665,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">varChoice: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__varChoice">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__varChoice_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__varChoice_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="varChoice"/>
 <xs:attribute name="title" type="xs:string" fixed="3.10 Indicates variables for which a there is a range of potential CMOR Variables"/>
 <xs:attribute name="id" type="xs:string" fixed="vc"/>
@@ -695,7 +695,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">temporalShape: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__temporalShape">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__temporalShape_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__temporalShape_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="temporalShape"/>
 <xs:attribute name="title" type="xs:string" fixed="2.2 Temporal dimension"/>
 <xs:attribute name="id" type="xs:string" fixed="ts"/>
@@ -723,7 +723,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">structure: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__structure">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__structure_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__structure_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="structure"/>
 <xs:attribute name="title" type="xs:string" fixed="2.3 Dimensions and related information"/>
 <xs:attribute name="id" type="xs:string" fixed="str"/>
@@ -773,7 +773,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">grids: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__grids">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__grids_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__grids_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="grids"/>
 <xs:attribute name="title" type="xs:string" fixed="1.7 Specification of dimensions"/>
 <xs:attribute name="id" type="xs:string" fixed="grd"/>
@@ -835,7 +835,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">timeSlice: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__timeSlice">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__timeSlice_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__timeSlice_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="timeSlice"/>
 <xs:attribute name="title" type="xs:string" fixed="3.11 Time Slices for Output Requests"/>
 <xs:attribute name="id" type="xs:string" fixed="tsl"/>
@@ -875,7 +875,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">cellMethods: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__cellMethods">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__cellMethods_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__cellMethods_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="cellMethods"/>
 <xs:attribute name="title" type="xs:string" fixed="7.1 Cell Methods"/>
 <xs:attribute name="id" type="xs:string" fixed="cmth"/>
@@ -899,7 +899,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">tags: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__tags">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__tags_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__tags_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="tags"/>
 <xs:attribute name="title" type="xs:string" fixed="6.1 Tags"/>
 <xs:attribute name="id" type="xs:string" fixed="tag"/>
@@ -923,7 +923,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">varRelations: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__varRelations">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__varRelations_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__varRelations_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="varRelations"/>
 <xs:attribute name="title" type="xs:string" fixed="6.2 Relationships between CMOR variables"/>
 <xs:attribute name="id" type="xs:string" fixed="vrln"/>
@@ -949,7 +949,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">varRelLnk: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__varRelLnk">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__varRelLnk_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__varRelLnk_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="varRelLnk"/>
 <xs:attribute name="title" type="xs:string" fixed="6.3 CMOR Variable Relation Links"/>
 <xs:attribute name="id" type="xs:string" fixed="vrln"/>
