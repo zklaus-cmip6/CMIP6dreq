@@ -11,18 +11,25 @@ except:
   imm=2
 
 if imm == 1:
-  from utilities import cmvFilter 
+  from utilities import cmvFilter, gridOptionSort
   import makeTables
   import fgrid
   import volsum
 else:
   import dreqPy.volsum as volsum
   import dreqPy.fgrid as fgrid
-  from dreqPy.utilities import cmvFilter 
+  from dreqPy.utilities import cmvFilter, gridOptionSort 
   import dreqPy.makeTables as makeTables
 
 import collections, string, operator
 import sys, os
+
+if sys.version_info >= (2,7):
+  oldpython = False
+else:
+  oldpython = True
+
+gridSorter = gridOptionSort( oldpython )
 
 def sortTimeSlice( tsl ):
   s = set()
@@ -162,6 +169,8 @@ class dreqQuery(object):
     self.cmvFilter = cmvFilter( self )
     self.tierMax = tierMax
     self.gridPolicyDefaultNative = False
+    self.gridOceanStructured = True
+    self.gridPolicyForce = None
     self.gridPolicyTopOnly = True
     self.exptFilter = None
     self.exptFilterBlack = None
@@ -474,14 +483,21 @@ class dreqQuery(object):
         print ( 'WARN.001.00001: no request items for: %s, %s' % (rl.uid, rl.title) )
       else:
 
-        if rl.grid == '100km':
+        if self.gridPolicyForce != None:
+          grd = self.gridPolicyForce
+        elif rl.grid in ['1deg','2deg','100km']:
+          if rl.grid == '100km':
             grd = '1deg'
-        if rl.grid in ['1deg','2deg']:
+          else:
             grd = rl.grid
         else:
           ## note that naming of "gridreq" is unfortunate ... "No" means that native grid is required
-          if rl.gridreq in ['No', 'no'] or self.gridPolicyDefaultNative:
+          if rl.gridreq in ['No', 'no']:
+             #or self.gridPolicyDefaultNative:
             grd = 'native'
+          elif rl.gridreq in ['no*1']:
+             #or self.gridPolicyDefaultNative:
+            grd = 'native:01'
           else:
             ## print ( 'INFO.grd.00001: defaulting to grid ..%s, %s, %s' % (rl.label,rl.title, rl.uid) )
             grd = 'DEF'
@@ -1022,12 +1038,27 @@ class dreqQuery(object):
           if len( l2x[(v,e)].keys() ) == 1:
              g,val = list( l2x[(v,e)].items() )[0]
           else:
-            if 'native' in l2x[(v,e)].keys():
-               g = 'native'
-               val = l2x[(v,e)][g]
-            else:
-               g = sorted( list( l2x[(v,e)].keys() ) )[0]
-               val = l2x[(v,e)][g]
+            kk = gridSorter.sort( l2x[(v,e)].keys() )
+            gflg = {'si':'','li':''}.get( self.cmvGridId[v], self.cmvGridId[v] )
+            g = kk[0]
+            ##if g in ['DEF','']:
+              ##if self.gridPolicyDefaultNative:       
+                 ##g = 'native'
+            ##elif g == 'native:01':
+              ##if gflg == 'o' and not self.gridOceanStructured:
+                ##g = '1deg'
+              ##else:
+                ##g = 'native'
+            if g not in l2x[(v,e)]:
+              print '%s not found in %s (%s):' % (g,str(l2x[(v,e)].keys()),str(kk))
+            val = l2x[(v,e)][g]
+                
+            ##if 'native' in l2x[(v,e)].keys():
+               ##g = 'native'
+               ##val = l2x[(v,e)][g]
+            ##else:
+               ##g = sorted( list( l2x[(v,e)].keys() ) )[0]
+               ##val = l2x[(v,e)][g]
           l2[v][(e,g)] = val
       else:
         for v,e,g in cc:
@@ -1140,14 +1171,21 @@ class dreqQuery(object):
             cc1[g] += 1
             se[g].add(e)
           for g in cc0:
-            g1 = 'native'
+            g1 = g
             if self.isLatLon[st.spid] != False:
               g1 = g
               if g1 == 'DEF' and self.isLatLon[st.spid] == 'o':
                   g1 = '1deg'
-              else:
+              elif g == 'native:01':
+                gflg = {'si':'','li':''}.get( self.cmvGridId[i], self.cmvGridId[i] )
+                if gflg == 'o' and not self.gridOceanStructured:
+                  g1 = '1deg'
+                else:
                   g1 = 'native'
-            g1 = g
+              else:
+                g1 = 'native'
+            elif g == 'native:01':
+                g1 = 'native'
 
             cc[ (st.spid,st.odims,ii.frequency,g1) ].append( (i,cc0[g],cc1[g],se[g]) )
 
@@ -1222,11 +1260,11 @@ class dreqQuery(object):
               ny = net/float(nn)
             else:
               ny = ny/float(nn)
-            assert tt[2] in ['native','1deg','2deg'], 'BAD grid identifier: %s' % str(tt)
+            assert tt[2] in ['native','1deg','2deg','native:01'], 'BAD grid identifier: %s' % str(tt)
             c3[tt][f] = (nn,ny,ne, labs,expts)
     return (sf,c3)
 
-  def getStrSz( self, g, stid=None, s=None, o=None, tt=False ):
+  def getStrSz( self, g, stid=None, s=None, o=None, tt=False, cmv=None ):
     assert stid == None or (s==None and o==None), 'Specify either stid or s and o'
     assert stid != None or (s!=None and o!=None), 'Specify either stid or s and o'
 
@@ -1248,6 +1286,13 @@ class dreqQuery(object):
              g1 = '1deg'
           else:
              g1 = 'native'
+    elif g1 == 'native:01':
+      assert cmv != None, 'Need a valid cmor variable id  .... '
+      gflg = {'si':'','li':''}.get( self.cmvGridId[cmv], self.cmvGridId[cmv] )
+      if gflg == 'o' and not self.gridOceanStructured:
+                  g1 = '1deg'
+      else:
+                  g1 = 'native'
     if (s,o,g) not in self.strSz:
 
         if o == '':
@@ -1259,7 +1304,6 @@ class dreqQuery(object):
 
         if type( sf ) == type( () ):
            sf = sf[0]
-
 
         try:
           if g1 != 'native' and self.isLatLon[s] != False:
@@ -1396,10 +1440,13 @@ class dreqUI(object):
       -t <tier> maxmum tier;
       -p <priority>  maximum priority;
       --xls : Create Excel file with requested variables;
-      --sf : Print summary of variable count by structure and frequency;
+      --sf : Print summary of variable count by structure and frequency [default];
+      --legacy : Use legacy approach to volume estimation (depricated);
       --xfr : Output variable lists in sheets organised by frequency and realm instead of by MIP table;
       --SF : Print summary of variable count by structure and frequency for all MIPs;
       --grdpol <native|1deg> :  policy for default grid, if MIPs have not expressed a preference;
+      --grdforce <native|1deg> :  force a specific grid option, independent of individual preferences;
+      --ogrdunstr : provide volume estimates for unstructured ocean grid (interpolation requirements of OMIP data are different in this case);
       --allgrd :  When a variable is requested on multiple grids, archive all grids requested (default: only the finest resolution);
       --unique :  List only variables which are requested uniquely by this MIP, for at least one experiment;
       --txt : Create text file with requested variables;
@@ -1429,9 +1476,13 @@ drq -m HighResMIP:Ocean.DiurnalCycle
                       '--count':('count',False), \
                       '--txt':('txt',False), \
                       '--sf':('sf',False), \
+                      '--legacy':('legacy',False), \
                       '--xfr':('xfr',False), \
                       '--SF':('SF',False), \
                       '--grdpol':('grdpol',True), \
+                      '--ogrdunstr':('ogrdunstr',False), \
+                      '--grdforce':('grdforce',True), \
+                      '--omitCmip':('omitcmip',False), \
                       '--allgrd':('allgrd',False), \
                       '--unique':('unique',False), \
                       '--mcfg':('mcfg',True), \
@@ -1469,9 +1520,14 @@ drq -m HighResMIP:Ocean.DiurnalCycle
         self.adict['m'] = ee
       else:
         self.adict['m'] = set(self.adict['m'].split(',') )
+        if 'omitcmip' not in self.adict and 'CMIP' not in self.adict['m']:
+          self.adict['m'].add( 'CMIP' )
 
     if 'grdpol' in self.adict:
       assert self.adict['grdpol'] in ['native','1deg'], 'Grid policy argument --grdpol must be native or 1deg : %s' % self.adict['grdpol']
+
+    if 'grdforce' in self.adict:
+      assert self.adict['grdforce'] in ['native','1deg'], 'Grid policy argument --grdforce must be native or 1deg : %s' % self.adict['grdforce']
 
     integerArgs = set( ['p','t','plm'] )
     for i in integerArgs.intersection( self.adict ):
@@ -1557,6 +1613,8 @@ drq -m HighResMIP:Ocean.DiurnalCycle
 
     self.sc = dreqQuery( dq=self.dq )
 
+    if 'grdforce' in self.adict:
+      self.sc.gridPolicyForce = self.adict['grdforce']
     if 'grdpol' in self.adict:
       self.sc.gridPolicyDefaultNative = self.adict['grdpol'] == 'native'
       print ( 'SETTING grid policy: %s' % self.sc.gridPolicyDefaultNative )
@@ -1565,6 +1623,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       print ( 'SETTING grid policy for multiple preferred grids: %s' % self.sc.gridPolicyTopOnly )
     if 'unique' in self.adict:
       self.sc.uniqueRequest = True
+    self.sc.gridOceanStructured = not self.adict.get( 'ogrdunstr', False )
 
     if 'mcfg' in self.adict:
       self.sc.setMcfg( lli )
@@ -1575,7 +1634,9 @@ drq -m HighResMIP:Ocean.DiurnalCycle
 
     makeXls = self.adict.get( 'xls', False )
     makeTxt = self.adict.get( 'txt', False )
-    doSf = 'SF' in self.adict or 'sf' in self.adict
+    ##doSf = 'SF' in self.adict or 'sf' in self.adict
+    doSf = 'legacy' not in self.adict
+    assert not ('legacy' in self.adict and 'sf' in self.adict), "Conflicting command line argument, 'legacy' and 'sf': use only one of these"
     if makeXls or makeTxt or doSf:
       xlsOdir = self.adict.get( 'xlsdir', 'xls' )
       self.sc.checkDir( xlsOdir, 'xls files' )

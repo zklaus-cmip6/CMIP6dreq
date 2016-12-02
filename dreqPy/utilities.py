@@ -1,4 +1,18 @@
 
+class gridOptionSort(object):
+  def __init__(self,oldpy=True):
+    self.od = {'1deg':'1001','2deg':'1002','native':'0102','DEF':'9000','':'9001','native:01':'0101'}
+    self.oldpy = oldpy
+
+  def cmp(self,x,y):
+    return cmp( self.od[x], self.od[y] )
+
+  def sort(self,ll):
+    if self.oldpy:
+       return sorted( ll, cmp=self.cmp )
+    else:
+       return sorted( ll, key=lambda x: self.od[x] )
+    
 class cmvFilter(object):
   """Class to filter list of CMOR variables by rank.
      dq: data request object, as returned by dreq.loadDreq()"""

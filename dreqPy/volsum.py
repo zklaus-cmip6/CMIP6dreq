@@ -56,7 +56,11 @@ class vsum(object):
     self.accum = False
     self.odir = odir
     self.efnsfx = ''
-    if sc.gridPolicyDefaultNative:
+    if sc.gridPolicyForce == 'native':
+      self.efnsfx = '_fn'
+    elif sc.gridPolicyForce == '1deg':
+      self.efnsfx = '_f1'
+    elif sc.gridPolicyDefaultNative:
       self.efnsfx = '_dn'
     if not os.path.isdir( odir ):
       print ( 'Creating new directory for xlsx output: %s' % odir )
@@ -137,7 +141,7 @@ class vsum(object):
           ee = self.sc.dq.inx.uid[e]
           if ee.mip not in ['SolarMIP']:
             lex[e].append( u )
-            t1, tt = self.sc.getStrSz( g, stid=i.stid, tt=True )
+            t1, tt = self.sc.getStrSz( g, stid=i.stid, tt=True, cmv=u )
             np = t1[1]*npy
             if not isClim:
               np = np*cmv[u][(e,g)]

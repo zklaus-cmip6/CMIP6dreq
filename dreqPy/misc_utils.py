@@ -9,11 +9,11 @@ def setMlab( m ):
         else:
           mlab = m
       else:
-        ll = sorted( list(m) )
+        ll = sorted( [x.lower() for x in list(m)] )
         if len(ll) == 1:
           mlab = list(m)[0]
         else:
-          mlab='.'.join( [ x[:2].lower() for x in m ] )
+          mlab='.'.join( [ x[:2].lower() for x in ll ] )
       return mlab
 
 class dreqLog(object):
