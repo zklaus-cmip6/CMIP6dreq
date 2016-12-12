@@ -43,10 +43,10 @@ class xlsx(object):
       self.wb.close()
 
 class vsum(object):
-  def __init__(self,sc,odsz,npy,makeTab,mt_tables,exptFilter=None, odir='xls', tabByFreqRealm=False):
+  def __init__(self,sc,odsz,npy,makeTab=None,tables=None,exptFilter=None, odir='xls', tabByFreqRealm=False):
     self.tabByFreqRealm = tabByFreqRealm
     self.makeTab = makeTab
-    self.mt_tables = mt_tables
+    self.mt_tables = tables
     idir = dreq.DOC_DIR
     self.sc = sc
     self.odsz=odsz
@@ -81,7 +81,7 @@ class vsum(object):
       self.infoRows.append( ll )
     ii.close()
 
-  def analAll(self,pmax,mips=None,html=True):
+  def analAll(self,pmax,mips=None,html=True,makeTabs=True):
       volsmm={}
       volsmmt={}
       volsme={}
@@ -90,6 +90,9 @@ class vsum(object):
         theseMips =  ['TOTAL',] + self.sc.mips
       else:
         theseMips = mips
+
+      self.rres = {}
+    
       for m in theseMips:
         olab = m
         if m == '*TOTAL':
@@ -108,15 +111,15 @@ class vsum(object):
           cmv1, cmvts = self.sc.cmvByInvMip(thism,pmax=pmax,includeYears=True)
           self.uniqueCmv = self.sc.differenceSelectedCmvDict(  cmv1, cmvTotal )
 
-        self.run( thism, '%s/requestVol_%s_%s_%s' % (self.odir,olab,self.sc.tierMax,pmax), pmax=pmax )
+        self.run( thism, '%s/requestVol_%s_%s_%s' % (self.odir,olab,self.sc.tierMax,pmax), pmax=pmax,doxlsx=makeTabs )
 
-        self.anal(olab=olab,doUnique='TOTAL' in theseMips, makeTabs=True)
+        self.anal(olab=olab,doUnique='TOTAL' in theseMips, makeTabs=makeTabs)
         ttl = sum( [x for k,x in self.res['vu'].items()] )*2.*1.e-12
-        print ( '%s volume: %8.2fTb' % (m,ttl) )
         volsmm[m] = self.res['vm']
         volsmmt[m] = self.res['vmt']
         volsme[m] = self.res['ve']
         volsue[m] = self.res['uve']
+        self.rres[m] = self.res['vf'].copy()
         if m == 'TOTAL':
           cmvTotal = self.sc.selectedCmv.copy()
           self.uniqueCmv =  {}
@@ -164,7 +167,7 @@ class vsum(object):
     else:
       return '%s/%s_%s_%s_%s_%s%s' % (self.odir,self.xlsPrefixM,olab,lab2,self.sc.tierMax,self.pmax,self.efnsfx)
 
-  def anal(self,olab=None,doUnique=False,makeTabs=False):
+  def anal(self,olab=None,doUnique=False,makeTabs=False,mode='full'):
     vmt = collections.defaultdict( int )
     vm = collections.defaultdict( int )
     ve = collections.defaultdict( int )
@@ -172,6 +175,9 @@ class vsum(object):
     lm = collections.defaultdict( set )
 
     lex, vet, vf, vu, mvol = self._analSelectedCmv(self.sc.selectedCmv )
+    if mode == 'short':
+      self.res = { 'vet':vet,  'lex':lex, 'vu':vu, 'vf':vf}
+      return
     if olab != 'TOTAL' and doUnique:
       s_lex, s_vet, s_vf, s_vu, s_mvol = self._analSelectedCmv(self.uniqueCmv )
       s_lm = set( self.uniqueCmv.keys() )
@@ -182,17 +188,18 @@ class vsum(object):
         vmt[('Unique',t)] += s_vet[(e,t)]
         uve[e] += s_vet[(e,t)]
 
-    checkMvol = 1
-    for k in mvol:
-      sp = self.sc.dq.inx.uid[k[0]]
-      if k not in self.mvol:
-        print ( '%s missing from mvol: ' % str(k) )
-      else:
-        if checkMvol > 1:
-          for u in mvol[k]:
-            la = self.sc.dq.inx.uid[u].label
-            if self.mvol[k][u] != mvol[k][u]:
-              print ( 'MISMATCH IN %s (%s): %s:: %s,%s' % (str(k),sp.label,la,mvol[k][u],self.mvol[k][u]) )
+    checkMvol = -1
+    if checkMvol > 0:
+      for k in mvol:
+        sp = self.sc.dq.inx.uid[k[0]]
+        if k not in self.mvol:
+          print ( '%s missing from mvol: ' % str(k) )
+        else:
+          if checkMvol > 1:
+            for u in mvol[k]:
+              la = self.sc.dq.inx.uid[u].label
+              if self.mvol[k][u] != mvol[k][u]:
+                print ( 'MISMATCH IN %s (%s): %s:: %s,%s' % (str(k),sp.label,la,mvol[k][u],self.mvol[k][u]) )
           
     for e in lex:
       ee = self.sc.dq.inx.uid[e]
@@ -250,12 +257,7 @@ class vsum(object):
           el = self.sc.dq.inx.uid[e].label
           self.makeTab(self.sc.dq, subset=s_lex[e], dest=self.xlsDest('u',olab,el), collected=ucc[e])
 
-    self.res = { 'vmt':vmt, 'vet':vet, 'vm':vm, 'uve':uve, 've':ve, 'lm':lm, 'lex':lex, 'vu':vu, 'cc':cc, 'cct':cct}
-    cc8 = collections.defaultdict( int )
-    for e,t in vet:
-      cc8[t] += vet[(e,t)]
-    for f in sorted( vf.keys() ):
-      print ( 'Frequency: %s: %s' % (f,vf[f]*2.*1.e-12 ) )
+    self.res = { 'vmt':vmt, 'vet':vet, 'vm':vm, 'uve':uve, 've':ve, 'lm':lm, 'lex':lex, 'vu':vu, 'cc':cc, 'cct':cct, 'vf':vf}
         
   def csvFreqStrSummary(self,mip,pmax=1):
     sf, c3 = self.sc.getFreqStrSummary(mip,pmax=pmax)
@@ -314,14 +316,17 @@ class vsum(object):
     for cmv in self.sc.selectedCmv.keys():
       pass
       
-  def run(self,mip='_all_',fn='test',pmax=1):
+  def run(self,mip='_all_',fn='test',pmax=1,doxlsx=True):
     if mip == '_all_':
       mip = set(self.sc.mips )
     self.mip = mip
+    orecs, crecs = self.csvFreqStrSummary(mip,pmax=pmax)
+    print 'csvFreqStrSummary: %s, %s: %s, %s' % (str(mip),pmax,len(orecs),len(crecs))
+    if not doxlsx:
+      return
     print ('Writing %s' % fn )
     self.x = xlsx( fn )
     self.sht = self.x.newSheet( 'Volume' )
-    orecs, crecs = self.csvFreqStrSummary(mip,pmax=pmax)
     oh = orecs[0]
     self.sht.set_column(0,0,60)
     self.sht.set_column(1,1,15)

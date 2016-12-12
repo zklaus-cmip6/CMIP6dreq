@@ -5,6 +5,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">
        Some specialised string types
     </xs:documentation></xs:annotation>
+<xs:simpleType name="st__uid"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9:_.+-])+"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="st__attLabel_def"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9-])+"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="st__attLabel_und"><xs:restriction base="xs:string"><xs:pattern value="([a-zA-Z0-9_])+"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="st__attLabel_int"><xs:restriction base="xs:integer"/></xs:simpleType>
@@ -17,7 +18,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">qcranges: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__qcranges">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__qcranges_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__qcranges_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="qcranges"/>
 <xs:attribute name="title" type="xs:string" fixed="Quality Control Ranges"/>
 <xs:attribute name="id" type="xs:string" fixed=""/>
@@ -27,7 +28,7 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringRecord identifierlabel;
+   aa:st__uidRecord identifierlabel;
    xs:stringtitle;
    xs:stringurl;
    xs:stringLink to review pagecomment;
@@ -45,7 +46,7 @@
 <xs:complexType name="ct__qcranges_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="url" type="xs:string"/>
 <xs:attribute name="comment" type="xs:string"/>
 <xs:attribute name="prov" type="xs:string"/>
@@ -63,7 +64,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">places: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__places">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__places_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__places_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="places"/>
 <xs:attribute name="title" type="xs:string" fixed="Places, States or Reservoirs"/>
 <xs:attribute name="id" type="xs:string" fixed=""/>
@@ -73,7 +74,7 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringlabel;
+   aa:st__uidlabel;
    xs:stringtitle;
    xs:stringmatter;
    xs:stringSubstance mip;
@@ -83,7 +84,7 @@
 <xs:complexType name="ct__places_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="matter" type="xs:string"/>
 <xs:attribute name="mip" type="xs:string"/>
 <xs:attribute name="vid" type="xs:string"/>
@@ -93,7 +94,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">transfers: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__transfers">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__transfers_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__transfers_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="transfers"/>
 <xs:attribute name="title" type="xs:string" fixed="Transfers of Material"/>
 <xs:attribute name="id" type="xs:string" fixed=""/>
@@ -103,7 +104,7 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringlabel;
+   aa:st__uidlabel;
    xs:stringtitle;
    xs:stringfrid;
    xs:stringtoid;
@@ -115,7 +116,7 @@
 <xs:complexType name="ct__transfers_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="frid" type="xs:string"/>
 <xs:attribute name="toid" type="xs:string"/>
 <xs:attribute name="isOneWay" type="xs:boolean"/>
@@ -127,7 +128,7 @@
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">units: Complex Type declaration
        </xs:documentation></xs:annotation>
 <xs:complexType name="ct__units">
-<xs:sequence><xs:element name="item" maxOccurs="8000" type="aa:ct__units_vocabItem"/></xs:sequence>
+<xs:sequence><xs:element name="item" maxOccurs="12000" type="aa:ct__units_vocabItem"/></xs:sequence>
 <xs:attribute name="label" type="xs:string" fixed="units"/>
 <xs:attribute name="title" type="xs:string" fixed="Units"/>
 <xs:attribute name="id" type="xs:string" fixed=""/>
@@ -137,7 +138,7 @@
 <xs:annotation><xs:appinfo>Attribute annotation</xs:appinfo><xs:documentation xml:lang="en">label;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   xs:stringlabel;
+   aa:st__uidlabel;
    xs:stringtitle;
    xs:stringgroup;
    xs:stringtext;
@@ -145,7 +146,7 @@
 <xs:complexType name="ct__units_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
-<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="xs:string"/>
+<xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="group" type="xs:string"/>
 <xs:attribute name="text" type="xs:string"/>
 

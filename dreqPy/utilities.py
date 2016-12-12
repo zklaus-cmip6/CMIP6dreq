@@ -1,7 +1,32 @@
+import re
+
+class markupHtml(object):
+  def __init__(self,base):
+    self.resect = re.compile( '(\{[a-zA-Z]*\})' )
+    self.relink = re.compile( '(\[http\S*.*\])' )
+    self.base = base
+
+  def parse(self,ss):
+    print 'INFO.parsing: ',ss
+    for x in self.resect.findall( ss ):
+      print 'INFO.parsing.0001: ',x
+      ss = ss.replace( x, self.sectionlink(x) )
+    for x in self.relink.findall( ss ):
+      print 'INFO.parsing.0001: ',x
+      ss = ss.replace( x, self.linklink(x) )
+    return ss
+
+  def sectionlink( self, x ):
+    x1 = x[1:-1]
+    return '<a href=%s%s.html>%s</a>' % (self.base,x1,x1)
+  def linklink( self, x ):
+    a,b = x[1:-1].split( None, 1 )
+    return '<a href=%s>%s</a>' % (a,b)
+
 
 class gridOptionSort(object):
   def __init__(self,oldpy=True):
-    self.od = {'1deg':'1001','2deg':'1002','native':'0102','DEF':'9000','':'9001','native:01':'0101'}
+    self.od = {'1deg':'1001','100km':'1001','2deg':'1002','native':'0102','DEF':'9000','':'9001','native:01':'0101'}
     self.oldpy = oldpy
 
   def cmp(self,x,y):
@@ -108,11 +133,14 @@ class cmvFilter(object):
       ## print self.dq.inx.uid[s].label, len(this), len(imr)
 
     return cmv
-  def filterByChoiceRank(self,cmv=None):
+
+  def filterByChoiceRank(self,cmv=None,asDict=False):
     """Filter a set of CMOR variable identifiers by rank as specified in varChoiceLinkR section of the data request.
        cmv: set of CMOR variable identifiers.
       
        Returns the filetered set. The items removed are available in self.rejected."""
+    if asDict:
+      assert cmv != None, 'Cannot have empty cmv argument if asDict is True'
 ##
 ## cmv is a set of CMORvar ids
 ##
@@ -127,7 +155,10 @@ class cmvFilter(object):
     v1 = set( [ u for u in cmv if u in s ] )
     if len(v1) == 0:
       ## print 'Nothing to do'
-      return cmv
+      if asDict:
+        return
+      else:
+        return cmv
 
 ## set of "rank" choice groups relevant to current selection
     s1 = set( [i.cid for i in self.dq.coll['varChoiceLinkR'].items if i.vid in v1] )
@@ -144,7 +175,10 @@ class cmvFilter(object):
         for i in this:
           if i.rank < mr:
             l1 = len(cmv)
-            cmv.remove( i.vid )
+            if asDict:
+               cmv.pop( i.vid )
+            else:
+              cmv.remove( i.vid )
             if len(cmv) == l1:
               print ( 'Failed to remove i.vid=%s' % i.vid )
             self.rejected.add( i.vid )
@@ -155,7 +189,10 @@ class cmvFilter(object):
         ## print self.dq.inx.uid[s].label, len(this)
         pass
 
-    return cmv
+    if asDict:
+      return
+    else:
+      return cmv
 
 
 test = cmvFilter
