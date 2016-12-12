@@ -163,11 +163,7 @@
    aa:st__uidRecord Identifiertitle;
    xs:stringLong namestid;
    xs:stringLink to a record specifying the structure of the variable (dimensions and associated variable attributes).vid;
-   xs:stringMIP Variablevalid_min;
-   xs:floatMinimum expected value for this variable.valid_max;
-   xs:floatMaximum expected value for this variable.ok_min_mean_abs;
-   xs:floatMinimum expected value of the mean absolute value at each point in timeok_max_mean_abs;
-   xs:floatMaximum expected value of the mean absolute value at each point in timedeflate;
+   xs:stringMIP Variabledeflate;
    xs:stringDeflate: NetCDF compression parameterdeflate_level;
    xs:stringDeflate Level: NetCDF compression parametershuffle;
    xs:stringShuffle: NetCDF compression parameterdefaultPriority;
@@ -191,10 +187,6 @@
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="stid" type="xs:string"/>
 <xs:attribute name="vid" type="xs:string"/>
-<xs:attribute name="valid_min" type="xs:float"/>
-<xs:attribute name="valid_max" type="xs:float"/>
-<xs:attribute name="ok_min_mean_abs" type="xs:float"/>
-<xs:attribute name="ok_max_mean_abs" type="xs:float"/>
 <xs:attribute name="deflate" type="xs:string"/>
 <xs:attribute name="deflate_level" type="xs:string"/>
 <xs:attribute name="shuffle" type="xs:string"/>
@@ -677,7 +669,7 @@
    xs:stringRecord Titlelabel;
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
-   aa:st__uidRecord identifierclass;
+   aa:st__uidRecord identifierchoiceClass;
    xs:stringClass of choice: heirarchy|cfgdescription;
    xs:stringRecord descriptionvarList;
    xs:stringA colon separated list of variable namesoptionList;
@@ -686,7 +678,7 @@
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
-<xs:attribute name="class" type="xs:string"/>
+<xs:attribute name="choiceClass" type="xs:string"/>
 <xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="varList" type="xs:string"/>
 <xs:attribute name="optionList" type="xs:string"/>

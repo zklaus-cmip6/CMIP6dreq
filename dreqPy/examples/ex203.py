@@ -20,19 +20,19 @@ def runExample( sc, priorityMax ):
     ll = ['C4MIP','CFMIP','LUMIP']
     ee = {}
     ss = 0.
+    sc.setTierMax( 1 )
     for l in ll:
-      x = sc.volByMip( l, pmax=priorityMax )*1.e-12*bytesPerFloat
+      x = sc.volByMip2( l, pmax=priorityMax )*1.e-12*bytesPerFloat
       print ( '%9s  %5.1fTb'  % ( l,x ) )
       ss += x
-    z = sc.volByMip( set(ll), pmax=priorityMax )*1.e-12*bytesPerFloat
+    z = sc.volByMip2( set(ll), pmax=priorityMax )*1.e-12*bytesPerFloat
 
     print ( 'Combined:  %5.1fTb'  % z )
     print ( 'Overlap:   %5.1fTb'  % (ss-z) )
 
-    sc.setTierMax( 1 )
-    z1 = sc.volByMip( set(ll), pmax=priorityMax )*1.e-12*bytesPerFloat
+    z1 = sc.volByMip2( set(ll), pmax=priorityMax )*1.e-12*bytesPerFloat
     sc.setTierMax( 2 )
-    z2 = sc.volByMip( set(ll), pmax=priorityMax )*1.e-12*bytesPerFloat
+    z2 = sc.volByMip2( set(ll), pmax=priorityMax )*1.e-12*bytesPerFloat
     print ( '' )
     print ( 'Combined, tier 1 only:  %5.1fTb'  % z1 )
     print ( 'Combined, tier 1+2 only:  %5.1fTb'  % z2 )
@@ -41,12 +41,13 @@ def main(scope):
 
   sc = scope.dreqQuery()
   print ('DREQ VERSION: %s' % str(sc.dq.version) )
-  print ( '######### All variables ###########' )
-  priorityMax = 3
-  runExample( sc, priorityMax )
+  ##print ( '######### All variables ###########' )
+  ##priorityMax = 3
+  ##runExample( sc, priorityMax )
   print ( '######### Top priority variables ###########' )
   priorityMax = 1
   runExample( sc, priorityMax )
+  ##sc.showOpts()
 
 if __name__ == '__main__':
   main( scope )

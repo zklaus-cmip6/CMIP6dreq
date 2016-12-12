@@ -32,9 +32,12 @@ else:
 gridSorter = gridOptionSort( oldpython )
 
 def sortTimeSlice( tsl ):
+  
   s = set()
   for ts in tsl:
-    s.add( ts[1] )
+    if ts[0] == None:
+      return (1,ts,'Taking unsliced option')
+    s.add( ts[0][1] )
   if len(s) > 1:
     return (-1,None,'Multiple slice types')
   tst = s.pop()
@@ -42,8 +45,8 @@ def sortTimeSlice( tsl ):
     return (-2,None,'slice type aggregation not supported')
   if len(tsl) == 2:
     tsll = list( tsl )
-    sa,ea = tsll[0][2:]
-    sb,eb = tsll[1][2:]
+    sa,ea = tsll[0][0][2:]
+    sb,eb = tsll[1][0][2:]
     if sa <= sb and ea >= eb:
       return (1,tsll[0], 'Taking largest slice')
     if sb <= sa and eb >= ea:
@@ -52,9 +55,9 @@ def sortTimeSlice( tsl ):
       return (2,tsll, 'Slices are disjoint')
     return (-3,None, 'Overlapping slices')
   else:
-    tsll = sorted( list(tsl), key=lambda x: x[3] )
-    if min( [x[2] for x in tsll] ) == tsll[-1][2]:
-        return (1,tsll[-1], 'Taking largest slice')
+    tsll = sorted( list(tsl), key=lambda x: x[0][3] )
+    if min( [x[0][2] for x in tsll] ) == tsll[-1][0][2]:
+        return (1,tsll[0][-1], 'Taking largest slice')
     return (-4,None, 'Cannot sort slices')
 
 odsz = {'landUse':(5,'free'), 'tau':7, 'scatratio':15, 'effectRadLi|tau':(28,'query pending'), 'vegtype':(8,'free'), 'sza5':5, 'site':(119,'73 for aquaplanet .. '), 'iceband':(5,'free'), 'dbze':15, 'spectband':(10,'free'), 'misrBands':(7,'query pending'), 'effectRadIc|tau':(28,'query pending')}
@@ -131,7 +134,7 @@ def filter2( a, b, tt, tm ):
 npy = {'1hrClimMon':24*12, 'daily':365, u'Annual':1, u'fx':0.01, u'1hr':24*365, u'3hr':8*365,
        u'monClim':12, u'Timestep':100, u'6hr':4*365, u'day':365, u'1day':365, u'mon':12, u'yr':1,
        u'1mon':12, 'month':12, 'year':1, 'monthly':12, 'hr':24*365, 'other':24*365,
-        'subhr':24*365, 'Day':365, '6h':4*365, '3 hourly':8*365, '':1 }
+        'subhr':24*365, 'Day':365, '6h':4*365, '3 hourly':8*365, '':1, 'dec':0.1 }
 
 ## There are 4 cmor variables with blank frequency ....
 
@@ -160,7 +163,9 @@ class dreqQuery(object):
     self.rlu = {}
     for i in self.dq.coll['objective'].items:
       k = '%s.%s' % (i.mip,i.label)
-      assert not k in self.rlu, 'Duplicate label in objectives: %s' % k
+      ##assert not k in self.rlu, 'Duplicate label in objectives: %s' % k
+      if k in self.rlu:
+        print ( 'SEVERE: Duplicate label in objectives: %s' % k )
       self.rlu[k] = i.uid
 
     self.odsz = odsz
@@ -171,6 +176,7 @@ class dreqQuery(object):
     self.gridPolicyDefaultNative = False
     self.gridOceanStructured = True
     self.gridPolicyForce = None
+    self.retainRedundantRank = False
     self.gridPolicyTopOnly = True
     self.exptFilter = None
     self.exptFilterBlack = None
@@ -195,6 +201,11 @@ class dreqQuery(object):
     self.mcfgNote = None
     self.szcfg()
     self.requestItemExpAll(  )
+
+  def showOpts(self):
+    print ( ( self.tierMax, self.gridPolicyDefaultNative, self.gridOceanStructured, self.gridPolicyForce,
+    self.retainRedundantRank, self.gridPolicyTopOnly, self.exptFilter, self.exptFilterBlack,
+    self.uniqueRequest ))
 
   def setMcfg(self, ll, msg=None ):
     assert len(ll) == 7, 'Model config must be of length 7: %s' % str(ll)
@@ -558,7 +569,7 @@ class dreqQuery(object):
     ## return dict[<variable group>][grid flag]{dict[<experiment>,<grid>]{<years>}}
     return ff
 
-  def volByExpt( self, l1, ex, pmax=1, cc=None, retainRedundantRank=False, intersection=False,expFullEx=False, adsCount=False ):
+  def volByExpt( self, l1, ex, pmax=1, cc=None, intersection=False,expFullEx=False, adsCount=False ):
     """volByExpt: calculates the total data volume associated with an experiment/experiment group and a list of request items.
           The calculation has some approximations concerning the number of years in each experiment group.
           cc: an optional collector, to accumulate indexed volumes. """
@@ -590,7 +601,7 @@ class dreqQuery(object):
 ##
 ## filter by configuration option and rank
 ##
-    if not retainRedundantRank:
+    if not self.retainRedundantRank:
       len1 = len(vars.keys())
       cmv = self.cmvFilter.filterByChoiceRank(cmv=vars.keys())
       vars = cmv
@@ -706,14 +717,13 @@ class dreqQuery(object):
           ff[v] = szv[v]
           ny = nymg[v]['native']
         else:
-          if len( nymg[v] ) > 1:
-            print ( '########### Selecting first in list .............' )
           ks0 = nymg[v].keys()
           if len(ks0) == 0:
             ff[v] = 0.
             ny = 0.
           else:
-            ks = list( nymg[v].keys() )[0]
+            ks = gridSorter.sort( nymg[v].keys() )[0]
+            ##ks = list( nymg[v].keys() )[0]
             ny = nymg[v][ks]
             if inx.uid[v].stid in self.szg[ks]:
               ff[v] = self.szg[ks][ inx.uid[v].stid ] * npy[inx.uid[v].frequency]
@@ -991,7 +1001,11 @@ class dreqQuery(object):
           for x in self.dq.inx.iref_by_sect[i.uid].a['requestVar']:
             i1 = self.dq.inx.uid[x]
 
-            if (pr == -1 and i1.priority <= pmax) or (pr > 0 and pr <= pmax):
+            thisp = i1.priority
+            if pr != -1:
+              thisp = pr
+              
+            if thisp <= pmax:
               if includeYears and i1.vid in self.cmvGridId:
                 ##assert i.uid in expys, 'No experiment info found for requestVarGroup: %s' % i.uid
                 ## may have no entry as a consequence of tierMin being set in the requestLink(s).
@@ -1013,7 +1027,10 @@ class dreqQuery(object):
                             grd1 = grd
                           cc[(i1.vid,e,grd1)].add( expys[i.uid][e,grd] )
                           if i.uid in self.tsliceDict and e in self.tsliceDict[i.uid]:
-                            ccts[(i1.vid,e)].add( self.tsliceDict[i.uid][e] )
+                            ccts[(i1.vid,e)].add( (self.tsliceDict[i.uid][e],thisp) )
+                          else:
+                            ccts[(i1.vid,e)].add( (None,thisp) )
+
 
                   else:
 
@@ -1041,24 +1058,10 @@ class dreqQuery(object):
             kk = gridSorter.sort( l2x[(v,e)].keys() )
             gflg = {'si':'','li':''}.get( self.cmvGridId[v], self.cmvGridId[v] )
             g = kk[0]
-            ##if g in ['DEF','']:
-              ##if self.gridPolicyDefaultNative:       
-                 ##g = 'native'
-            ##elif g == 'native:01':
-              ##if gflg == 'o' and not self.gridOceanStructured:
-                ##g = '1deg'
-              ##else:
-                ##g = 'native'
             if g not in l2x[(v,e)]:
               print '%s not found in %s (%s):' % (g,str(l2x[(v,e)].keys()),str(kk))
             val = l2x[(v,e)][g]
                 
-            ##if 'native' in l2x[(v,e)].keys():
-               ##g = 'native'
-               ##val = l2x[(v,e)][g]
-            ##else:
-               ##g = sorted( list( l2x[(v,e)].keys() ) )[0]
-               ##val = l2x[(v,e)][g]
           l2[v][(e,g)] = val
       else:
         for v,e,g in cc:
@@ -1073,12 +1076,20 @@ class dreqQuery(object):
               if rc == 1:
                 l2ts[v][e] = ts
               elif rc == 2:
-                yl = range( ts[0][2], ts[0][3] + 1) + range( ts[1][2], ts[1][3] + 1)
-                l2ts[v][e] = ('_union', 'YEARLIST', len(yl), yl )
+                yl = range( ts[0][0][2], ts[0][0][3] + 1) + range( ts[0][1][2], ts[0][1][3] + 1)
+                l2ts[v][e] = ('_union', 'YEARLIST', len(yl), yl, ts[1] )
               else:
                 print ('TIME SLICE MULTIPLE OPTIONS FOR : %s, %s, %s, %s' % (v,e,str(ccts[(v,e)]), msg ) )
             else:
-              l2ts[v][e] = ccts[(v,e)].pop()
+              a,b = ccts[(v,e)].pop()
+              if type(a) == type( [] ):
+                l2ts[v][e] = a + [b,]
+              elif type(a) == type( () ):
+                l2ts[v][e] = list(a) + [b,]
+              elif a == None:
+                l2ts[v][e] = [None,b]
+              else:
+                assert False, 'Bad type for ccts record: %s' % type( a)
       return l2, l2ts
     else:
       l2 = sorted( [i for i in [self.dq.inx.uid[i] for i in ss] if i._h.label != 'remarks'], key=lambda x: x.label )
@@ -1123,6 +1134,12 @@ class dreqQuery(object):
       cmv1, cmvts1 = self.cmvByInvMip(mip,pmax=pmax,includeYears=True,exptFilter=self.exptFilter,exptFilterBlack=self.exptFilterBlack)
       cmv2, cmvts2 = self.cmvByMip('TOTAL',pmax=pmax,includeYears=True,exptFilter=self.exptFilter,exptFilterBlack=self.exptFilterBlack)
       cmv = self.differenceSelectedCmvDict(  cmv1, cmv2 )
+
+    if not self.retainRedundantRank:
+      len1 = len(cmv)
+      self.cmvFilter.filterByChoiceRank(cmv=cmv,asDict=True)
+      len2 = len(cmv)
+      ##print 'INFO.redundant.0001: length %s --> %s' % (len1,len2)
  
     self.selectedCmv = cmv
     return self.cmvByFreqStr( cmv )
@@ -1352,7 +1369,17 @@ class dreqQuery(object):
       else:
         return l2
 
-  def volByMip( self, mip, pmax=2, retainRedundantRank=False, intersection=False, adsCount=False, exptid=None):
+  def volByMip2( self, mip, pmax=2, intersection=False, adsCount=False, exptid=None):
+      vs = volsum.vsum( self, odsz, npy )
+      vs.run( mip, 'dummy', pmax=pmax, doxlsx=False ) 
+      vs.anal(olab='dummy', doUnique=False, mode='short', makeTabs=False)
+      self.vf = vs.res['vf'].copy()
+      for f in sorted( vs.res['vf'].keys() ):
+           mlg.prnt ( 'Frequency: %s: %s' % (f, vs.res['vf'][f]*2.*1.e-12 ) )
+      ttl = sum( [x for k,x in vs.res['vu'].items()] )
+      return ttl
+
+  def volByMip( self, mip, pmax=2, intersection=False, adsCount=False, exptid=None):
 
     l1 = self.rqiByMip( mip )
       
@@ -1373,7 +1400,7 @@ class dreqQuery(object):
       expts = self.esid_to_exptList(e,deref=True,full=False)
       if expts not in  [None,[]]:
         for ei in expts:
-          self.volByE[ei.label] = self.volByExpt( l1, ei.uid, pmax=pmax, cc=cc, retainRedundantRank=retainRedundantRank, intersection=intersection, adsCount=adsCount )
+          self.volByE[ei.label] = self.volByExpt( l1, ei.uid, pmax=pmax, cc=cc, intersection=intersection, adsCount=adsCount )
           vtot += self.volByE[ei.label][0]
         self.allVars = self.allVars.union( self.vars )
     self.indexedVol = cc
@@ -1449,6 +1476,7 @@ class dreqUI(object):
       --ogrdunstr : provide volume estimates for unstructured ocean grid (interpolation requirements of OMIP data are different in this case);
       --allgrd :  When a variable is requested on multiple grids, archive all grids requested (default: only the finest resolution);
       --unique :  List only variables which are requested uniquely by this MIP, for at least one experiment;
+      --esm :  include ESM experiments (default is to omit esm-hist etc from volume estimates);
       --txt : Create text file with requested variables;
       --mcfg : Model configuration: 7 integers, comma separated, 'nho','nlo','nha','nla','nlas','nls','nh1'
                  default: 259200,60,64800,40,20,5,100
@@ -1479,6 +1507,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
                       '--legacy':('legacy',False), \
                       '--xfr':('xfr',False), \
                       '--SF':('SF',False), \
+                      '--esm':('esm',False), \
                       '--grdpol':('grdpol',True), \
                       '--ogrdunstr':('ogrdunstr',False), \
                       '--grdforce':('grdforce',True), \
@@ -1636,6 +1665,8 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     makeTxt = self.adict.get( 'txt', False )
     ##doSf = 'SF' in self.adict or 'sf' in self.adict
     doSf = 'legacy' not in self.adict
+    if doSf:
+      self.adict['sf'] = True
     assert not ('legacy' in self.adict and 'sf' in self.adict), "Conflicting command line argument, 'legacy' and 'sf': use only one of these"
     if makeXls or makeTxt or doSf:
       xlsOdir = self.adict.get( 'xlsdir', 'xls' )
@@ -1644,15 +1675,15 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     tabByFreqRealm = self.adict.get( 'xfr', False )
     if 'SF' in self.adict:
       self.sc.gridPolicyDefaultNative = True
-      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
+      vs = volsum.vsum( self.sc, odsz, npy, makeTab=makeTables.makeTab, tables=makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
       vs.analAll(pmax)
 
       self.sc.gridPolicyDefaultNative = False
-      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
+      vs = volsum.vsum( self.sc, odsz, npy, makeTab=makeTables.makeTab, tables=makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
       vs.analAll(pmax)
 
       self.sc.setTierMax( 3 )
-      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
+      vs = volsum.vsum( self.sc, odsz, npy, makeTab=makeTables.makeTab, tables=makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
       vs.analAll(3)
       return
 
@@ -1682,35 +1713,52 @@ drq -m HighResMIP:Ocean.DiurnalCycle
         assert eid != None, 'Experiment/MIP %s not found' % self.adict['e']
         self.sc.exptFilter = set( [eid,] )
 
-    ss = set()
-    for e in ['esm-hist','esm-hist-ext','esm-piControl','piControl-spinup','esm-piControl-spinup']:
-      ss.add( self.sc.exptByLabel[ e ] )
-    self.sc.exptFilterBlack = ss
+    if not self.adict.get( 'esm', False ):
+      ss = set()
+      for e in ['esm-hist','esm-hist-ext','esm-piControl','piControl-spinup','esm-piControl-spinup']:
+        ss.add( self.sc.exptByLabel[ e ] )
+      self.sc.exptFilterBlack = ss
+    makeXls = self.adict.get( 'xls', False )
 
     if 'sf' in self.adict:
-      vs = volsum.vsum( self.sc, odsz, npy, makeTables.makeTab, makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
-      vs.run( self.adict['m'], 'requestVol_%s_%s_%s' % (mlab,tierMax,pmax), pmax=pmax ) 
-      vs.anal(olab=mlab,doUnique=False)
+      vs = volsum.vsum( self.sc, odsz, npy, makeTab=makeTables.makeTab, tables=makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
+      vs.run( self.adict['m'], '%s/requestVol_%s_%s_%s' % (xlsOdir,mlab,tierMax,pmax), pmax=pmax, doxlsx=makeXls ) 
+      totalOnly = False
+      if len( self.adict['m'] ) == 1 or totalOnly:
+        if makeXls:
+          vsmode='full'
+        else:
+          vsmode='short'
+        vs.anal(olab=mlab,doUnique=False, mode=vsmode, makeTabs=makeXls)
+        for f in sorted( vs.res['vf'].keys() ):
+           mlg.prnt ( 'Frequency: %s: %s' % (f, vs.res['vf'][f]*2.*1.e-12 ) )
+        ttl = sum( [x for k,x in vs.res['vu'].items()] )*2.*1.e-12
+        mlg.prnt( 'TOTAL volume: %8.2fTb' % ttl )
+        return
+      
       mips = self.adict['m']
       if type(mips) in [type(set()),type(dict())]:
-        mips = self.adict['m'].copy()
-        if len(mips) > 1:
-          if type(mips) == type(set()):
-             mips.add( '*TOTAL' )
-          else:
-             mips['*TOTAL'] = ''
+          mips = self.adict['m'].copy()
+          if len(mips) > 1:
+            if type(mips) == type(set()):
+               mips.add( '*TOTAL' )
+            else:
+               mips['*TOTAL'] = ''
 
-      vs.analAll(pmax,mips=mips,html=False)
-      ttl = sum( [x for k,x in vs.res['vu'].items()] )*2.*1.e-12
-      ttl2 = sum( [x for k,x in vs.res['vu'].items()] )*2.*1.e-12
-      mlg.prnt( 'TOTAL volume: %8.2fTb' % ttl )
+      vs.analAll(pmax,mips=mips,html=False,makeTabs=makeXls)
+      thisd = {}
+      for m in sorted( self.adict['m'] ) + ['*TOTAL',]:
+        for f in sorted( vs.rres[m].keys() ):
+           mlg.prnt ( '%s:: Frequency: %s: %s' % (m,f, vs.rres[m][f]*2.*1.e-12 ) )
+      for m in sorted( self.adict['m'] ) + ['*TOTAL',]:
+        thisd[m] = sum( [x for k,x in vs.rres[m].items()] )
+        mlg.prnt( '%s:: TOTAL volume: %8.2fTb' % (m, thisd[m]*2.*1.e-12 )  )
       return
 
 
     adsCount = self.adict.get( 'count', False )
 
     self.getVolByMip(pmax,eid,adsCount)
-    makeXls = self.adict.get( 'xls', False )
     makeTxt = self.adict.get( 'txt', False )
     if makeXls or makeTxt:
       mips = self.adict['m']

@@ -165,8 +165,8 @@ class xlsx(object):
       j = 0
       ncga = 'NetCDF Global Attribute'
       if mode == 'c':
-        hrec = ['Priority','Long name', 'units', 'description', 'comment', 'Variable Name', 'CF Standard Name', 'cell_methods', 'positive', 'type', 'dimensions', 'CMOR Name', 'modeling_realm', 'frequency', 'cell_measures', 'prov', 'provNote','rowIndex','UID','vid','stid','Structure Title']
-        hcmt = ['Default priority (generally overridden by settings in "requestVar" record)',ncga,'','','Name of variable in file','','','CMOR directive','','','CMOR name, unique within table','','','','','','','','','','CMOR variable identifier','MIP variable identifier','Structure identifier','']
+        hrec = ['Priority','Long name', 'units', 'description', 'comment', 'Variable Name', 'CF Standard Name', 'cell_methods', 'positive', 'type', 'dimensions', 'CMOR Name', 'modeling_realm', 'frequency', 'cell_measures', 'prov', 'provNote','rowIndex','UID','vid','stid','Structure Title','valid_min', 'valid_max', 'ok_min_mean_abs', 'ok_max_mean_abs']
+        hcmt = ['Default priority (generally overridden by settings in "requestVar" record)',ncga,'','','Name of variable in file','','','CMOR directive','','','CMOR name, unique within table','','','','','','','','','','CMOR variable identifier','MIP variable identifier','Structure identifier','','','','','']
         if self.xls:
           self.sht.set_column(1,1,40)
           self.sht.set_column(1,3,50)
@@ -397,10 +397,23 @@ class makeTab(object):
             dims +=  strc.odims.split( '|' )
             dims +=  strc.coords.split( '|' )
             dims = ' '.join( dims )
-            if mode == 'c':
-              orec = [str(v.defaultPriority),cv.title, cv.units, cv.description, v.description, cv.label, cv.sn, strc.cell_methods, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, v.prov,v.provNote,str(v.rowIndex),v.uid,v.vid,v.stid,strc.title]
+            if "qcranges" in dq.inx.iref_by_sect[v.uid].a:
+              u = dq.inx.iref_by_sect[v.uid].a['qcranges'][0]
+              qc = dq.inx.uid[u]
+              ll = []
+              for k in ['valid_min', 'valid_max', 'ok_min_mean_abs', 'ok_max_mean_abs']:
+                if qc.hasattr(k):
+                  ll.append( '%s %s' % (qc.__dict__[k],qc.__dict__['%s_status' % k][0]) )
+                else:
+                  ll.append( '' )
+              valid_min, valid_max, ok_min_mean_abs, ok_max_mean_abs = tuple( ll )
             else:
-              orec = ['',cv.title, cv.units, v.description, '', cv.label, cv.sn, '','', strc.cell_methods, v.valid_min, v.valid_max, v.ok_min_mean_abs, v.ok_max_mean_abs, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, strc.flag_values, strc.flag_meanings,v.prov,v.provNote,str(v.rowIndex),cv.uid]
+              valid_min, valid_max, ok_min_mean_abs, ok_max_mean_abs = ('','','','')
+               
+            if mode == 'c':
+              orec = [str(v.defaultPriority),cv.title, cv.units, cv.description, v.description, cv.label, cv.sn, strc.cell_methods, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, v.prov,v.provNote,str(v.rowIndex),v.uid,v.vid,v.stid,strc.title, valid_min, valid_max, ok_min_mean_abs, ok_max_mean_abs]
+            else:
+              orec = ['',cv.title, cv.units, v.description, '', cv.label, cv.sn, '','', strc.cell_methods, valid_min, valid_max, ok_min_mean_abs, ok_max_mean_abs, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, strc.flag_values, strc.flag_meanings,v.prov,v.provNote,str(v.rowIndex),cv.uid]
 
             if byFreqRealm:
               orec = [v.mipTable,] + orec
@@ -414,8 +427,15 @@ class makeTab(object):
             if tslice != None:
               if v.uid not in tslice:
                 orec += ['All', '','']
+              elif type( tslice[v.uid] ) == type( 0 ):
+                print 'ERROR: unexpected tslice type: %s, %s' % (v.uid, tslice[v.uid] )
+              elif len(  tslice[v.uid] ) == 2:
+                x,priority = tslice[v.uid]
+                orec[0] = priority
               else:
-                tslab,tsmode,a,b = tslice[v.uid]
+                tslab,tsmode,a,b,priority = tslice[v.uid]
+                orec[0] = priority
+                     
                 if tsmode[:4] in ['simp','bran']:
                    nys = b + 1 - a
                    ys = range(a,b+1)

@@ -9,8 +9,10 @@ import xml.dom.minidom
 import re, shelve, os, sys
 try:
   from __init__ import DOC_DIR, version, PACKAGE_DIR
+  import utilities
 except:
   from dreqPy.__init__ import DOC_DIR, version, PACKAGE_DIR
+  from dreqPy import utilities
 
 python2 = True
 if sys.version_info[0] == 3:
@@ -167,6 +169,10 @@ class dreqItemBase(object):
            self.dictInit( idict )
          elif mdMode:
            self.mdInit( xmlMiniDom, etree=etree )
+
+       def hasattr(self,tag):
+         """Return True id the argument passed is the name of an attribute of this instance."""
+         return tag in self.__dict__
 
        def __repr__(self):
          """Provide a one line summary of identifying the object."""
@@ -468,13 +474,14 @@ class config(object):
     self.configOnly = configOnly
     self.coll = {}
 
-    self.nts = collections.namedtuple( 'sectdef', ['tag','label','title','id','itemLabelMode','level','maxOccurs','labUnique','uid'] )
+    self.nts = collections.namedtuple( 'sectdef', ['tag','label','title','id','itemLabelMode','level','maxOccurs','labUnique','uid','description'] )
     self.nti = collections.namedtuple( 'itemdef', ['tag','label','title','type','useClass','techNote','required'] )
     self.ntt = collections.namedtuple( 'sectinit', ['header','attributes','defaults'] )
     self.nt__default = collections.namedtuple( 'deflt', ['defaults','glob'] )
     self.ntf = collections.namedtuple( 'sect', ['header','attDefn','items'] )
     self.bscc = loadBS(blockSchemaFile)
     self.strings = strings
+    self.docl = []
 
     self.tt0 = {}
     self.tt1 = {}
@@ -512,6 +519,7 @@ class config(object):
   def __read__(self, thisdoc, configdoc):
     self.vdef = configdoc
     self.vsamp = thisdoc
+    self.docl.append( (thisdoc,configdoc) )
     fn = thisdoc.split( '/' )[-1]
 
     if self.strings:
@@ -701,13 +709,13 @@ class config(object):
            'techNote':'', 'useClass':'__core__', 'superclass':'rdf:property',\
            'type':'xs:string', 'uid':'__core__:description', 'label':'label', 'required':'required' }
         if v == None:
-          vtt = self.nts( '__core__', 'CoreAttributes', 'X.1 Core Attributes', '00000000', 'def', '0', '0', 'false', '__core__' )
+          vtt = self.nts( '__core__', 'CoreAttributes', 'X.1 Core Attributes', '00000000', 'def', '0', '0', 'false', '__core__', 'The core attributes, used in defining sections and attributes' )
         else:
-          vtt = self.nts( '__main__', 'DataRequestAttributes', 'X.2 Data Request Attributes', '00000001', 'def', '0', '0', 'false', '__main__' )
+          vtt = self.nts( '__main__', 'DataRequestAttributes', 'X.2 Data Request Attributes', '00000001', 'def', '0', '0', 'false', '__main__' , 'The attributes used to define data request records')
       elif v == '__sect__':
         idict = {'title':'Record Description', \
          'uid':'__core__:description', 'label':'label', 'useClass':'text', 'id':'id', 'maxOccurs':'', 'itemLabelMode':'', 'level':'', 'labUnique':'' }
-        vtt = self.nts( '__sect__', 'sectionAttributes', 'X.3 Section Attributes', '00000000', 'def', '0', '0', 'false', '__sect__' )
+        vtt = self.nts( '__sect__', 'sectionAttributes', 'X.3 Section Attributes', '00000000', 'def', '0', '0', 'false', '__sect__', 'The attributes used to define data request sections' )
 ##<var label="var" uid="SECTION:var" useClass="vocab" title="MIP Variable" id="cmip.drv.001">
       else:
         l = v.getAttribute( 'label' )
@@ -718,9 +726,10 @@ class config(object):
         lev = v.getAttribute( 'level' )
         maxo = v.getAttribute( 'maxOccurs' )
         labu = v.getAttribute( 'labUnique' )
+        des = v.getAttribute( 'description' )
         il = v.getElementsByTagName( 'rowAttribute' )
         ##vtt = self.nts( v.nodeName, l,t,i,ilm,lev, maxo, labu, 's__%s' % v.nodeName )
-        vtt = self.nts( v.nodeName, l,t,i,ilm,lev, maxo, labu, u )
+        vtt = self.nts( v.nodeName, l,t,i,ilm,lev, maxo, labu, u, des )
         idict = {}
         for i in il:
           tt = self.parseicfg(i)
@@ -873,6 +882,7 @@ defaultConfig = 'dreq2Defn.xml'
 
 defaultDreqPath = '%s/%s' % (DOC_DIR, defaultDreq )
 defaultConfigPath = '%s/%s' % (DOC_DIR, defaultConfig )
+defaultManifestPath = '%s/dreqManifest.txt' % DOC_DIR
 
 class loadDreq(object):
   """Load in a vocabulary document.
@@ -882,7 +892,12 @@ class loadDreq(object):
   htmlStyles: dictionary of styling directives which influence structure of html page generates by the "makeHtml" method
 """
 
-  def __init__(self,dreqXML=defaultDreqPath, configdoc=defaultConfigPath, useShelve=False, htmlStyles=None, strings=False, manifest=None , configOnly=False):
+  def __init__(self,dreqXML=None, configdoc=None, useShelve=False, htmlStyles=None, strings=False, manifest=defaultManifestPath , configOnly=False):
+    if manifest == None:
+      if dreqXML == None:
+       dreqXML=defaultDreqPath
+      if configdoc==None:
+       configdoc=defaultConfigPath
     self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve,strings=strings,manifest=manifest,configOnly=configOnly)
     self.coll = self.c.coll
     self.version = self.c.version
@@ -1022,6 +1037,7 @@ class loadDreq(object):
 page for each item and also generating index pages.
     odir: directory for html files;
     ttl0: Title for main index (in odir/index.html)"""
+    markup = utilities.markupHtml( '' )
 
     ks = self.inx.uid.keys()
     ks.sort( kscl( self.inx.uid, 'title' ).cmp )
@@ -1061,6 +1077,7 @@ page for each item and also generating index pages.
       msg0.append( '<li><a href="index/%s.html">%s [%s]</a></li>\n' % (k,self.coll[k].header.title,k) )
       msg = ['<h1>%s</h1>\n' % ttl, '<ul>',]
       msg.append( '<a href="../index.html">Home</a><br/>\n' )
+      msg.append( '<p>%s</p>\n' % markup.parse( self.coll[k].header.description ) )
       lst = self.getHtmlItemStyle(k)
       
       for i in self.coll[k].items:
