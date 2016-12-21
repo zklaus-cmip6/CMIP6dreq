@@ -60,7 +60,7 @@ def sortTimeSlice( tsl ):
   else:
     tsll = sorted( list(tsl), key=lambda x: x[0][3] )
     if min( [x[0][2] for x in tsll] ) == tsll[-1][0][2]:
-        return (1,tsll[0][-1], 'Taking largest slice')
+        return (1,tsll[-1], 'Taking largest slice')
     return (-4,None, 'Cannot sort slices')
 
 odsz = {'landUse':(5,'free'), 'tau':7, 'scatratio':15, 'effectRadLi|tau':(28,'query pending'), 'vegtype':(8,'free'), 'sza5':5, 'site':(119,'73 for aquaplanet .. '), 'iceband':(5,'free'), 'dbze':15, 'spectband':(10,'free'), 'misrBands':(7,'query pending'), 'effectRadIc|tau':(28,'query pending')}
@@ -1051,7 +1051,7 @@ class dreqQuery(object):
                 ss.add( i1.vid )
 
     if self.intersection and type(mip) == type( set() ) and len(mip) > 1:
-      sint = {k for k in mipsByVar if len( mipsByVar[k] ) == len(mip)}
+      sint = set( [k for k in mipsByVar if len( mipsByVar[k] ) == len(mip)] )
       print ( 'INTERSECTION: %s out of %s variables [%s]' % (len(sint),len(mipsByVar.keys()),str(mip)) )
       xxx = [t for t in cc if t[0] not in sint]
       for t in xxx:
