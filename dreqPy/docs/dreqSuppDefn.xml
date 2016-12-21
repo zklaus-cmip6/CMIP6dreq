@@ -46,7 +46,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="mip" type="xs:string" title="" useClass="internalLink" techNote="" description="" uid="ATTRIBUTE::transfers.mip" superclass="" required="true"/>
   <rowAttribute label="vid" type="xs:string" title="" useClass="internalLink" techNote="" description="Identifier of the 'CMORvar' associated with the flux." uid="ATTRIBUTE::transfers.vid" superclass="" required="true"/>
 </table>
-<table label="units" uid="SECTION:units" title="Units" id="" itemLabelMode="def" level="12" maxOccurs="1" labUnique="Yes" description="The units of the parameters in the var section">
+<table label="units" uid="SECTION:units" title="Units" id="" itemLabelMode="def" level="12" maxOccurs="1" labUnique="Yes" description="The units of the parameters defined in the {var} section">
   <rowAttribute label="label" type="xs:string" title="Record Label" description="Mnemonic label for record" uid="ATTRIBUTE::units.label" required="True"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" description="Title of record" uid="ATTRIBUTE::units.title" required="True"/>
   <rowAttribute label="uid" type="aa:st__uid" title="" useClass="" techNote="" description="" uid="ATTRIBUTE::units.uid" superclass="" required="true"/>

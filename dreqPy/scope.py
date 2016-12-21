@@ -12,17 +12,20 @@ except:
 
 if imm == 1:
   from utilities import cmvFilter, gridOptionSort
-  import makeTables
+  import misc_utils
   import fgrid
   import volsum
 else:
   import dreqPy.volsum as volsum
   import dreqPy.fgrid as fgrid
   from dreqPy.utilities import cmvFilter, gridOptionSort 
-  import dreqPy.makeTables as makeTables
+  import dreqPy.misc_utils as misc_utils
 
 import collections, string, operator
 import sys, os
+
+def intdict():
+    return collections.defaultdict( int )
 
 if sys.version_info >= (2,7):
   oldpython = False
@@ -57,7 +60,7 @@ def sortTimeSlice( tsl ):
   else:
     tsll = sorted( list(tsl), key=lambda x: x[0][3] )
     if min( [x[0][2] for x in tsll] ) == tsll[-1][0][2]:
-        return (1,tsll[0][-1], 'Taking largest slice')
+        return (1,tsll[-1], 'Taking largest slice')
     return (-4,None, 'Cannot sort slices')
 
 odsz = {'landUse':(5,'free'), 'tau':7, 'scatratio':15, 'effectRadLi|tau':(28,'query pending'), 'vegtype':(8,'free'), 'sza5':5, 'site':(119,'73 for aquaplanet .. '), 'iceband':(5,'free'), 'dbze':15, 'spectband':(10,'free'), 'misrBands':(7,'query pending'), 'effectRadIc|tau':(28,'query pending')}
@@ -177,6 +180,7 @@ class dreqQuery(object):
     self.gridOceanStructured = True
     self.gridPolicyForce = None
     self.retainRedundantRank = False
+    self.intersection = False
     self.gridPolicyTopOnly = True
     self.exptFilter = None
     self.exptFilterBlack = None
@@ -964,7 +968,7 @@ class dreqQuery(object):
   def xlsByMipExpt(self,m,ex,pmax,odir='xls',xls=True,txt=False,txtOpts=None):
     import scope_utils
     mxls = scope_utils.xlsTabs(self,tiermax=self.tierMax,pmax=pmax,xls=xls, txt=txt, txtOpts=txtOpts,odir=odir)
-    mlab = makeTables.setMlab( m )
+    mlab = misc_utils.setMlab( m )
     mxls.run( m, mlab=mlab )
 
   def cmvByInvMip( self, mip,pmax=1,includeYears=False, exptFilter=None,exptFilterBlack=None ):
@@ -990,6 +994,8 @@ class dreqQuery(object):
       expys = self.exptYears( l1, ex=exptFilter, exBlack=exptFilterBlack )
       cc = collections.defaultdict( set )
       ccts = collections.defaultdict( set )
+
+    mipsByVar = collections.defaultdict( set )
     ss = set()
     for pr in ee:
 ### loop over request  var groups.
@@ -1015,6 +1021,7 @@ class dreqQuery(object):
                 rtl = True
 
                 if i.uid in expys:
+                  mipsByVar[i1.vid].add( i.mip )
                   if rtl:
                     for e,grd in expys[i.uid]:
                         if exptFilter == None or e in exptFilter:
@@ -1042,6 +1049,13 @@ class dreqQuery(object):
               else:
                 print ( 'SKIPPING %s: %s' % (i1.label,i1.vid) )
                 ss.add( i1.vid )
+
+    if self.intersection and type(mip) == type( set() ) and len(mip) > 1:
+      sint = set( [k for k in mipsByVar if len( mipsByVar[k] ) == len(mip)] )
+      print ( 'INTERSECTION: %s out of %s variables [%s]' % (len(sint),len(mipsByVar.keys()),str(mip)) )
+      xxx = [t for t in cc if t[0] not in sint]
+      for t in xxx:
+          del cc[t]
     if includeYears:
       l2 = collections.defaultdict( dict )
       l2x = collections.defaultdict( dict )
@@ -1059,7 +1073,7 @@ class dreqQuery(object):
             gflg = {'si':'','li':''}.get( self.cmvGridId[v], self.cmvGridId[v] )
             g = kk[0]
             if g not in l2x[(v,e)]:
-              print '%s not found in %s (%s):' % (g,str(l2x[(v,e)].keys()),str(kk))
+              print ( '%s not found in %s (%s):' % (g,str(l2x[(v,e)].keys()),str(kk)) )
             val = l2x[(v,e)][g]
                 
           l2[v][(e,g)] = val
@@ -1074,20 +1088,28 @@ class dreqQuery(object):
             if len( ccts[(v,e)] ) > 1:
               rc, ts, msg = sortTimeSlice( ccts[(v,e)] )
               if rc == 1:
-                l2ts[v][e] = ts
+                l2ts[v][e] = tuple( list(ts) + [g,] )
               elif rc == 2:
-                yl = range( ts[0][0][2], ts[0][0][3] + 1) + range( ts[0][1][2], ts[0][1][3] + 1)
-                l2ts[v][e] = ('_union', 'YEARLIST', len(yl), yl, ts[1] )
+                try:
+##(('abrupt5', 'simpleRange', 0, 5), 1), (('abrupt30', 'simpleRange', 121, 150), 1)]
+                  yl = list( range( ts[0][0][2], ts[0][0][3] + 1) ) + list( range( ts[1][0][2], ts[1][0][3] + 1) )
+                except:
+                  print ( 'FAILED TO GENERATE YEARLIST' )
+                  print ( str((v,e) ) )
+                  print ( 'range( ts[0][0][2], ts[0][0][3] + 1) + range( ts[1][0][2], ts[1][0][3] + 1)' )
+                  print ( str(ts) )
+                  raise
+                l2ts[v][e] = ('_union', 'YEARLIST', len(yl), str(yl), ts[1], g )
               else:
                 print ('TIME SLICE MULTIPLE OPTIONS FOR : %s, %s, %s, %s' % (v,e,str(ccts[(v,e)]), msg ) )
             else:
               a,b = ccts[(v,e)].pop()
               if type(a) == type( [] ):
-                l2ts[v][e] = a + [b,]
+                l2ts[v][e] = a + [b,g,]
               elif type(a) == type( () ):
-                l2ts[v][e] = list(a) + [b,]
+                l2ts[v][e] = list(a) + [b,g,]
               elif a == None:
-                l2ts[v][e] = [None,b]
+                l2ts[v][e] = [None,b,g]
               else:
                 assert False, 'Bad type for ccts record: %s' % type( a)
       return l2, l2ts
@@ -1369,14 +1391,25 @@ class dreqQuery(object):
       else:
         return l2
 
-  def volByMip2( self, mip, pmax=2, intersection=False, adsCount=False, exptid=None):
+  def volByMip2( self, mip, pmax=2, intersection=False, adsCount=False, exptid=None,makeTabs=False, odir='xls'):
       vs = volsum.vsum( self, odsz, npy )
-      vs.run( mip, 'dummy', pmax=pmax, doxlsx=False ) 
-      vs.anal(olab='dummy', doUnique=False, mode='short', makeTabs=False)
+      rqf = 'dummy'
+      vsmode='short'
+      if makeTabs:
+        mlab = misc_utils.setMlab( mip )
+        rqf = '%s/requestVol_%s_%s_%s' % (odir,mlab,self.tierMax,pmax)
+        vsmode='full'
+      vs.run( mip, rqf, pmax=pmax, doxlsx=makeTabs ) 
+      vs.anal(olab='dummy', doUnique=False, mode=vsmode, makeTabs=makeTabs)
       self.vf = vs.res['vf'].copy()
       for f in sorted( vs.res['vf'].keys() ):
            mlg.prnt ( 'Frequency: %s: %s' % (f, vs.res['vf'][f]*2.*1.e-12 ) )
       ttl = sum( [x for k,x in vs.res['vu'].items()] )
+      self.res = vs.res
+      self.indexedVol = collections.defaultdict( dict )
+      for u in vs.res['vu']:
+        cmv = self.dq.inx.uid[u]
+        self.indexedVol[cmv.frequency]['%s.%s' % (cmv.mipTable,cmv.label)] = vs.res['vu'][u]
       return ttl
 
   def volByMip( self, mip, pmax=2, intersection=False, adsCount=False, exptid=None):
@@ -1468,7 +1501,7 @@ class dreqUI(object):
       -p <priority>  maximum priority;
       --xls : Create Excel file with requested variables;
       --sf : Print summary of variable count by structure and frequency [default];
-      --legacy : Use legacy approach to volume estimation (depricated);
+      --legacy : Use legacy approach to volume estimation (deprecated);
       --xfr : Output variable lists in sheets organised by frequency and realm instead of by MIP table;
       --SF : Print summary of variable count by structure and frequency for all MIPs;
       --grdpol <native|1deg> :  policy for default grid, if MIPs have not expressed a preference;
@@ -1641,6 +1674,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       lli = [ int(x) for x in ll]
 
     self.sc = dreqQuery( dq=self.dq )
+    self.sc.intersection = self.intersection
 
     if 'grdforce' in self.adict:
       self.sc.gridPolicyForce = self.adict['grdforce']
@@ -1675,15 +1709,15 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     tabByFreqRealm = self.adict.get( 'xfr', False )
     if 'SF' in self.adict:
       self.sc.gridPolicyDefaultNative = True
-      vs = volsum.vsum( self.sc, odsz, npy, makeTab=makeTables.makeTab, tables=makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
+      vs = volsum.vsum( self.sc, odsz, npy, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
       vs.analAll(pmax)
 
       self.sc.gridPolicyDefaultNative = False
-      vs = volsum.vsum( self.sc, odsz, npy, makeTab=makeTables.makeTab, tables=makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
+      vs = volsum.vsum( self.sc, odsz, npy, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
       vs.analAll(pmax)
 
       self.sc.setTierMax( 3 )
-      vs = volsum.vsum( self.sc, odsz, npy, makeTab=makeTables.makeTab, tables=makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
+      vs = volsum.vsum( self.sc, odsz, npy, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
       vs.analAll(3)
       return
 
@@ -1696,7 +1730,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
         if i not in self.sc.mips:
           ok = False
           mlg.prnt ( 'NOT FOUND: %s' % i )
-      mlab = makeTables.setMlab( self.adict['m'] )
+      mlab = misc_utils.setMlab( self.adict['m'] )
     assert ok,'Available MIPs: %s' % str(self.sc.mips)
 
     eid = None
@@ -1721,7 +1755,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     makeXls = self.adict.get( 'xls', False )
 
     if 'sf' in self.adict:
-      vs = volsum.vsum( self.sc, odsz, npy, makeTab=makeTables.makeTab, tables=makeTables.tables, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
+      vs = volsum.vsum( self.sc, odsz, npy, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
       vs.run( self.adict['m'], '%s/requestVol_%s_%s_%s' % (xlsOdir,mlab,tierMax,pmax), pmax=pmax, doxlsx=makeXls ) 
       totalOnly = False
       if len( self.adict['m'] ) == 1 or totalOnly:
@@ -1734,6 +1768,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
            mlg.prnt ( 'Frequency: %s: %s' % (f, vs.res['vf'][f]*2.*1.e-12 ) )
         ttl = sum( [x for k,x in vs.res['vu'].items()] )*2.*1.e-12
         mlg.prnt( 'TOTAL volume: %8.2fTb' % ttl )
+        self.printListCc(vs.res['vu'])
         return
       
       mips = self.adict['m']
@@ -1753,8 +1788,8 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       for m in sorted( self.adict['m'] ) + ['*TOTAL',]:
         thisd[m] = sum( [x for k,x in vs.rres[m].items()] )
         mlg.prnt( '%s:: TOTAL volume: %8.2fTb' % (m, thisd[m]*2.*1.e-12 )  )
+      self.printListCc(vs.rresu['*TOTAL'])
       return
-
 
     adsCount = self.adict.get( 'count', False )
 
@@ -1772,6 +1807,22 @@ drq -m HighResMIP:Ocean.DiurnalCycle
         txtOpts=None
 
       self.sc.xlsByMipExpt(mips,eid,pmax,odir=xlsOdir,xls=makeXls,txt=makeTxt,txtOpts=txtOpts)
+
+  def printListCc(self,cc):
+    if self.adict.get( 'vars', False ):
+      if python2:
+            vl = sorted( cc.keys(), cmp=cmpd(cc).cmp, reverse=True )
+      else:
+            vl = sorted( cc.keys(), key=lambda x: cc[x], reverse=True )
+      printLinesMax = self.adict.get( 'plm', 20 )
+      if printLinesMax > 0:
+        mx = min( [printLinesMax,len(vl)] )
+      else:
+        mx = len(vl)
+
+      for k in vl[:mx]:
+            cmv = self.dq.inx.uid[k]
+            print ('%s.%s::   %sTb' % (cmv.mipTable, cmv.label, cc[k]*2.*1.e-12) )
 
   def printList(self):
     mips = self.adict['m']
@@ -1791,7 +1842,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
   def getVolByMip(self,pmax,eid,adsCount):
 
     v0 = self.sc.volByMip( self.adict['m'], pmax=pmax, intersection=self.intersection, adsCount=adsCount, exptid=eid )
-    mlg.prnt ( 'getVolByMip: %s [%s]' % (v0,makeTables.vfmt(v0*2.)) )
+    mlg.prnt ( 'getVolByMip: %s [%s]' % (v0,misc_utils.vfmt(v0*2.)) )
     cc = collections.defaultdict( int )
     for e in self.sc.volByE:
       for v in self.sc.volByE[e][2]:
@@ -1812,7 +1863,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
         mx = len(vl)
 
       for v in vl[:mx]:
-        mlg.prnt ( '%s.%s: %s' % (self.dq.inx.uid[v].mipTable,self.dq.inx.uid[v].label, makeTables.vfmt( cc[v]*2. ) ) )
+        mlg.prnt ( '%s.%s: %s' % (self.dq.inx.uid[v].mipTable,self.dq.inx.uid[v].label, misc_utils.vfmt( cc[v]*2. ) ) )
       if mx < len(vl):
         mlg.prnt ( '%s variables not listed (use --printLinesMax to print more)' % (len(vl)-mx) )
 

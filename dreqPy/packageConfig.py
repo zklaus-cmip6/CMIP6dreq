@@ -13,8 +13,8 @@ DOC_DEFAULT_DIR = os.path.join(PACKAGE_DIR, 'docs')
 
 DOC_DIR = os.environ.get('DRQ_CONFIG_DIR', DOC_DEFAULT_DIR)
 
-__versionComment__ = "Updates to AerChemMIP experiment names; removed some variable duplication; cleaned uid strings"
-__version__ = "01.beta.45"
+__versionComment__ = "Version 01.00.00: the first publication ready edition"
+__version__ = "01.00.00"
 __title__ = "dreqPy"
 __description__ = "CMIP6 Data Request Python API"
 __uri__ = "http://proj.badc.rl.ac.uk/svn/exarch/CMIP6dreq/tags/{0}".format(__version__)

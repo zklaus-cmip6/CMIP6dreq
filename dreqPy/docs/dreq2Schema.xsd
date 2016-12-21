@@ -135,7 +135,9 @@
    xs:stringTitledescription;
    xs:stringDescriptionfrequency;
    xs:stringFrequencyprov;
-   xs:stringProvenance</xs:documentation></xs:annotation>
+   xs:stringProvenancealtLabel;
+   xs:stringAlternative Labelcomment;
+   xs:stringComment</xs:documentation></xs:annotation>
 <xs:complexType name="ct__miptable_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
@@ -143,6 +145,8 @@
 <xs:attribute name="description" type="xs:string"/>
 <xs:attribute name="frequency" type="xs:string"/>
 <xs:attribute name="prov" type="xs:string"/>
+<xs:attribute name="altLabel" type="xs:string"/>
+<xs:attribute name="comment" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">CMORvar: Complex Type declaration
@@ -880,12 +884,14 @@
    xs:stringRecord Labeltitle;
    xs:stringRecord Titleuid;
    aa:st__uidRecord Identifiercell_methods;
-   xs:stringCell Methods String</xs:documentation></xs:annotation>
+   xs:stringCell Methods Stringdescription;
+   xs:stringRecord Description</xs:documentation></xs:annotation>
 <xs:complexType name="ct__cellMethods_vocabItem">
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid"/>
 <xs:attribute name="cell_methods" type="xs:string"/>
+<xs:attribute name="description" type="xs:string"/>
 
 </xs:complexType><!--Auto-generated vocabulary complexType declarations/>-->
 <xs:annotation><xs:appinfo>W3Schools Note</xs:appinfo><xs:documentation xml:lang="en">tags: Complex Type declaration
