@@ -4,17 +4,23 @@ import collections, os
 
 try:
   import dreq
-  import misc_utils
-  import overviewTabs
+  imm=1
 except:
-  import dreqPy.dreq as dreq
-  import dreqPy.misc_utils as misc_utils
-  import dreqPy.overviewTabs as overviewTabs
+  import dreqPy.dreq  as dreq
+  imm=2
 
-###cell = xl_rowcol_to_cell(1, 2)  # C2
+if imm == 1:
+  import misc_utils
+  import table_utils
+  import overviewTabs
+else:
+  import dreqPy.misc_utils as misc_utils
+  import dreqPy.table_utils as table_utils
+  import dreqPy.overviewTabs as overviewTabs
 
 class xlsx(object):
   def __init__(self,fn,txtOpts=None):
+    """Class to write spreadsheets of CMOR variables"""
     self.txtOpts = txtOpts
     self.mcfgNote = 'Reference Volume (1 deg. atmosphere, 0.5 deg. ocean)'
     self.wb = xlsxwriter.Workbook('%s.xlsx' % fn)
@@ -43,10 +49,8 @@ class xlsx(object):
       self.wb.close()
 
 class vsum(object):
-  def __init__(self,sc,odsz,npy,makeTab=None,tables=None,exptFilter=None, odir='xls', tabByFreqRealm=False):
+  def __init__(self,sc,odsz,npy,exptFilter=None, odir='xls', tabByFreqRealm=False):
     self.tabByFreqRealm = tabByFreqRealm
-    self.makeTab = makeTab
-    self.mt_tables = tables
     idir = dreq.DOC_DIR
     self.sc = sc
     self.odsz=odsz
@@ -92,6 +96,7 @@ class vsum(object):
         theseMips = mips
 
       self.rres = {}
+      self.rresu = {}
     
       for m in theseMips:
         olab = m
@@ -120,11 +125,12 @@ class vsum(object):
         volsme[m] = self.res['ve']
         volsue[m] = self.res['uve']
         self.rres[m] = self.res['vf'].copy()
+        self.rresu[m] = self.res['vu'].copy()
         if m == 'TOTAL':
           cmvTotal = self.sc.selectedCmv.copy()
           self.uniqueCmv =  {}
       if html:
-        r1 = overviewTabs.r1( self.sc, self.mt_tables, pmax=pmax, vols=( volsmm, volsme, volsmmt,volsue ) )
+        r1 = overviewTabs.r1( self.sc, table_utils.tables, pmax=pmax, vols=( volsmm, volsme, volsmmt,volsue ) )
 
   def _analSelectedCmv(self,cmv):
     lex = collections.defaultdict( list )
@@ -211,7 +217,6 @@ class vsum(object):
       vmt[(ee.mip,t)] += vet[(e,t)]
       vm[ee.mip] += vet[(e,t)]
       ve[e] += vet[(e,t)]
-
 ##
 ## makeTab needs: cc[m]: volume summary, by table,   lm[m]: list of CMOR variables
 ##
@@ -226,12 +231,12 @@ class vsum(object):
           cct[t] += cc[m][t]
         ss = ss.union( lm[m] )
         if makeTabs:
-          self.makeTab(self.sc.dq, subset=lm[m], dest=self.xlsDest('m',olab,m), collected=cc[m])
+          table_utils.makeTab(self.sc.dq, subset=lm[m], dest=self.xlsDest('m',olab,m), collected=cc[m])
 
     if olab != None and makeTabs:
-        self.makeTab(self.sc.dq, subset=ss, dest=self.xlsDest('m',olab,'TOTAL'), collected=cct)
+        table_utils.makeTab(self.sc.dq, subset=ss, dest=self.xlsDest('m',olab,'TOTAL'), collected=cct)
         if olab != 'TOTAL' and doUnique:
-          self.makeTab(self.sc.dq, subset=s_lm, dest=self.xlsDest('m',olab,'Unique'), collected=s_cc)
+          table_utils.makeTab(self.sc.dq, subset=s_lm, dest=self.xlsDest('m',olab,'Unique'), collected=s_cc)
 
     cc = collections.defaultdict( dict )
     ucc = collections.defaultdict( dict )
@@ -246,7 +251,7 @@ class vsum(object):
           if e in self.sc.cmvts[v]:
             tslice[v] = self.sc.cmvts[v][e]
         dest = self.xlsDest('e',olab,el)
-        self.makeTab(self.sc.dq, subset=lex[e], dest=self.xlsDest('e',olab,el), collected=cc[e],byFreqRealm=self.tabByFreqRealm, tslice=tslice)
+        table_utils.makeTab(self.sc.dq, subset=lex[e], dest=self.xlsDest('e',olab,el), collected=cc[e],byFreqRealm=self.tabByFreqRealm, tslice=tslice)
         ##self.makeTab(self.sc.dq, subset=lex[e], dest=self.xlsDest('e',olab,el), collected=cc[e],byFreqRealm=self.tabByFreqRealm)
 
     if olab != 'TOTAL' and doUnique:
@@ -255,7 +260,7 @@ class vsum(object):
       for e in sorted( uve.keys() ):
         if olab != None and makeTabs:
           el = self.sc.dq.inx.uid[e].label
-          self.makeTab(self.sc.dq, subset=s_lex[e], dest=self.xlsDest('u',olab,el), collected=ucc[e])
+          table_utils.makeTab(self.sc.dq, subset=s_lex[e], dest=self.xlsDest('u',olab,el), collected=ucc[e])
 
     self.res = { 'vmt':vmt, 'vet':vet, 'vm':vm, 'uve':uve, 've':ve, 'lm':lm, 'lex':lex, 'vu':vu, 'cc':cc, 'cct':cct, 'vf':vf}
         
@@ -321,10 +326,9 @@ class vsum(object):
       mip = set(self.sc.mips )
     self.mip = mip
     orecs, crecs = self.csvFreqStrSummary(mip,pmax=pmax)
-    print 'csvFreqStrSummary: %s, %s: %s, %s' % (str(mip),pmax,len(orecs),len(crecs))
     if not doxlsx:
       return
-    print ('Writing %s' % fn )
+    print ('Writing %s.xlsx' % fn )
     self.x = xlsx( fn )
     self.sht = self.x.newSheet( 'Volume' )
     oh = orecs[0]

@@ -2,6 +2,21 @@ import collections, string , os
 import logging
 import time
 
+def vfmt( x ):
+            if x < 1.e9:
+              s = '%sM' % int( x*1.e-6 )
+            elif x < 1.e12:
+              s = '%sG' % int( x*1.e-9 )
+            elif x < 1.e13:
+              s = '%3.1fT' % ( x*1.e-12 )
+            elif x < 1.e15:
+              s = '%3iT' % int( x*1.e-12 )
+            elif x < 1.e18:
+              s = '%3iP' % int( x*1.e-15 )
+            else:
+              s = '{:,.2f}'.format( x*1.e-9 )
+            return s
+
 def setMlab( m ):
       if type(m) == type(''):
         if m == '_all_':

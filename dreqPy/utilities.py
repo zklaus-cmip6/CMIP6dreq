@@ -7,12 +7,9 @@ class markupHtml(object):
     self.base = base
 
   def parse(self,ss):
-    print 'INFO.parsing: ',ss
     for x in self.resect.findall( ss ):
-      print 'INFO.parsing.0001: ',x
       ss = ss.replace( x, self.sectionlink(x) )
     for x in self.relink.findall( ss ):
-      print 'INFO.parsing.0001: ',x
       ss = ss.replace( x, self.linklink(x) )
     return ss
 

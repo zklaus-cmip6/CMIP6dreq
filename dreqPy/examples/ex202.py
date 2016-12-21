@@ -9,7 +9,7 @@ if len(sys.argv) > 1:
       print ( 'No scope.py in specified directory' )
       sys.exit(0)
   else:
-    print  ('Specified directoty does not exist' )
+    print  ('Specified directory does not exist' )
     sys.exit(0)
 else:
   from dreqPy import scope
@@ -17,4 +17,4 @@ else:
 
 sc = scope.dreqQuery()
 p=1
-sc.xlsByMipExpt('DCPP',None,p,odir='xls')
+sc.volByMip2('DCPP',p, makeTabs=True)
