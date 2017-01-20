@@ -268,7 +268,12 @@ class styles(object):
     return '<li>%s: %s</li>' % (  targ.label, targ.__href__(odir='../u/', label=targ.title) )
 
   def cmLink(self,targ,frm='',ann=''):
-    return '<li>%s [%s]: %s</li>' % (  targ.cell_methods,targ.label, targ.__href__(odir='../u/', label=targ.title) )
+    sz0 = len(targ._inx.iref_by_sect[targ.uid].a['structure'])
+    sz1 = 0
+    if sz0 > 0:
+      for id in targ._inx.iref_by_sect[targ.uid].a['structure']:
+        sz1 += len(targ._inx.iref_by_sect[id].a['CMORvar'])
+    return '<li>%s [%s]: %s {%s/%s}</li>' % (  targ.cell_methods,targ.label, targ.__href__(odir='../u/', label=targ.title),sz0,sz1 )
 
   def objLnkLink(self,targ,frm='',ann=''):
     if frm == 'objective':

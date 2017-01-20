@@ -1729,7 +1729,22 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       for i in self.adict['m']:
         if i not in self.sc.mips:
           ok = False
-          mlg.prnt ( 'NOT FOUND: %s' % i )
+          tt = misc_utils.mdiff().diff( i,self.sc.mips )
+          assert not tt[0], 'Bad logic ... unexpected return from misc_utils.mdiff'
+          ##cms = difflib.get_close_matches(i,self.sc.mips )
+          if tt[1] == 0:
+            mlg.prnt ( 'NOT FOUND: %s' % i )
+          else:
+            msg = []
+            for ix in tt[2]:
+              msg.append( '%s [%4.1f]' % (','.join( ix[1] ),ix[0]) ) 
+
+            mlg.prnt( '----------------------------------------' )
+            if tt[1] == 1 and len(tt[2][0][1]) == 1:
+              mlg.prnt ( 'NOT FOUND: %s:  SUGGESTION: %s' % (i,msg[0]) )
+            else:
+              mlg.prnt ( 'NOT FOUND: %s:  SUGGESTIONS: %s' % (i,'; '.join( msg ) ) ) 
+            mlg.prnt( '----------------------------------------' )
       mlab = misc_utils.setMlab( self.adict['m'] )
     assert ok,'Available MIPs: %s' % str(self.sc.mips)
 
@@ -1740,12 +1755,23 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       if ex in self.sc.mipsp:
         eid = set( self.dq.inx.iref_by_sect[ex].a['experiment'] )
         self.sc.exptFilter = eid
-      else:
-        for i in self.dq.coll['experiment'].items:
-          if i.label == self.adict['e']:
-            eid = i.uid
-        assert eid != None, 'Experiment/MIP %s not found' % self.adict['e']
+      elif self.adict['e'] in self.sc.exptByLabel:
+        eid = self.sc.exptByLabel[ self.adict['e'] ]
         self.sc.exptFilter = set( [eid,] )
+      else:
+        ns = 0
+        md =  misc_utils.mdiff()
+        ttm = md.diff( self.adict['e'],self.sc.mipsp )
+        tte = md.diff( self.adict['e'],self.sc.exptByLabel.keys() )
+        if ttm[1] > 0 and tte[1] == 0 or (ttm[2][0][0] > 0.6*tte[2][0][0]):
+          oo =  md.prntprep( self.adict['e'], ttm )
+          for l in oo:
+            mlg.prnt( l )
+        if tte[1] > 0 and ttm[1] == 0 or (tte[2][0][0] > 0.6*ttm[2][0][0]):
+          oo =  md.prntprep( self.adict['e'], tte )
+          for l in oo:
+            mlg.prnt( l )
+        assert False, 'Experiment/MIP %s not found' % self.adict['e']
 
     if not self.adict.get( 'esm', False ):
       ss = set()
