@@ -1,6 +1,11 @@
-import collections, string , os
+import collections, string , os, sys
 import logging
 import time
+import difflib 
+
+python2 = True
+if sys.version_info[0] == 3:
+  python2 = False
 
 def vfmt( x ):
             if x < 1.e9:
@@ -17,6 +22,60 @@ def vfmt( x ):
               s = '{:,.2f}'.format( x*1.e-9 )
             return s
 
+
+class mdiff(object):
+  """Compare a string against a list, using the difflib library, with an extension to look at case insensitive matches.
+     Lower case matches are weighted by 90% .. i.e. an exact match scores 1, an exact match after conversion to lower case score 0.90"""
+
+  def __init__(self,nmax=3,cut=0.3):
+    self.n = nmax
+    self.c = cut
+
+  def diff(self,s,targ):
+    if s in targ:
+      return (True, None)
+    targl = collections.defaultdict( set )
+    for x in targ:
+      targl[ x.lower() ].add( x )
+
+    l1 = difflib.get_close_matches(s,targ,self.n,self.c)
+    l1s = difflib.get_close_matches(s.lower(),targl,self.n,self.c)
+    if len( l1 ) == 0 and len(l1s) == 0:
+      return (False, 0)
+    cc = collections.defaultdict( set )
+    for k in l1:
+      r = difflib.SequenceMatcher(None, s, k ).ratio()
+      cc[r].add( k )
+
+    for k in l1s:
+      r = difflib.SequenceMatcher(None, s.lower(), k ).ratio()
+      r1 = 0.90*r
+      for x in targl[k]:
+        cc[r1].add( x )
+    ks = sorted( cc.keys() )
+    ks.reverse()
+    ll = []
+    for k in  ks:
+      ll.append( (k,tuple( cc[k] )) )
+    return (False, len(ll), ll )
+
+  def prntprep(self,i,tt):
+          oo = []
+          if tt[1] == 0:
+            oo.append ( 'NOT FOUND: %s' % i )
+          else:
+            msg = []
+            for ix in tt[2]:
+              msg.append( '%s [%4.1f]' % (','.join( ix[1] ),ix[0]) )
+
+            oo.append( '----------------------------------------' )
+            if tt[1] == 1 and len(tt[2][0][1]) == 1:
+              oo.append ( 'NOT FOUND: %s:  SUGGESTION: %s' % (i,msg[0]) )
+            else:
+              oo.append ( 'NOT FOUND: %s:  SUGGESTIONS: %s' % (i,'; '.join( msg ) ) )
+            oo.append( '----------------------------------------' )
+          return oo
+          
 def setMlab( m ):
       if type(m) == type(''):
         if m == '_all_':
