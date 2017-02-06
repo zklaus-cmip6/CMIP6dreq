@@ -187,8 +187,8 @@ class r1(object):
     mmh = []
     mhdr = [ '\\rot{80}{%s}' % hmap0.get(m,m) for m in self.mipsp + ['TOTAL',]]
     mhdrh = [ '<th><div><span>%s</span></div></th>' % hmap0.get(m,m) for m in self.mipsp + ['TOTAL','Unique','CALC']]
-    oo.write( string.join(['',] + mhdr, ' & ' ) + '\\\\ \n\\hline\n' )
-    mmh.append( '<table>\n<tr class="rotate">' + string.join(['<th></th>',] + mhdrh ) + '</tr>\n' )
+    oo.write( ' & '.join(['',] + mhdr ) + '\\\\ \n\\hline\n' )
+    mmh.append( '<table>\n<tr class="rotate">' + ''.join(['<th></th>',] + mhdrh ) + '</tr>\n' )
     htmltmpl_head = '<html><body>\n' 
 
 ##
@@ -221,7 +221,7 @@ class r1(object):
                  oo1.write( '<td>%s</td>' % h )
                for t in self.cc[m].dd[m2][k]:
                  oo1.write( '\n</tr><tr>\n' )
-                 oo1.write( string.join( ['<td>%s</td>' % x for x in t ] ) + '\n' )
+                 oo1.write( ''.join( ['<td>%s</td>' % x for x in t ] ) + '\n' )
                oo1.write( '</tr></table></div>\n' )
    
            oo1.write( '</body></html>' )
@@ -241,7 +241,7 @@ class r1(object):
             s = vfmt( x )
             kc = '_%s_%s' % (m,m2)
             if m2 == 'TOTAL':
-              sm = string.join( ['%s: %s' % (k,vfmt(cct[k]*2.)) for k in sorted( cct ) ], '; ' )
+              sm = '; '.join( ['%s: %s' % (k,vfmt(cct[k]*2.)) for k in sorted( cct ) ] )
               print ( '%s, %s' % (m,cct) )
               s1 = '<b><span title="%s">%s</span></b>' % (sm,s)
               s = '<b>%s</b>' % s
@@ -249,7 +249,7 @@ class r1(object):
                for k in self.cc[kc].a.keys():
                 cct[k] += self.cc[kc].a[k]
             ll.append( s )
-            sm = string.join( ['%s: %s' % (k,vfmt(self.cc[kc].a[k]*2.)) for k in sorted( self.cc[kc].a.keys() ) ], '; ' )
+            sm = '; '.join( ['%s: %s' % (k,vfmt(self.cc[kc].a[k]*2.)) for k in sorted( self.cc[kc].a.keys() ) ] )
 
             if sss:
               if self.fnm == 'new':
@@ -262,9 +262,9 @@ class r1(object):
           except:
             print ( 'Failed to compute element: %s,%s  %s' % (m,m2, str(self.cc[m].a[m2]) ) )
             raise
-      oo.write( string.join(ll, ' & ' ) + '\\\\ \n\\hline\n' )
+      oo.write( ' & '.join(ll ) + '\\\\ \n\\hline\n' )
       llh.append( '<a href="data/tabs02/requestVol_%s_%s_%s.xlsx">Workings</a>' % (m,self.tiermax, self.pmax) )
-      mmh.append( '<tr>' + string.join(['<td>%s</td>' % x for x in llh] ) + '</tr>\n' )
+      mmh.append( '<tr>' + ''.join(['<td>%s</td>' % x for x in llh] ) + '</tr>\n' )
     mmh.append( '</table>' )
     ttl = 'Data volume overview, upto tier %s and priority %s -- provisional' % (self.tiermax, self.pmax) 
     if self.sc.gridPolicyDefaultNative:
@@ -275,7 +275,7 @@ class r1(object):
 <p>Data volumes are estimated for nominal model with 1 degree resolution and 40 levels in the atmosphere and 0.5 degrees with 60 levels in the ocean.  The "Requesting MIP" (rows) is the MIP specifying the data required to meet their scientific objectives. The "designing MIP" (columns) is the MIP specifying the experimental design. %(defNat)s <b>The figures below represent work in progress: there are still omissions and flaws, more details are on the 
 <a href="https://earthsystemcog.org/projects/wip/CMIP6DataRequest" title="Data Request CoG page">Data Request home page</a>.</b></p>
 ''' % {'ttl':ttl, 'defNat':defNat }
-    bdy += string.join( mmh, '\n' )
+    bdy += '\n'.join( mmh )
     ooh = open( 'tab01_%s_%s%s.html' % (self.tiermax,self.pmax,self.efnsfx), 'w' )
     ooh.write( self.dq.pageTmpl % (ttl, jsh, './', './index.html', bdy ) )
     ooh.close()
