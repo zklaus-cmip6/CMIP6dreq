@@ -209,9 +209,9 @@ class dreqItemBase(object):
                ttl = self.title
              else:
                ttl = self.label
-             ttl = string.replace( ttl,'"', '&quot;' )
-             ttl = string.replace( ttl,'<', '&lt;' )
-             self._htmlTtl = string.replace( ttl,'>', '&gt;' )
+             ttl = ttl.replace( '"', '&quot;' )
+             ttl = ttl.replace( '<', '&lt;' )
+             self._htmlTtl = ttl.replace( '>', '&gt;' )
            title=self._htmlTtl
          if label == None:
              label = self.uid
@@ -221,7 +221,7 @@ class dreqItemBase(object):
          return '<span title="%s"><a href="%s%s.html">%s</a></span>' % (title,odir,self.uid,label)
 
        def htmlLinkAttrListStyle(self,a,targ,frm=None):
-           xx = string.join( ['%s [%s]' % (x.label, x.__href__()) for x in targ], '; ')
+           xx = '; '.join( ['%s [%s]' % (x.label, x.__href__()) for x in targ])
            return '<li>%s: [%s] %s</li>' % ( a, targ[0]._h.label, xx )
 
        def getHtmlLinkAttrStyle(self,a):
@@ -317,7 +317,8 @@ class dreqItemBase(object):
                    am.append( '<h3>%s</h3>' % self._inx.uid[u0]._h.title )
                    am.append( '<ul>' )
                    items = [self._inx.uid[u] for  u in self._inx.iref_by_sect[self.uid].a[t] ]
-                   items.sort( ds('label').cmp )
+                   ##items.sort( ds('label').cmp )
+                   items = sorted( items, key=ds('label').key )
                    for targ in items:
                      if ghis == None:
                        m = '<li>%s:%s [%s]</li>' % ( targ._h.label, targ.label, targ.__href__() )
@@ -487,6 +488,7 @@ class config(object):
     self.tt1 = {}
     self.ttl2 = []
     self.docs = {}
+    self.version = None
 
     if manifest != None:
       assert os.path.isfile( manifest ), 'Manifest file not found: %s' % manifest
@@ -559,7 +561,11 @@ class config(object):
       else:
         self.ns = None
       vl = root.findall( './/{http://purl.org/pav/2.3}version' )
-      self.version = vl[0].text
+      if self.version != None:
+        if vl[0].text != self.version:
+          print ('WARNING: version difference between %s [%s] and %s [%s]' % (self.docl[0][0],self.version,thisdoc,vl[0].text) )
+      else:
+        self.version = vl[0].text
       self.parent_map = dict((c, p) for p in root.getiterator() for c in p)
     else:
       if self.strings:
@@ -864,6 +870,8 @@ class ds(object):
     self.k = k
   def cmp(self,x,y):
     return cmp( x.__dict__[self.k], y.__dict__[self.k] )
+  def key(self,x):
+    return x.__dict__[self.k]
 
 class kscl(object):
   """Comparison object to assist sorting of dictionaries of class instances"""
@@ -872,6 +880,8 @@ class kscl(object):
     self.idict = idict
   def cmp(self,x,y):
     return cmp( self.idict[x].__dict__[self.k], self.idict[y].__dict__[self.k] )
+  def key(self,x):
+    return self.idict[x].__dict__[self.k]
 
 src1 = '../workbook/trial_20150831.xml'
 
@@ -1009,9 +1019,9 @@ class loadDreq(object):
     elif typ in ['xs:integer', 'xs:float', 'xs:boolean']:
        return str(v)
     elif typ == "aa:st__stringList":
-       return string.join(v)
+       return ' '.join(v)
     elif typ in ["aa:st__integerList","aa:st__integerListMonInc", "aa:st__floatList"]:
-       return string.join( [str(x) for x in v] )
+       return ' '.join( [str(x) for x in v] )
     else:
        assert False, 'Data type not recognised'
       
@@ -1022,9 +1032,9 @@ class loadDreq(object):
       a,b = ab
 
       if self.c.rc.isIntStr(a):
-        a = int(a)
+        a = '%3.3i' % int(a)
       if self.c.rc.isIntStr(b):
-        b = int(b)
+        b = '%3.3i' % int(b)
       rv = (a,b)
     elif len(ab) == 1:
       rv = (ab[0],0)
@@ -1040,11 +1050,12 @@ page for each item and also generating index pages.
     markup = utilities.markupHtml( '' )
 
     ks = self.inx.uid.keys()
-    ks.sort( kscl( self.inx.uid, 'title' ).cmp )
+    ##ks.sort( kscl( self.inx.uid, 'title' ).cmp )
+    ks = sorted( ks, key=kscl( self.inx.uid, 'title' ).key )
     for k in ks:
       i = self.inx.uid[k]
       ttl = 'Data Request Record: [%s]%s' % (i._h.label,i.label)
-      bdy = string.join( i.__html__( ghis=self.getHtmlItemStyle ), '\n' )
+      bdy = '\n'.join( i.__html__( ghis=self.getHtmlItemStyle ) )
       oo = open( '%s/u/%s.html' % (odir,i.uid), 'w' )
       oo.write( self.pageTmpl % (ttl, jsh, '../', '../index.html', bdy ) )
       oo.close()
@@ -1072,7 +1083,7 @@ page for each item and also generating index pages.
       else:
         ann = {}
 
-      self.coll[k].items.sort( ds('label').cmp )
+      ##self.coll[k].items.sort( ds('label').cmp )
       ttl = 'Data Request Section: %s' % k
       msg0.append( '<li><a href="index/%s.html">%s [%s]</a></li>\n' % (k,self.coll[k].header.title,k) )
       msg = ['<h1>%s</h1>\n' % ttl, '<ul>',]
@@ -1080,18 +1091,20 @@ page for each item and also generating index pages.
       msg.append( '<p>%s</p>\n' % markup.parse( self.coll[k].header.description ) )
       lst = self.getHtmlItemStyle(k)
       
+      msg1 = []
       for i in self.coll[k].items:
         ##m = '<li>%s: %s</li>' % ( i.label, i.__href__(odir='../u/') )
        
         m = lst( i, ann=ann.get( i.label ) )
-        msg.append( m )
+        msg1.append( m )
+      msg += sorted( msg1 )
       msg.append( '</ul>' )
-      bdy = string.join( msg, '\n' )
+      bdy = '\n'.join( msg )
       oo = open( '%s/index/%s.html' % (odir,k), 'w' )
       oo.write( self.pageTmpl % (ttl, '', '../', '../index.html', bdy ) )
       oo.close()
     msg0.append( '</ul>' )
-    bdy = string.join( msg0, '\n' )
+    bdy = '\n'.join( msg0 )
     oo = open( '%s/index.html' % odir, 'w' )
     oo.write( self.pageTmpl % (ttl0, '', '', 'index.html', bdy ) )
     oo.close()

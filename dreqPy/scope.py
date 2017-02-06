@@ -1201,7 +1201,8 @@ class dreqQuery(object):
       if asDict:
         ii = self.dq.inx.uid[i]
         if ii._h.label != 'remarks':
-          st = self.dq.inx.uid[ ii.stid ]
+         st = self.dq.inx.uid[ ii.stid ]
+         if st._h.label != 'remarks':
           cc0 = collections.defaultdict( float )
           cc1 = collections.defaultdict( int )
           se = collections.defaultdict( set )

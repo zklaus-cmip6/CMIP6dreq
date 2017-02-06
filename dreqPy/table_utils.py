@@ -160,6 +160,8 @@ class xlsx(object):
           self.sht.set_column(1,3,60)
           self.sht.set_column(1,4,40)
           self.sht.set_column(1,5,40)
+          self.sht.set_column(1,20,40)
+          self.sht.set_column(1,21,40)
 
       if self.xls:
         for i in range(len(hrec)):
@@ -187,6 +189,11 @@ class xlsx(object):
           self.sht.set_column(1,9,40)
           self.sht.set_column(1,18,40)
           self.sht.set_column(1,19,40)
+          self.sht.set_column(1,20,40)
+          self.sht.set_column(1,21,40)
+          self.sht.set_column(1,26,40)
+          self.sht.set_column(1,27,40)
+          self.sht.set_column(1,30,40)
       else:
         hrec = ['','Long name', 'units', 'description', '', 'Variable Name', 'CF Standard Name', '','', 'cell_methods', 'valid_min', 'valid_max', 'ok_min_mean_abs', 'ok_max_mean_abs', 'positive', 'type', 'dimensions', 'CMOR name', 'modeling_realm', 'frequency', 'cell_measures', 'flag_values', 'flag_meanings', 'prov', 'provNote','rowIndex','UID']
       if addMips:

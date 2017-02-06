@@ -1,8 +1,8 @@
 import collections, string
 try:
-  import makeTables
+  import table_utils
 except:
-  import dreqPy.makeTables as makeTables
+  import dreqPy.table_utils as table_utils
 
 ##NT_txtopts = collections.namedtuple( 'txtopts', ['mode'] )
 
@@ -11,7 +11,7 @@ class c1(object):
     self.a = collections.defaultdict( int )
 
 class xlsTabs(object):
-  """used in scope.py; uses makeTables.py"""
+  """used in scope.py; uses table_utils.py"""
   def __init__(self,sc,tiermax=1,pmax=1,xls=True, txt=False, txtOpts=None, odir='xls'):
     self.pmax=pmax
     self.tiermax=tiermax
@@ -25,7 +25,7 @@ class xlsTabs(object):
     self.mips = ['AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
     self.mipsp = ['DECK','CMIP6',] + self.mips[:-4]
 
-    self.tabs = makeTables.tables( sc, xls=xls, txt=txt, txtOpts=txtOpts, odir=odir )
+    self.tabs = table_utils.tables( sc, xls=xls, txt=txt, txtOpts=txtOpts, odir=odir )
 
   def run(self,m,colCallback=None,verb=False,mlab=None,exid=None):
       if m == 'TOTAL':
