@@ -62,7 +62,7 @@
    xs:stringThe MIP making the request. tab;
    xs:stringRedundant?expt;
    xs:stringName of experiment or group of experimentsrlid;
-   xs:stringIdentifier of corresponding requestLinkesid;
+   xs:stringIdentifier of Corresponding Request Linkesid;
    xs:stringIdentifier experiment(s): a link to an experiment, an experiment group or a MIPesidComment;
    xs:stringComment on experiment(s) linked to.preset;
    xs:integerOption to override priority set in each variable grouptreset;

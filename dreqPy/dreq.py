@@ -130,7 +130,7 @@ def loadBS(bsfile):
 class rechecks(object):
   """Checks to be applied to strings"""
   def __init__(self):
-    self.__isInt = re.compile( '-{0,1}[0-9]+' )
+    self.__isInt = re.compile( '^-{0,1}[0-9]+$' )
 
   def isIntStr( self, tv ):
     """Check whether a string is a valid representation of an integer."""
@@ -450,9 +450,9 @@ class dreqItemBase(object):
            else:
              if a in ['uid',]:
                thissect = '%s' % (self._h.title)
-               p = self.parent_map( el )
-               print ( 'ERROR.020.0001: missing uid: %s: a,tv,v: %s, %s, %s' % (thissect,a,tv,v) )
+               print ( 'ERROR.020.0001: missing uid: %s: a,tv,v: %s, %s, %s\n %s' % (thissect,a,tv,v,str( self.__dict__ )) )
                if etree:
+                 ##p = self.parent_map( el )
                  print ( ks )
                  raise
                  import sys
@@ -912,6 +912,7 @@ class loadDreq(object):
     self.coll = self.c.coll
     self.version = self.c.version
     self.softwareVersion = version
+    self.indexSortBy = {}
     if not configOnly:
       self.inx = index(self.coll)
       self.itemStyles = {}
@@ -1083,7 +1084,10 @@ page for each item and also generating index pages.
       else:
         ann = {}
 
-      ##self.coll[k].items.sort( ds('label').cmp )
+      sortkey = self.indexSortBy.get( k,'title')
+      print 'INFO.dreq.0001: %s, %s' % (k,sortkey)
+      ##self.coll[k].items.sort( ds(self.indexSortBy.get( k,'title') ).cmp )
+      items = sorted( self.coll[k].items, key=ds(sortkey).key )
       ttl = 'Data Request Section: %s' % k
       msg0.append( '<li><a href="index/%s.html">%s [%s]</a></li>\n' % (k,self.coll[k].header.title,k) )
       msg = ['<h1>%s</h1>\n' % ttl, '<ul>',]
@@ -1092,12 +1096,15 @@ page for each item and also generating index pages.
       lst = self.getHtmlItemStyle(k)
       
       msg1 = []
-      for i in self.coll[k].items:
+      for i in items:
         ##m = '<li>%s: %s</li>' % ( i.label, i.__href__(odir='../u/') )
        
         m = lst( i, ann=ann.get( i.label ) )
         msg1.append( m )
-      msg += sorted( msg1 )
+      if k in self.indexSortBy:
+        msg += msg1
+      else:
+        msg += sorted( msg1 )
       msg.append( '</ul>' )
       bdy = '\n'.join( msg )
       oo = open( '%s/index/%s.html' % (odir,k), 'w' )
