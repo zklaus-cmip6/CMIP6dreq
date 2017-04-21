@@ -349,7 +349,6 @@ if __name__ == "__main__":
 ##
 ## add special styles to dq object "itemStyle" dictionary.
 ##
-
   dq.itemStyles['standardname'] = styls.snLink
   dq.itemStyles['var'] = styls.varLink
   dq.itemStyles['mip'] = styls.mipLink
@@ -364,6 +363,7 @@ if __name__ == "__main__":
   dq.itemStyles['requestLink'] = styls.rqlLink02
   dq.itemStyles['requestItem'] = styls.rqiLink02
   dq.itemStyles['spatialShape'] = styls.labTtl
+  dq.indexSortBy['miptable'] = 'label'
   dq.coll['var'].items[0].__class__._linkAttrStyle['sn'] = styls.snLink01
   dq.coll['CMORvar'].items[0].__class__._linkAttrStyle['stid'] = styls.stidLink01
 ##dq.coll['requestVarGroup'].items[0].__class__._linkAttrStyle['requestVar'] = styls.rqvLink01
