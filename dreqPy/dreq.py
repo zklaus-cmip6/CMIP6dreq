@@ -1085,7 +1085,6 @@ page for each item and also generating index pages.
         ann = {}
 
       sortkey = self.indexSortBy.get( k,'title')
-      print 'INFO.dreq.0001: %s, %s' % (k,sortkey)
       ##self.coll[k].items.sort( ds(self.indexSortBy.get( k,'title') ).cmp )
       items = sorted( self.coll[k].items, key=ds(sortkey).key )
       ttl = 'Data Request Section: %s' % k
