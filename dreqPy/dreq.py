@@ -474,6 +474,7 @@ class config(object):
     self.silent = True
     self.configOnly = configOnly
     self.coll = {}
+    self.recordAttributeDefn = {}
 
     self.nts = collections.namedtuple( 'sectdef', ['tag','label','title','id','itemLabelMode','level','maxOccurs','labUnique','uid','description'] )
     self.nti = collections.namedtuple( 'itemdef', ['tag','label','title','type','useClass','techNote','required'] )
@@ -533,50 +534,52 @@ class config(object):
 ##
     self.etree = False
     self.etree = True
-    if self.etree:
-      import xml.etree.cElementTree as cel
+    self.ns = None
+    if not self.configOnly:
+      if self.etree:
+        import xml.etree.cElementTree as cel
       
-      if not pythonPre27:
-        ## this for of namespace registration not available in 2.6
-        ## absence of registration means module cannot write data exactly as read.
-        ##
-        cel.register_namespace('', "urn:w3id.org:cmip6.dreq.dreq:a")
-        cel.register_namespace('pav', "http://purl.org/pav/2.3")
+        if not pythonPre27:
+          ## this for of namespace registration not available in 2.6
+          ## absence of registration means module cannot write data exactly as read.
+          ##
+          cel.register_namespace('', "urn:w3id.org:cmip6.dreq.dreq:a")
+          cel.register_namespace('pav', "http://purl.org/pav/2.3")
 
-      if not self.strings:
-        if python2:
-          parser = getParser()()
-          self.contentDoc = cel.parse( self.vsamp, parser=parser )
+        if not self.strings:
+          if python2:
+            parser = getParser()()
+            self.contentDoc = cel.parse( self.vsamp, parser=parser )
+          else:
+            self.contentDoc = cel.parse( self.vsamp )
+
+          root = self.contentDoc.getroot()
         else:
-          self.contentDoc = cel.parse( self.vsamp )
+          root = cel.fromstring(self.vsamp)
 
-        root = self.contentDoc.getroot()
+        self.docs[fn] = (root, self.contentDoc)
+        bs = root.tag.split( '}' )
+        if len( bs ) > 1:
+          self.ns = bs[0] + '}'
+        else:
+          self.ns = None
+        vl = root.findall( './/{http://purl.org/pav/2.3}version' )
+        if self.version != None:
+          if vl[0].text != self.version:
+            print ('WARNING: version difference between %s [%s] and %s [%s]' % (self.docl[0][0],self.version,thisdoc,vl[0].text) )
+        else:
+          self.version = vl[0].text
+        self.parent_map = dict((c, p) for p in root.getiterator() for c in p)
       else:
-        root = cel.fromstring(self.vsamp)
-      ##bs = string.split( root.tag, '}' )
-      self.docs[fn] = (root, self.contentDoc)
-      bs = root.tag.split( '}' )
-      if len( bs ) > 1:
-        self.ns = bs[0] + '}'
-      else:
+        if self.strings:
+          self.contentDoc = xml.dom.minidom.parseString( self.vsamp  )
+        else:
+          self.contentDoc = xml.dom.minidom.parse( self.vsamp )
+
+          vl = self.contentDoc.getElementsByTagName( 'prologue' )
+          v = vl[0].getElementsByTagName( 'pav:version' )
+          self.version = v[0].firstChild.data
         self.ns = None
-      vl = root.findall( './/{http://purl.org/pav/2.3}version' )
-      if self.version != None:
-        if vl[0].text != self.version:
-          print ('WARNING: version difference between %s [%s] and %s [%s]' % (self.docl[0][0],self.version,thisdoc,vl[0].text) )
-      else:
-        self.version = vl[0].text
-      self.parent_map = dict((c, p) for p in root.getiterator() for c in p)
-    else:
-      if self.strings:
-        self.contentDoc = xml.dom.minidom.parseString( self.vsamp  )
-      else:
-        self.contentDoc = xml.dom.minidom.parse( self.vsamp )
-
-        vl = self.contentDoc.getElementsByTagName( 'prologue' )
-        v = vl[0].getElementsByTagName( 'pav:version' )
-        self.version = v[0].firstChild.data
-      self.ns = None
 
     vl = doc.getElementsByTagName( 'table' ) + doc.getElementsByTagName( 'annextable' )
     self.tables = {}
@@ -640,7 +643,8 @@ class config(object):
         assert k in ec, 'Key %s [%s] not found' % (k,sct)
         self.coll[sct].attDefn[k] = ec[k]
 
-    self.recordAttributeDefn = tables
+    for k in tables:
+      self.recordAttributeDefn[k] = tables[k]
 
     if self.configOnly:
       return
@@ -1085,6 +1089,7 @@ page for each item and also generating index pages.
         ann = {}
 
       sortkey = self.indexSortBy.get( k,'title')
+      print 'INFO.dreq.0001: %s, %s' % (k,sortkey)
       ##self.coll[k].items.sort( ds(self.indexSortBy.get( k,'title') ).cmp )
       items = sorted( self.coll[k].items, key=ds(sortkey).key )
       ttl = 'Data Request Section: %s' % k
