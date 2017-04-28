@@ -251,7 +251,7 @@ class dreqQuery(object):
         elif vd == 'aslevel':
           nz = self.mcfg['nlas']
         else:
-          mlg.prnt( 'Failed to parse dimensions %s' % i.dimensions )
+          mlg.prnt( 'Failed to parse dimensions %s: %s' % (i.label,i.dimensions) )
           raise
       else:
         nz = i.levels
