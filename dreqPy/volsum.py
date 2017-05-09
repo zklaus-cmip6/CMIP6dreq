@@ -282,7 +282,7 @@ class vsum(object):
     for tt in sorted( c3.keys() ):
       s,o,g = tt
       i = self.sc.dq.inx.uid[ s ]
-      if o != '':
+      if o != '' and type(o) == type('x'):
         msg = '%48.48s [%s]' % (i.title,o)
       else:
         msg = '%48.48s' % i.title

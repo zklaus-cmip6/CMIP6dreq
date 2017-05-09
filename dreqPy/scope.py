@@ -3,6 +3,10 @@
 The scope.py module contains the dreqQuery class and a set of ancilliary functions. The dreqQuery class contains methods for analysing the data request.
 """
 
+class exYr(object):
+  def __init__(self):
+    pass
+
 try:
   import dreq
   imm=1
@@ -281,7 +285,7 @@ class dreqQuery(object):
     for i in self.dq.coll['structure'].items:
       s = 1
       knownAtmos = False
-      if i.odims != '':
+      if i.__dict__.get('odims','')  != '':
         if i.odims in odsz:
            sf = odsz[i.odims]
         else:
@@ -498,6 +502,7 @@ class dreqQuery(object):
         print ( 'WARN.001.00001: no request items for: %s, %s' % (rl.uid, rl.title) )
       else:
 
+        ##print rl.uid, rl.title, rl.grid, rl.gridreq
         if self.gridPolicyForce != None:
           grd = self.gridPolicyForce
         elif rl.grid in ['1deg','2deg','100km']:
@@ -514,7 +519,7 @@ class dreqQuery(object):
              #or self.gridPolicyDefaultNative:
             grd = 'native:01'
           else:
-            ## print ( 'INFO.grd.00001: defaulting to grid ..%s, %s, %s' % (rl.label,rl.title, rl.uid) )
+            ##print ( 'INFO.grd.00001: defaulting to grid ..%s, %s, %s' % (rl.label,rl.title, rl.uid) )
             grd = 'DEF'
 
         for iu in self.dq.inx.iref_by_sect[rl.uid].a['requestItem']:
@@ -540,12 +545,14 @@ class dreqQuery(object):
     ee = collections.defaultdict( dict )
 
     revertToLast = True
+    ey = exYr()
     if revertToLast:
       for g,e,grd in cc:
         ee[g][(e,grd)] = max( cc[( g,e,grd) ] )
         if (g,e) in ccts and ee[g][(e,grd)] in ccts[(g,e)]:
            self.tsliceDict[g][e] = ccts[(g,e)][ ee[g][(e,grd)] ]
-      return ee
+      ey.exptYears = ee
+      return ey
     ff = collections.defaultdict( dict )
 ##
 ## this needs to be done separately for ocean and atmosphere, because of the default logic workflow ...
@@ -1020,19 +1027,20 @@ class dreqQuery(object):
                 gflg = {'si':'','li':''}.get( self.cmvGridId[i1.vid], self.cmvGridId[i1.vid] )
                 rtl = True
 
-                if i.uid in expys:
+                if i.uid in expys.exptYears:
                   mipsByVar[i1.vid].add( i.mip )
                   if rtl:
-                    for e,grd in expys[i.uid]:
+                    for e,grd in expys.exptYears[i.uid]:
                         if exptFilter == None or e in exptFilter:
                           if grd == 'DEF':
-                            if gflg == 'o':
+                            if gflg == 'o' and not self.gridPolicyDefaultNative:
+                            ##if gflg == 'o':
                               grd1 = '1deg'
                             else:
                               grd1 = 'native'
                           else:
                             grd1 = grd
-                          cc[(i1.vid,e,grd1)].add( expys[i.uid][e,grd] )
+                          cc[(i1.vid,e,grd1)].add( expys.exptYears[i.uid][e,grd] )
                           if i.uid in self.tsliceDict and e in self.tsliceDict[i.uid]:
                             ccts[(i1.vid,e)].add( (self.tsliceDict[i.uid][e],thisp) )
                           else:
@@ -1041,11 +1049,11 @@ class dreqQuery(object):
 
                   else:
 
-                   for gf in expys[i.uid]:
-                    for e,grd in expys[i.uid][gf]:
+                   for gf in expys.exptYears[i.uid]:
+                    for e,grd in expys.exptYears[i.uid][gf]:
                       if grd in ["1deg",'2deg'] or gf == gflg:
                         if exptFilter == None or e in exptFilter:
-                          cc[(i1.vid,e,grd)].add( expys[i.uid][gf][e,grd] )
+                          cc[(i1.vid,e,grd)].add( expys.exptYears[i.uid][gf][e,grd] )
               else:
                 print ( 'SKIPPING %s: %s' % (i1.label,i1.vid) )
                 ss.add( i1.vid )
@@ -1215,23 +1223,29 @@ class dreqQuery(object):
             if self.isLatLon[st.spid] != False:
               g1 = g
               if g1 == 'DEF' and self.isLatLon[st.spid] == 'o':
-                  g1 = '1deg'
+                  if self.gridPolicyDefaultNative:
+                     g1 = 'native'
+                  else:
+                     g1 = '1deg'
               elif g == 'native:01':
                 gflg = {'si':'','li':''}.get( self.cmvGridId[i], self.cmvGridId[i] )
                 if gflg == 'o' and not self.gridOceanStructured:
                   g1 = '1deg'
                 else:
                   g1 = 'native'
+              elif g1 in ['1deg','2deg','native']:
+                pass
               else:
+                print ( 'WARNING --- blind default to native: %s' % g )
                 g1 = 'native'
             elif g == 'native:01':
                 g1 = 'native'
 
-            cc[ (st.spid,st.odims,ii.frequency,g1) ].append( (i,cc0[g],cc1[g],se[g]) )
+            cc[ (st.spid,st.__dict__.get('odims',''),ii.frequency,g1) ].append( (i,cc0[g],cc1[g],se[g]) )
 
       else:
         st = self.dq.inx.uid[ i.stid ]
-        cc[ (st.spid,st.odims,i.frequency) ].append( i.label )
+        cc[ (st.spid,st.__dict__.get('odims',''),i.frequency) ].append( i.label )
 
     self.thiscmvset = set()
     c2 = collections.defaultdict( dict )
@@ -1312,7 +1326,7 @@ class dreqQuery(object):
       st = self.dq.inx.uid[stid]
       if st._h.label != 'remarks':
         s = st.spid
-        o = st.odims
+        o = st.__dict__.get( 'odims', '' )
       else:
         self.strSz[ (stid,g) ] = (False,0)
         if tt:
