@@ -323,9 +323,11 @@ class makeTab(object):
           else:
             dims = []
             dims +=  sshp.dimensions.split( '|' )
-            dims +=  strc.odims.split( '|' )
+            if 'odims' in strc.__dict__:
+              dims +=  strc.odims.split( '|' )
             dims +=  tshp.dimensions.split( '|' )
-            dims +=  strc.coords.split( '|' )
+            if 'coords' in strc.__dict__:
+              dims +=  strc.coords.split( '|' )
             dims = ' '.join( dims )
             if "qcranges" in dq.inx.iref_by_sect[v.uid].a:
               u = dq.inx.iref_by_sect[v.uid].a['qcranges'][0]

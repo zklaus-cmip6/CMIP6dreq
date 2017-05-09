@@ -96,7 +96,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::spatialShape.title" superclass="" required="true"/>
   <rowAttribute label="uid" type="aa:st__uid" title="Record Identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::spatialShape.uid" superclass="" required="true"/>
   <rowAttribute label="dimensions" type="xs:string" title="List of spatial dimensions" useClass="" techNote="" description="" uid="ATTRIBUTE::spatialShape.dimensions" superclass="" required="true"/>
-  <rowAttribute label="dimids" type="aa:st__stringList" title="Identifiers for records in grids section" useClass="internalLinkList" techNote="" description="" uid="ATTRIBUTE::spatialShape.dimids" superclass="" required="true"/>
+  <rowAttribute label="dimids" type="aa:st__stringList" title="Identifiers for records in grids section" useClass="internalLinkList" techNote="" description="" uid="ATTRIBUTE::spatialShape.dimids" superclass="" required="false"/>
   <rowAttribute label="levels" type="xs:integer" title="Number of vertical levels (ignored if levelFlag=false)" useClass="" techNote="" description="The number of vertical levels, if fixed." uid="ATTRIBUTE::spatialShape.levels" superclass="" required="true"/>
   <rowAttribute label="levelFlag" type="xs:boolean" title="Flag set to *false* if number of levels is optional (e.g. determined by the model)" useClass="" techNote="" description="True is there is a fixed number of levels specified by the 'levels' attribute." uid="ATTRIBUTE::spatialShape.levelFlag" superclass="" required="true"/>
 </table>
@@ -264,7 +264,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="label" type="xs:string" title="Record Label" useClass="" techNote="" description="" uid="ATTRIBUTE::temporalShape.label" superclass="skos:prefLabel" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Record Title" useClass="" techNote="" description="" uid="ATTRIBUTE::temporalShape.title" superclass="dc:title" required="true"/>
   <rowAttribute label="uid" type="aa:st__uid" title="Record Identifier" useClass="recordId" techNote="" description="" uid="ATTRIBUTE::temporalShape.uid" superclass="" required="true"/>
-  <rowAttribute label="dimid" type="xs:string" title="Identifiers for record in grids section" useClass="internalLink" techNote="" description="" uid="ATTRIBUTE::temporalShape.dimid" superclass="" required="true"/>
+  <rowAttribute label="dimid" type="xs:string" title="Identifiers for record in grids section" useClass="internalLink" techNote="" description="" uid="ATTRIBUTE::temporalShape.dimid" superclass="" required="false"/>
   <rowAttribute label="dimensions" type="xs:string" title="Dimensions" useClass="" techNote="" description="" uid="ATTRIBUTE::temporalShape.dimensions" superclass="" required="true"/>
   <rowAttribute label="description" type="xs:string" title="Description" useClass="" techNote="" description="" uid="ATTRIBUTE::temporalShape.description" superclass="dc:description" required="false"/>
 </table>
@@ -297,7 +297,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="label" type="xs:string" title="CMOR dimension" useClass="" techNote="" description="Unique label" uid="ATTRIBUTE::grids.label" superclass="skos:prefLabel" required="true"/>
   <rowAttribute label="altLabel" type="xs:string" title="output dimension name" useClass="" techNote="" description="Name used for the dimension in NetCDF files" uid="ATTRIBUTE::grids.altLabel" superclass="skos:altLabel" required="true"/>
   <rowAttribute label="description" type="xs:string" title="description" useClass="" techNote="" description="" uid="ATTRIBUTE::grids.description" superclass="dc:description" required="true"/>
-  <rowAttribute label="standardName" type="xs:string" title="standard name" useClass="internalLink" techNote="" description="CF Standard Name" uid="ATTRIBUTE::grids.standardName" superclass="" required="true"/>
+  <rowAttribute label="standardName" type="xs:string" title="standard name" useClass="internalLink" techNote="" description="CF Standard Name" uid="ATTRIBUTE::grids.standardName" superclass="" required="false"/>
   <rowAttribute label="title" type="xs:string" title="long name" useClass="" techNote="" description="Used for the variable long_name attribute" uid="ATTRIBUTE::grids.title" superclass="dc:title" required="true"/>
   <rowAttribute label="axis" type="xs:string" title="axis" useClass="" techNote="" description="For spatial or temporal dimensions, set to X, Y, Z or T." uid="ATTRIBUTE::grids.axis" superclass="" required="true"/>
   <rowAttribute label="units" type="xs:string" title="units" useClass="" techNote="" description="" uid="ATTRIBUTE::grids.units" superclass="" required="true"/>

@@ -267,6 +267,13 @@ class styles(object):
   def strLink(self,targ,frm='',ann=''):
     return '<li>%s: %s</li>' % (  targ.label, targ.__href__(odir='../u/', label=targ.title) )
 
+  def remarkLink(self,targ,frm='',ann=''):
+    if 'tid' in targ.__dict__ and targ.tid in targ._inx.uid:
+      ii = targ._inx.uid[ targ.tid ]
+      return '<li>%s.%s [%s]: %s</li>' % (  ii._h.label, targ.tattr, ii.label, targ.__href__(odir='../u/', label=targ.uid) )
+    else:
+      return '<li>%s [%s]: %s</li>' % (  targ.label, targ.tattr, targ.__href__(odir='../u/', label=targ.uid) )
+
   def cmLink(self,targ,frm='',ann=''):
     sz0 = len(targ._inx.iref_by_sect[targ.uid].a['structure'])
     sz1 = 0
@@ -357,6 +364,7 @@ if __name__ == "__main__":
   dq.itemStyles['units'] = styls.unitLink
   dq.itemStyles['structure'] = styls.strLink
   dq.itemStyles['cellMethods'] = styls.cmLink
+  dq.itemStyles['remarks'] = styls.remarkLink
   dq.itemStyles['objectiveLink'] = styls.objLnkLink
   dq.itemStyles['requestVarGroup'] = styls.vgrpLink
   dq.itemStyles['miptable'] = styls.miptableLink

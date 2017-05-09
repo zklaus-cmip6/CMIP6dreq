@@ -259,7 +259,7 @@
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid" use="required"/>
 <xs:attribute name="dimensions" type="xs:string" use="required"/>
-<xs:attribute name="dimids" type="aa:st__stringList" use="required"/>
+<xs:attribute name="dimids" type="aa:st__stringList"/>
 <xs:attribute name="levels" type="xs:integer" use="required"/>
 <xs:attribute name="levelFlag" type="xs:boolean" use="required"/>
 
@@ -707,7 +707,7 @@
 <xs:attribute name="id" type="xs:string"/>
 <xs:attribute name="label" type="aa:st__attLabel_def"/>
 <xs:attribute name="title" type="xs:string"/><xs:attribute name="uid" type="aa:st__uid" use="required"/>
-<xs:attribute name="dimid" type="xs:string" use="required"/>
+<xs:attribute name="dimid" type="xs:string"/>
 <xs:attribute name="dimensions" type="xs:string" use="required"/>
 <xs:attribute name="description" type="xs:string"/>
 
@@ -805,7 +805,7 @@
 <xs:attribute name="uid" type="aa:st__uid" use="required"/>
 <xs:attribute name="altLabel" type="xs:string" use="required"/>
 <xs:attribute name="description" type="xs:string" use="required"/>
-<xs:attribute name="standardName" type="xs:string" use="required"/>
+<xs:attribute name="standardName" type="xs:string"/>
 <xs:attribute name="axis" type="xs:string" use="required"/>
 <xs:attribute name="units" type="xs:string" use="required"/>
 <xs:attribute name="isIndex" type="xs:string" use="required"/>
