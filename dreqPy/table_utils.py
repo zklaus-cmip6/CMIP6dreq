@@ -343,7 +343,11 @@ class makeTab(object):
               valid_min, valid_max, ok_min_mean_abs, ok_max_mean_abs = ('','','','')
                
             if mode == 'c':
-              orec = [str(v.defaultPriority),cv.title, cv.units, cv.description, v.description, cv.label, cv.sn, strc.cell_methods, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, v.prov,v.provNote,str(v.rowIndex),v.uid,v.vid,v.stid,strc.title, valid_min, valid_max, ok_min_mean_abs, ok_max_mean_abs]
+              try:
+                orec = [str(v.defaultPriority),cv.title, cv.units, cv.description, v.description, cv.label, cv.sn, strc.cell_methods, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, v.prov,v.provNote,str(v.rowIndex),v.uid,v.vid,v.stid,strc.title, valid_min, valid_max, ok_min_mean_abs, ok_max_mean_abs]
+              except:
+                print ('FAILED TO CONSTRUCT RECORD: %s [%s], %s [%s]' % (v.uid,v.label,cv.uid,cv.label) )
+                raise
             else:
               orec = ['',cv.title, cv.units, v.description, '', cv.label, cv.sn, '','', strc.cell_methods, valid_min, valid_max, ok_min_mean_abs, ok_max_mean_abs, v.positive, v.type, dims, v.label, v.modeling_realm, v.frequency, strc.cell_measures, strc.flag_values, strc.flag_meanings,v.prov,v.provNote,str(v.rowIndex),cv.uid]
 
