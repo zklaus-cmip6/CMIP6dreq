@@ -265,7 +265,12 @@ class styles(object):
     return '<li>%s [%s]: %s</li>' % (  targ.text, targ.label, targ.__href__(odir='../u/', label=targ.title) )
 
   def strLink(self,targ,frm='',ann=''):
-    return '<li>%s: %s</li>' % (  targ.label, targ.__href__(odir='../u/', label=targ.title) )
+    sz0 = len(targ._inx.iref_by_sect[targ.uid].a['CMORvar'])
+    sz1 = 0
+    if sz0 > 0:
+      for u in targ._inx.iref_by_sect[targ.uid].a['CMORvar']:
+        sz1 += len( targ._inx.iref_by_sect[u].a['requestVar'] )
+    return '<li>%s: %s [%s/%s]</li>' % (  targ.label, targ.__href__(odir='../u/', label=targ.title), sz0, sz1 )
 
   def remarkLink(self,targ,frm='',ann=''):
     if 'tid' in targ.__dict__ and targ.tid in targ._inx.uid:
