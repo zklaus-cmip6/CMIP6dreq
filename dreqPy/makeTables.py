@@ -194,7 +194,9 @@ class styles(object):
       if targ._h.label == 'remarks':
         return '<li>%s [%s]: %s</li>' % ( cmv.label, targ.__href__(odir='../u/',label=targ.priority) , 'Variable not defined or not found'  )
       else:
-        return '<li>%s [%s]: %s</li>' % ( cmv.label, targ.__href__(odir='../u/',label=targ.priority) , cmv.__href__(odir='../u/',label=cmv.title)  )
+        ng = len( targ._inx.iref_by_sect[cmv.uid].a['requestVar'] )
+        nv = len( targ._inx.iref_by_sect[cmv.vid].a['CMORvar'] )
+        return '<li>%s.%s [%s]: %s {groups: %s, vars: %s}</li>' % ( cmv.label,cmv.mipTable, targ.__href__(odir='../u/',label=targ.priority) , cmv.__href__(odir='../u/',label=cmv.title), ng, nv  )
     else:
       rg = targ._inx.uid[ targ.vgid ]
       if targ._h.label == 'remarks':

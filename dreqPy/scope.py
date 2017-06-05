@@ -1522,6 +1522,7 @@ class dreqUI(object):
       --grdpol <native|1deg> :  policy for default grid, if MIPs have not expressed a preference;
       --grdforce <native|1deg> :  force a specific grid option, independent of individual preferences;
       --ogrdunstr : provide volume estimates for unstructured ocean grid (interpolation requirements of OMIP data are different in this case);
+      --omitCmip : omit the CMIP core data request (included by default);
       --allgrd :  When a variable is requested on multiple grids, archive all grids requested (default: only the finest resolution);
       --unique :  List only variables which are requested uniquely by this MIP, for at least one experiment;
       --esm :  include ESM experiments (default is to omit esm-hist etc from volume estimates);
