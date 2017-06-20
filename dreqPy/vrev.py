@@ -7,7 +7,9 @@ class checkVar(object):
 --------
 Class to analyse the usage of variables in the data request.
 """
-  def __init__(self,dq):
+  errorLog = collections.defaultdict( set )
+  def __init__(self,dq,errorMode='aggregate'):
+    self.errorMode = errorMode
     self.dq = dq
     self.mips = set( [i.label for i in  dq.coll['mip'].items] )
     for i in ['PDRMIP', 'DECK', 'VIACSAB', 'SolarMIP', 'CMIP6' ]:
@@ -122,7 +124,9 @@ Class to analyse the usage of variables in the data request.
                 r = dq.inx.uid[  dq.inx.iref_by_sect[e].a['experiment'][0] ]
               else:
                 ei = dq.inx.uid[e]
-                print ( 'ERROR.exptgroup.00001: empty experiment group: %s: %s' % (ei.label, ei.title) )
+                if self.errorMode != 'aggregate':
+                  print ( 'ERROR.exptgroup.00001: empty experiment group: %s: %s' % (ei.label, ei.title) )
+                self.errorLog['ERROR.exptgroup.00001'].add( 'empty experiment group: %s: %s' % (ei.label, ei.title) )
             if r._h.label in [ 'remarks','exptgroup']:
               ##print 'WARNING: link to remarks encountered'
               pass

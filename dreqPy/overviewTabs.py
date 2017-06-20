@@ -36,8 +36,10 @@ class c2(object):
 
 hmap0 = {'CMIP6':'Historical'}
 class r1(object):
-  def __init__(self,sc,mt_tables,tiermax=1,pmax=1,only=False,vols=None,fnm='new'):
+  infoLog = collections.defaultdict( list )
+  def __init__(self,sc,mt_tables,tiermax=1,pmax=1,only=False,vols=None,fnm='new',msgLevel=0):
     self.mt_tables = mt_tables
+    self.msgLevel = msgLevel
 
     self.fnm = fnm
     assert vols == None or type(vols) == type( () ), 'vols argument must be none or tuple of length 2: %s' % type(vols)
@@ -132,14 +134,15 @@ class r1(object):
     else:
       fss = '%s-%s_%s_%s.html' % (m,m2,self.tiermax, self.pmax)
     kc = '_%s_%s' % (m,m2)
-    print ('INFO.mmhtml.00001: %s, %s' % (kc,len( self.cc[kc].a.keys() ) ) )
+    self.infoLog[ 'INFO.mmhtml.00001' ].append( ' %s, %s' % (kc,len( self.cc[kc].a.keys() ) ) )
+    ##print ('INFO.mmhtml.00001: %s, %s' % (kc,len( self.cc[kc].a.keys() ) ) )
     if len( self.cc[kc].a.keys() ) == 0:
       return
     if not os.path.isdir( 'tabs03' ):
       print ( 'WARNING.makeMMhtml: creating directory for html files: tabs03' )
       os.mkdir( 'tabs03' )
     oo = open( 'tabs03/%s' % fss, 'w' )
-    ttl = 'Date requested by %s from %s experiments (tier %s, priority %s)' % (m,m2,self.tiermax,self.pmax)
+    ttl = 'Data requested by %s from %s experiments (tier %s, priority %s)' % (m,m2,self.tiermax,self.pmax)
     jsh = ''
     pream = '<h1>%s</h1>\n' % ttl
     if self.efnsfx == '_dn':
@@ -242,7 +245,8 @@ class r1(object):
             kc = '_%s_%s' % (m,m2)
             if m2 == 'TOTAL':
               sm = '; '.join( ['%s: %s' % (k,vfmt(cct[k]*2.)) for k in sorted( cct ) ] )
-              print ( '%s, %s' % (m,cct) )
+              if self.msgLevel > 1:
+                print ( 'INFO.overviewTabs.01001: %s, %s' % (m,cct) )
               s1 = '<b><span title="%s">%s</span></b>' % (sm,s)
               s = '<b>%s</b>' % s
             else:

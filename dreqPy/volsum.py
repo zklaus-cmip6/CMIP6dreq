@@ -199,7 +199,7 @@ class vsum(object):
       for k in mvol:
         sp = self.sc.dq.inx.uid[k[0]]
         if k not in self.mvol:
-          print ( '%s missing from mvol: ' % str(k) )
+          print ( 'INFO.volsum.01001: %s missing from mvol: ' % str(k) )
         else:
           if checkMvol > 1:
             for u in mvol[k]:
@@ -328,7 +328,7 @@ class vsum(object):
     orecs, crecs = self.csvFreqStrSummary(mip,pmax=pmax)
     if not doxlsx:
       return
-    print ('Writing %s.xlsx' % fn )
+    print ('INFO.volsum.01002: Writing %s.xlsx' % fn )
     self.x = xlsx( fn )
     self.sht = self.x.newSheet( 'Volume' )
     oh = orecs[0]

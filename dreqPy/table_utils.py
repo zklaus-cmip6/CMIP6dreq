@@ -361,6 +361,9 @@ class makeTab(object):
               orec.append( ','.join( sorted( list( thismips2) ) ) )
 
             if tslice != None:
+              msgLevel = 0
+              if v.uid in tslice and msgLevel > 1:
+                print ( 'INFO.table_utils.01001: slice 3: %s : %s' % ( str( tslice[v.uid] ), v.label ) )
               if v.uid not in tslice:
                 orec += ['All', '','','']
               elif type( tslice[v.uid] ) == type( 0 ):
@@ -368,7 +371,12 @@ class makeTab(object):
               elif len(  tslice[v.uid] ) == 3:
                 x,priority,grid = tslice[v.uid]
                 orec[0] = priority
-                orec += ['','','',grid]
+                if x != None:
+                   tslab,tsmode,a,b = x
+                   orec += [tslab,tsmode,'',grid]
+                else:   
+                   print ( 'WARN.table_utils.01001: slice 3: %s : %s' % ( str( tslice[v.uid] ), v.label ) )
+                   orec += ['*unknown*','','',grid]
               else:
                 tslab,tsmode,a,b,priority,grid = tslice[v.uid]
                 if type( priority ) != type(1):
@@ -381,6 +389,10 @@ class makeTab(object):
                    nys = b + 1 - a
                    ys = range(a,b+1)
                    orec += [str(nys), '',str(ys)]
+                elif tsmode in ['rangeplus']:
+                   nys = b + 1 - a + 0.01
+                   ys = [1850,] + range(a,b+1)
+                   orec += [str(nys), 'Partial 1850 + %s to %s' % (a,b),'%6.2f' % ys]
                 elif tsmode[:4] in ['YEAR']:
                    nys = a
                    ys = b
