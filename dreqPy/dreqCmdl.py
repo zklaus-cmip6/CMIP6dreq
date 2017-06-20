@@ -43,6 +43,20 @@ def main_entry():
   else:
      x = scope.dreqUI(sys.argv[1:])
      x.run()
+     if len(scope.dreqQuery.errorLog.keys()) > 0:
+       elog = scope.dreqQuery.errorLog
+       print( 'ERRORS ENCOUNTERED IN scope.dreqQuery' )
+       for k in sorted( elog.keys() ):
+         print ( '%s: %s' % (k,len(elog[k]) ) )
+         for m in sorted(list(elog[k])):
+           print ( '          -- %s' % m )
 
+     if len(scope.volsum.table_utils.vrev.checkVar.errorLog.keys()) > 0:
+       elog = scope.volsum.table_utils.vrev.checkVar.errorLog
+       print( 'ERRORS ENCOUNTERED IN vrev.checkVar' )
+       for k in sorted( elog.keys() ):
+         print ( '%s: %s' % (k,len(elog[k]) ) )
+         for m in sorted(list(elog[k])):
+           print ( '          -- %s' % m )
 if __name__ == '__main__':
   main_entry()

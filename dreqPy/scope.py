@@ -38,6 +38,58 @@ else:
 
 gridSorter = gridOptionSort( oldpython )
 
+class timeSlice( object ):
+  def __init__(self,tsl):
+    self.tsl = tsl
+
+  def sort(self):
+    tsl = self.tsl
+    s = set()
+    ee = dict()
+    for ts in tsl:
+      if ts[0] == None:
+        return (1,ts,'Taking unsliced option')
+      s.add( ts[0][1] )
+      ee[ts[0][0]] = ts
+    tst = s.pop()
+    p = min( [ee[k][1] for k in ee.keys()] )
+    if len(s) > 0 or tst == 'dayList':
+      if sorted(ee.keys()) in [['piControl030a','piControl200'],['piControl030', 'piControl030a', 'piControl200']]:
+        return (1,(ee['piControl200'][0],p), 'Taking larger slice (possible alignment issues)')
+      elif sorted(ee.keys()) in [['piControl030', 'piControl030a']]:
+        return (1,(ee['piControl030'][0],p), 'Taking preferred slice (possible alignment issues)')
+      elif sorted(ee.keys()) == ['RFMIP','RFMIP2']:
+        return (1,(('RFMIP-union', 'dayList', None, None),p), 'Taking ad-hoc union')
+      elif sorted(ee.keys()) == ['RFMIP', 'RFMIP2', 'hist55']:
+        return (1,(('hist55plus', 'rangeplus', 1960, 2014),p), 'Taking ad-hoc union with extra ...')
+      elif sorted(ee.keys()) == ['RFMIP', 'hist55']:
+        return (1,(ee['hist55'][0],p), 'Taking larger containing slice')
+      elif sorted(ee.keys()) == ['DAMIP20','DAMIP40']:
+        return (1,(ee['DAMIP40'][0],p), 'Taking larger containing slice')
+      return (-1,None,'Multiple slice types: %s' % sorted(ee.keys()))
+
+    if not ( tst == 'simpleRange' or (len(tst) > 13 and tst[:13] == 'branchedYears') ):
+      return (-2,None,'slice type aggregation not supported')
+    if len(tsl) == 2:
+      tsll = list( tsl )
+      sa,ea = tsll[0][0][2:]
+      sb,eb = tsll[1][0][2:]
+      if sa <= sb and ea >= eb:
+        return (1,tsll[0], 'Taking largest slice')
+      if sb <= sa and eb >= ea:
+        return (1,tsll[1], 'Taking largest slice')
+      if ea < sb or eb < sa:
+        return (2,tsll, 'Slices are disjoint')
+      return (-3,None, 'Overlapping slices')
+    else:
+##
+## sort by end year and length .. if longest of last ending is also the first starting, we can sort ...
+##
+      tsll = sorted( list(tsl), key=lambda x: (x[0][3],x[0][3]-x[0][2]) )
+      if min( [x[0][2] for x in tsll] ) == tsll[-1][0][2]:
+        return (1,tsll[-1], 'Taking largest slice')
+      return (-4,None, 'Cannot sort slices')
+
 def sortTimeSlice( tsl ):
   
   s = set()
@@ -62,7 +114,10 @@ def sortTimeSlice( tsl ):
       return (2,tsll, 'Slices are disjoint')
     return (-3,None, 'Overlapping slices')
   else:
-    tsll = sorted( list(tsl), key=lambda x: x[0][3] )
+##
+## sort by end year and length .. if longest of last ending is also the first starting, we can sort ...
+##
+    tsll = sorted( list(tsl), key=lambda x: (x[0][3],x[0][3]-x[0][2]) )
     if min( [x[0][2] for x in tsll] ) == tsll[-1][0][2]:
         return (1,tsll[-1], 'Taking largest slice')
     return (-4,None, 'Cannot sort slices')
@@ -162,6 +217,7 @@ class col_count(object):
 
 class dreqQuery(object):
   __doc__ = """Methods to analyse the data request, including data volume estimates"""
+  errorLog = collections.defaultdict( set )
   def __init__(self,dq=None,tierMax=1):
     if dq == None:
       self.dq = dreq.loadDreq()
@@ -496,10 +552,12 @@ class dreqQuery(object):
       
     self.tsliceDict = collections.defaultdict( dict )
     ccts = collections.defaultdict( dict )
+    ccts2 = collections.defaultdict( set )
     cc = collections.defaultdict( set )
     for rl in rqll:
       if 'requestItem' not in self.dq.inx.iref_by_sect[rl.uid].a:
-        print ( 'WARN.001.00001: no request items for: %s, %s' % (rl.uid, rl.title) )
+        self.errorLog['WARN.001.00001'].add( 'no request items for: %s, %s' % (rl.uid, rl.title) )
+        ##print ( 'WARN.001.00001: no request items for: %s, %s' % (rl.uid, rl.title) )
       else:
 
         ##print rl.uid, rl.title, rl.grid, rl.gridreq
@@ -541,6 +599,7 @@ class dreqQuery(object):
                     cc[ (rl.refid,e,grd) ].add( thisns*thisny*thisne )
                     if self.rqiExp[iu][4] != None:
                       ccts[(rl.refid,e)][thisns*thisny*thisne] = self.rqiExp[iu][4]
+                      ccts2[(rl.refid,e)].add( self.rqiExp[iu][4] )
 
     ee = collections.defaultdict( dict )
 
@@ -549,8 +608,13 @@ class dreqQuery(object):
     if revertToLast:
       for g,e,grd in cc:
         ee[g][(e,grd)] = max( cc[( g,e,grd) ] )
-        if (g,e) in ccts and ee[g][(e,grd)] in ccts[(g,e)]:
-           self.tsliceDict[g][e] = ccts[(g,e)][ ee[g][(e,grd)] ]
+        ##if (g,e) in ccts and ee[g][(e,grd)] in ccts[(g,e)]:
+#
+# possible corner cut here ... as max length may not include all years where there is a non-overlap ...
+#
+           ##self.tsliceDict[g][e] = ccts[(g,e)][ ee[g][(e,grd)] ]
+## change to a set of slices
+        self.tsliceDict[g][e] = ccts2[(g,e)]
       ey.exptYears = ee
       return ey
     ff = collections.defaultdict( dict )
@@ -1042,10 +1106,10 @@ class dreqQuery(object):
                             grd1 = grd
                           cc[(i1.vid,e,grd1)].add( expys.exptYears[i.uid][e,grd] )
                           if i.uid in self.tsliceDict and e in self.tsliceDict[i.uid]:
-                            ccts[(i1.vid,e)].add( (self.tsliceDict[i.uid][e],thisp) )
+                            for thisSlice in self.tsliceDict[i.uid][e]:
+                              ccts[(i1.vid,e)].add( (thisSlice,thisp) )
                           else:
                             ccts[(i1.vid,e)].add( (None,thisp) )
-
 
                   else:
 
@@ -1093,8 +1157,14 @@ class dreqQuery(object):
       for v in l2:
         for e,g in l2[v]:
           if (v,e) in ccts:
-            if len( ccts[(v,e)] ) > 1:
-              rc, ts, msg = sortTimeSlice( ccts[(v,e)] )
+            ccx = collections.defaultdict( set )
+            for x in ccts[(v,e)]:
+              ccx[x[0]].add( x[1] )
+            if len( ccx.keys() ) > 1:
+              tslp = [ (k,min(ccx[k])) for k in ccx ]
+              thisTimeSlice = timeSlice( tslp )
+              rc, ts, msg = thisTimeSlice.sort()
+              ##rc, ts, msg = sortTimeSlice( tslp )
               if rc == 1:
                 l2ts[v][e] = tuple( list(ts) + [g,] )
               elif rc == 2:
@@ -1107,11 +1177,13 @@ class dreqQuery(object):
                   print ( 'range( ts[0][0][2], ts[0][0][3] + 1) + range( ts[1][0][2], ts[1][0][3] + 1)' )
                   print ( str(ts) )
                   raise
+### tslab,tsmode,a,b,priority,grid
                 l2ts[v][e] = ('_union', 'YEARLIST', len(yl), str(yl), ts[1], g )
               else:
                 print ('TIME SLICE MULTIPLE OPTIONS FOR : %s, %s, %s, %s' % (v,e,str(ccts[(v,e)]), msg ) )
             else:
-              a,b = ccts[(v,e)].pop()
+              a = ccx.keys()[0]
+              b = min( [x[1] for x in ccts[(v,e)] ] )
               if type(a) == type( [] ):
                 l2ts[v][e] = a + [b,g,]
               elif type(a) == type( () ):

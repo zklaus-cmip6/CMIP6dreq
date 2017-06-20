@@ -391,6 +391,10 @@ class dreqItemBase(object):
                tvtl.append( (a,False,None) )
        
          for a,tv,v in tvtl:
+           if a == 'uid':
+             uid = v
+
+         for a,tv,v in tvtl:
            if tv:
              erase = False
              if v == None:
@@ -408,8 +412,12 @@ class dreqItemBase(object):
              elif self._a[a].type in [u'aa:st__floatList', u'aa:st__floatListMonInc']:
                  v = [float(x) for x in v.split()]
              elif self._a[a].type in [u'aa:st__integerList', u'aa:st__integerListMonInc']:
+               try:
                  v = [int(x) for x in v.split()]
-                 if self._a[a].type in [u'aa:st__integerListMonInc'] and self._strictRead:
+               except:
+                 v = [int(float(x)) for x in v.split()]
+                 print ('WARN: non-compliant integer list [%s:%s]: %s' % (thissect,a,v))
+               if self._a[a].type in [u'aa:st__integerListMonInc'] and self._strictRead:
                    for i in range(len(v)-1):
                      assert v[i] < v[i+1], 'Attribute %s of type %s with non-monotonic value: %s' % (a,self._a[a].type,str(v))
              elif self._a[a].type == u'xs:integer':
@@ -425,8 +433,9 @@ class dreqItemBase(object):
                    v = 0
                  else:
                    try:
+                     v0 = v
                      v = int(float(v))
-                     print ( 'WARN: input integer non-compliant: %s: %s: %s' % (thissect,a,v) )
+                     print ( 'WARN: input integer non-compliant: %s: %s: %s [%s] %s' % (thissect,a,v0,v,uid) )
                    except:
                      msg = 'ERROR: failed to convert integer: %s: %s: %s, %s' % (thissect,a,v,type(v))
                      deferredHandling=True
