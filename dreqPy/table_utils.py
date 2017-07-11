@@ -12,6 +12,13 @@ except:
   import dreqPy.vrev as vrev
   import dreqPy.misc_utils as misc_utils
 
+def realmFlt( ss ):
+  if ss == '':
+    return ss
+  if ss.find( ' ' ) == -1:
+    return ss
+  return ss.split( ' ' )[0]
+
 python2 = True
 if sys.version_info[0] == 3:
   python2 = False
