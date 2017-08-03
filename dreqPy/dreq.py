@@ -241,6 +241,7 @@ class dreqItemBase(object):
                    except:
                      print ( 'INFO.cex.00001:',a, self.__dict__[a], sect, self.label )
                      m = '<li>%s: %s .... broken link</li>' % ( app, self.__dict__[a] )
+                     print ( '%s: %s .... broken link' % ( app, self.__dict__[a]  ) )
                      raise
           else:
             assert self._a[a].useClass == 'internalLinkList', 'Unrecognised useClass in __htmlLink__: %s' % self._a[a].useClass
