@@ -243,9 +243,14 @@ class xlsx(object):
     if self.txt:
       self.oo.close()
 
+###
+### need to have name of experiment here, for the aggregation over MIPs to work ... in the column of request by MIPs
+###
 class makeTab(object):
-  def __init__(self, dq, subset=None, mcfgNote=None, dest='tables/test', skipped=set(), collected=None,xls=True,txt=False,txtOpts=None,byFreqRealm=False, tslice=None):
+  def __init__(self, sc, subset=None, mcfgNote=None, dest='tables/test', skipped=set(), collected=None,xls=True,txt=False,txtOpts=None,byFreqRealm=False, tslice=None, exptUid=None):
     """txtOpts: gives option to list MIP variables instead of CMOR variables"""
+    self.sc = sc
+    dq = sc.dq
     if subset != None:
       cmv = [x for x in dq.coll['CMORvar'].items if x.uid in subset]
     else:
@@ -267,7 +272,8 @@ class makeTab(object):
 
     addMips = True
     if addMips:
-      c = vrev.checkVar(dq)
+      chkv = vrev.checkVar(dq)
+      chkv.sc = self.sc
     mode = 'c'
     tableNotes = [
        ('Request Version',str(dq.version)),
@@ -361,9 +367,19 @@ class makeTab(object):
             if byFreqRealm:
               orec = [v.mipTable,] + orec
 
+##!
+# CHECK -- ERROR HERE FOR "TOTAL" ROW --spurious mips in thismips ---
+##!
+## change "c" to something searchable
             if addMips:
-              thismips = c.chkCmv( v.uid )
-              thismips2 = c.chkCmv( v.uid, byExpt=True )
+##
+## union of all mips interested in this variable
+##
+              thismips = chkv.chkCmv( v.uid )
+##
+## all mips requesting this variable for this experiment
+##
+              thismips2 = chkv.chkCmv( v.uid, byExpt=True, expt=exptUid )
               orec.append( ','.join( sorted( list( thismips) ) ) )
               orec.append( ','.join( sorted( list( thismips2) ) ) )
 
@@ -552,6 +568,6 @@ class tables(object):
 ### BUT ... there is a treset in the request item .... it may be that some variables are excluded ...
 ###         need the variable list itself .....
 ###
-          makeTab( self.sc.dq, subset=lll, dest='%s/%s-%s_%s_%s' % (self.odir,mlab,mlab2,self.sc.tierMax,pmax), collected=collector[kkc].a,
+          makeTab( self.sc, subset=lll, dest='%s/%s-%s_%s_%s' % (self.odir,mlab,mlab2,self.sc.tierMax,pmax), collected=collector[kkc].a,
               mcfgNote=self.sc.mcfgNote,
-              txt=self.doTxt, xls=self.doXls, txtOpts=self.txtOpts )
+              txt=self.doTxt, xls=self.doXls, txtOpts=self.txtOpts, exptUid=self.sc.exptByLabel.get(mlab2,mlab2) )

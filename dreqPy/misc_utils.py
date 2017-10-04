@@ -203,7 +203,8 @@ class rqiSet(object):
   npy = {'1hrClimMon':24*12, 'daily':365, u'Annual':1, u'fx':0.01, u'1hr':24*365, u'3hr':8*365,
        u'monClim':12, u'Timestep':100, u'6hr':4*365, u'day':365, u'1day':365, u'mon':12, u'yr':1,
        u'1mon':12, 'month':12, 'year':1, 'monthly':12, 'hr':24*365, 'other':24*365,
-        'subhr':24*365, 'Day':365, '6h':4*365, '3 hourly':8*365, '':1 }
+        'subhr':24*365, 'Day':365, '6h':4*365, '3 hourly':8*365, '':1, 'dec':0.1, 
+        '1hrCM':24*12, '1hrPt':24*365, '3hrPt':8*365, '6hrPt':4*365, 'monPt':12, 'monC':12, 'subhrPt':24*365, 'yrPt':1 }
   def __init__(self,dq,rqi=None,byMip=None):
     self.dq = dq
     if rqi != None:

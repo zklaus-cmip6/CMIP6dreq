@@ -63,6 +63,8 @@ class timeSlice( object ):
       elif sorted(ee.keys()) == ['RFMIP', 'RFMIP2', 'hist55']:
         return (1,(('hist55plus', 'rangeplus', 1960, 2014),p), 'Taking ad-hoc union with extra ...')
       elif sorted(ee.keys()) == ['RFMIP', 'hist55']:
+        return (1,(('hist55plus', 'rangeplus', 1960, 2014),p), 'Taking ad-hoc union with extra ...')
+      elif sorted(ee.keys()) == ['RFMIP2', 'hist55']:
         return (1,(ee['hist55'][0],p), 'Taking larger containing slice')
       elif sorted(ee.keys()) == ['DAMIP20','DAMIP40']:
         return (1,(ee['DAMIP40'][0],p), 'Taking larger containing slice')
@@ -196,9 +198,8 @@ def filter2( a, b, tt, tm ):
 npy = {'1hrClimMon':24*12, 'daily':365, u'Annual':1, u'fx':0.01, u'1hr':24*365, u'3hr':8*365,
        u'monClim':12, u'Timestep':100, u'6hr':4*365, u'day':365, u'1day':365, u'mon':12, u'yr':1,
        u'1mon':12, 'month':12, 'year':1, 'monthly':12, 'hr':24*365, 'other':24*365,
-        'subhr':24*365, 'Day':365, '6h':4*365, '3 hourly':8*365, '':1, 'dec':0.1 }
-
-## There are 4 cmor variables with blank frequency ....
+        'subhr':24*365, 'Day':365, '6h':4*365, '3 hourly':8*365, '':1, 'dec':0.1,
+        '1hrCM':24*12, '1hrPt':24*365, '3hrPt':8*365, '6hrPt':4*365, 'monPt':12, 'monC':12, 'subhrPt':24*365, 'yrPt':1 }
 
 def vol01( sz, v, npy, freq, inx ):
   n1 = npy[freq]
@@ -222,7 +223,7 @@ class dreqQuery(object):
     if dq == None:
       self.dq = dreq.loadDreq()
     else:
-      self.dq=dq
+      self.dq = dq
     self.rlu = {}
     for i in self.dq.coll['objective'].items:
       k = '%s.%s' % (i.mip,i.label)
@@ -254,6 +255,7 @@ class dreqQuery(object):
 
     self.experiments = set( [x.uid for x in self.dq.coll['experiment'].items ] )
     self.exptByLabel = {}
+    self.rqLinkByExpt = self._setRqLinkByExpt()
     for x in self.dq.coll['experiment'].items:
       if x.label in self.exptByLabel:
         print ( 'ERROR: experiment label duplicated: %s' % x.label )
@@ -265,6 +267,28 @@ class dreqQuery(object):
     self.mcfgNote = None
     self.szcfg()
     self.requestItemExpAll(  )
+
+  def _setRqLinkByExpt(self):
+    dq = self.dq
+    ee = {}
+#
+# loop over experiment records
+##
+    for e in dq.coll['experiment'].items:
+      eu = e.uid
+      ss = set()
+
+## loop over request link records
+      for l in dq.coll['requestLink'].items:
+        lu = l.uid
+
+## check to see if any request items associated with the record link to current experiment.
+        for u in dq.inx.iref_by_sect[lu].a['requestItem']:
+            esid = dq.inx.uid[u].esid
+            if esid == eu or 'experiment' in dq.inx.iref_by_sect[esid].a and eu in dq.inx.iref_by_sect[esid].a['experiment']:
+              ss.add( lu )
+      ee[eu] = ss
+    return ee
 
   def showOpts(self):
     print ( ( self.tierMax, self.gridPolicyDefaultNative, self.gridOceanStructured, self.gridPolicyForce,
@@ -805,7 +829,7 @@ class dreqQuery(object):
             else:
               ff[v] = 0.
 
-        if inx.uid[v].frequency != 'monClim':
+        if inx.uid[v].frequency not in ['monClim','monC']:
           ff[v] = ff[v]*ny
 
     ee = self.listIndexDual( ov, 'mipTable', 'label', acount=None, alist=None, cdict=ff, cc=cc )

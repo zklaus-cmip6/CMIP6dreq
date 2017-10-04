@@ -143,7 +143,7 @@ class vsum(object):
       i = self.sc.dq.inx.uid[u]
       if i._h.label != 'remarks':
         npy = self.npy[ i.frequency ]
-        isClim = i.frequency.lower().find( 'clim' ) != -1
+        isClim = i.frequency.lower().find( 'clim' ) != -1 or i.frequency in ['monC', '1hrCM']
         st = self.sc.dq.inx.uid[i.stid]
         c1 = 0
         for e,g in cmv[u]:
@@ -160,7 +160,7 @@ class vsum(object):
             vu[u] += np
           else:
             print ('ERROR.obsoleteMip.00001: %s,%s,%s' % (ee.mip,ee.label,ee.uid) )
-        if i.frequency == 'mon':
+        if i.frequency in ['mon','monPt']:
             mvol[tt][u] = c1
 
     return dict(lex), dict(vet), dict(vf), dict(vu), dict(mvol)
@@ -231,12 +231,13 @@ class vsum(object):
           cct[t] += cc[m][t]
         ss = ss.union( lm[m] )
         if makeTabs:
-          table_utils.makeTab(self.sc.dq, subset=lm[m], dest=self.xlsDest('m',olab,m), collected=cc[m])
+          ##table_utils.makeTab(self.sc.dq, subset=lm[m], dest=self.xlsDest('m',olab,m), collected=cc[m],exptUid=self.sc.exptByLabel.get(m,m) )
+          table_utils.makeTab(self.sc, subset=lm[m], dest=self.xlsDest('m',olab,m), collected=cc[m] )
 
     if olab != None and makeTabs:
-        table_utils.makeTab(self.sc.dq, subset=ss, dest=self.xlsDest('m',olab,'TOTAL'), collected=cct)
+        table_utils.makeTab(self.sc, subset=ss, dest=self.xlsDest('m',olab,'TOTAL'), collected=cct)
         if olab != 'TOTAL' and doUnique:
-          table_utils.makeTab(self.sc.dq, subset=s_lm, dest=self.xlsDest('m',olab,'Unique'), collected=s_cc)
+          table_utils.makeTab(self.sc, subset=s_lm, dest=self.xlsDest('m',olab,'Unique'), collected=s_cc)
 
     cc = collections.defaultdict( dict )
     ucc = collections.defaultdict( dict )
@@ -251,7 +252,7 @@ class vsum(object):
           if e in self.sc.cmvts[v]:
             tslice[v] = self.sc.cmvts[v][e]
         dest = self.xlsDest('e',olab,el)
-        table_utils.makeTab(self.sc.dq, subset=lex[e], dest=self.xlsDest('e',olab,el), collected=cc[e],byFreqRealm=self.tabByFreqRealm, tslice=tslice)
+        table_utils.makeTab(self.sc, subset=lex[e], dest=self.xlsDest('e',olab,el), collected=cc[e],byFreqRealm=self.tabByFreqRealm, tslice=tslice, exptUid=e)
         ##self.makeTab(self.sc.dq, subset=lex[e], dest=self.xlsDest('e',olab,el), collected=cc[e],byFreqRealm=self.tabByFreqRealm)
 
     if olab != 'TOTAL' and doUnique:
@@ -260,7 +261,7 @@ class vsum(object):
       for e in sorted( uve.keys() ):
         if olab != None and makeTabs:
           el = self.sc.dq.inx.uid[e].label
-          table_utils.makeTab(self.sc.dq, subset=s_lex[e], dest=self.xlsDest('u',olab,el), collected=ucc[e])
+          table_utils.makeTab(self.sc, subset=s_lex[e], dest=self.xlsDest('u',olab,el), collected=ucc[e])
 
     self.res = { 'vmt':vmt, 'vet':vet, 'vm':vm, 'uve':uve, 've':ve, 'lm':lm, 'lex':lex, 'vu':vu, 'cc':cc, 'cct':cct, 'vf':vf}
         
