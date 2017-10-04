@@ -188,7 +188,11 @@ class styles(object):
         return '<li>%s [%s]: %s</li>' % ( cmv.label, targ.__href__(odir='../u/',label=targ.priority) , 'Variable not defined or not found'  )
       else:
         ng = len( targ._inx.iref_by_sect[cmv.uid].a['requestVar'] )
-        nv = len( targ._inx.iref_by_sect[cmv.vid].a['CMORvar'] )
+        try:
+          nv = len( targ._inx.iref_by_sect[cmv.vid].a['CMORvar'] )
+        except:
+          print 'FAILED: %s' % cmv.uid
+          raise
         return '<li>%s.%s [%s]: %s {groups: %s, vars: %s}</li>' % ( cmv.label,cmv.mipTable, targ.__href__(odir='../u/',label=targ.priority) , cmv.__href__(odir='../u/',label=cmv.title), ng, nv  )
     else:
       rg = targ._inx.uid[ targ.vgid ]
@@ -347,6 +351,13 @@ htmlStyle['units']        = {'getIrefs':['__all__']}
 htmlStyle['timeSlice']    = {'getIrefs':['__all__']}
 
 if __name__ == "__main__":
+  try:
+    import makeTables
+    import scope
+  except:
+    import dreqPy.scope as scope
+    import dreqPy.makeTables as makeTables
+
   assert os.path.isdir( 'html' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml'
   assert os.path.isdir( 'html/u' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml, and refernces to "u" in style lines below'
   assert os.path.isdir( 'html/index' ), 'Before running this script you need to create "html", "html/index" and "html/u" sub-directories, or edit the call to dq.makeHtml, and refernces to "u" in style lines below'
@@ -382,8 +393,9 @@ if __name__ == "__main__":
 
   ht = htmlTrees(dq)
   dq.makeHtml( annotations={'var':ht.anno}, ttl0='Data Request [%s]' % dreq.version )
+  sc = scope.dreqQuery(dq=dq)
   try:
-    mt = table_utils.makeTab( dq)
+    mt = table_utils.makeTab( sc)
   except:
     print ('Could not make tables ...')
     raise

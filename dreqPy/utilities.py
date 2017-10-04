@@ -63,8 +63,8 @@ class cmvFilter(object):
       return False
 
     vidt = vidt[0]
-    taf = [i for i in cmv if self.dq.inx.uid[i].vid == vidt and self.dq.inx.uid[i].frequency in ['3hr','6hr']]
-    tau = [i for i in self.sc.allVars if self.dq.inx.uid[i].vid == vidt and self.dq.inx.uid[i].frequency in ['3hr','6hr']]
+    taf = [i for i in cmv if self.dq.inx.uid[i].vid == vidt and self.dq.inx.uid[i].frequency in ['3hr','6hr','3hrPt','6hrPt']]
+    tau = [i for i in self.sc.allVars if self.dq.inx.uid[i].vid == vidt and self.dq.inx.uid[i].frequency in ['3hr','6hr','3hrPt','6hrPt']]
 ##
 ## NB not easy to separate pressure level from model level variables here
 ## at 01.beta.06 do not filter CMIP5 6hrPlev and 27 level HighResMIP ....
