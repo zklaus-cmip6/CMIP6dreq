@@ -1082,6 +1082,7 @@ page for each item and also generating index pages.
     msg0.append( '<li><a href="tab01_1_1.html">Overview: priority 1 variables, tier 1 experiments</a></li>' )
     msg0.append( '<li><a href="tab01_1_1_dn.html">Overview: priority 1 variables, tier 1 experiments (grid default to native)</a></li>' )
     msg0.append( '<li><a href="mipVars.html">Search for variables</a></li>' )
+    msg0.append( '<li><a href="experiments.html">Search for experiments</a></li>' )
     msg0 += ['</ul>', '<h2>%s</h2>' % subttl2, '<ul>',]
     ks = sorted( self.coll.keys() )
     ee = {}
