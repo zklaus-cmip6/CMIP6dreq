@@ -6,11 +6,11 @@ xmlns:dc="http://purl.org/dc/elements/1.1/"
 xmlns:pav="http://purl.org/pav/2.3"
 xmlns="urn:w3id.org:cmip6.dreq.dreq:a">
 <prologue>
-<dc:title>Draft CMIP6 Data Request [01.00.20]</dc:title>
+<dc:title>Draft CMIP6 Data Request [01.00.21]</dc:title>
 <dc:description>The CMIP6 Data Request will specify the variables requested for the CMIP6 archive, and the detail the experiments and time slices for which they are required.</dc:description>
 <dc:creator>Martin Juckes</dc:creator>
 <dc:date>2017-12-22</dc:date>
-<pav:version>01.00.20</pav:version>
+<pav:version>01.00.21</pav:version>
 </prologue>
 <main>
 <requestVarGroup label="requestVarGroup" uid="SECTION:requestVarGroup" useClass="vocab" title="3.1 Request variable group: a collection of request variables" id="rqvg">
