@@ -64,7 +64,7 @@ class cmpdn(object):
 import re
 
 class makePurl(object):
-  def __init__(self):
+  def __init__(self,dq):
     c1 = re.compile( '^[a-zA-Z][a-zA-Z0-9]*$' )
     mv = dq.coll['var'].items
     oo = open( 'htmlRewrite.txt', 'w' )
@@ -138,7 +138,7 @@ class htmlTrees(object):
           bdy.append( '</ul></li>\n' )
       bdy.append( '</ul></body></html>\n' )
       oo = open( '%s/%s.html' % (self.odir,v.label), 'w' )
-      oo.write( dq.pageTmpl % ( title, '', '../', '../index.html', '\n'.join( bdy ) ) )
+      oo.write( self.dq.pageTmpl % ( title, '', '../', '../index.html', '\n'.join( bdy ) ) )
       oo.close()
       self.anno[v.label] = '<a href="../t/%s.html">Usage</a>' % v.label
     else:
@@ -350,7 +350,7 @@ htmlStyle['varRelLnk']    = {'getIrefs':['__all__']}
 htmlStyle['units']        = {'getIrefs':['__all__']}
 htmlStyle['timeSlice']    = {'getIrefs':['__all__']}
 
-if __name__ == "__main__":
+def run():
   try:
     import makeTables
     import scope
@@ -399,5 +399,8 @@ if __name__ == "__main__":
   except:
     print ('Could not make tables ...')
     raise
-  mp = makePurl()
+  mp = makePurl( dq )
   mj = makeJs( dq )
+
+if __name__ == "__main__":
+  run()
