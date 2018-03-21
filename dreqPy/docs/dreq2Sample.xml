@@ -107,7 +107,7 @@ xmlns="urn:w3id.org:cmip6.dreq.dreq:a">
 </grids>
 <timeSlice label="timeSlice" uid="SECTION:timeSlice" useClass="vocab" title="3.11 Time Slices for Output Requests" id="tsl">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
-<item id="001.025.001" label="example-01" title="dummy title string" type="noType" start="25" end="25" step="5." sliceLen="25" nyears="5." uid="b78f84c3-27ad-11e8-9588-1c4d70487308" startList="25 30" sliceLenUnit="dummyAt" description="dummyAt" child="dummyAt"/>
+<item id="001.025.001" label="example-01" title="dummy title string" type="yearList" start="25" end="25" step="5." sliceLen="25" nyears="5." uid="b78f84c3-27ad-11e8-9588-1c4d70487308" startList="25 30" sliceLenUnit="dummyAt" description="dummyAt" child="dummyAt"/>
 </timeSlice>
 <cellMethods label="cellMethods" uid="SECTION:cellMethods" useClass="vocab" title="7.1 Cell Methods" id="cmth">
 <!-- <info srcType="dummy" srcRef="ptxt.py">Dummy entries</info> -->
