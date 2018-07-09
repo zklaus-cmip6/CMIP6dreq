@@ -1,6 +1,20 @@
 """collect: extensions to create frequently used collections of objects."""
 
 
+def __expt__requestItem(self,tierMax=None,esid=None):
+    """Return set of request item item identifiers for request items linked directly or indirectly to this experiment:
+          tierMax: maximum experiment tier: if set, only return experiments with tier <= tierMax;
+          esid: set of esid values: if set, return experiments for specified set, rather than self.esid"""
+
+
+    s = set()
+    for u in [self.uid,self.mip,self.egid]:
+      if 'requestItem' in self._inx.uid[u].a:
+        for x in self._inx.uid[u].a['requestItem']:
+          s.add(x)
+    return s
+    
+
 def __requestItem__expt(self,tierMax=None,esid=None):
     """Return set of experiment item identifiers for experiments linked directly or indirectly to this requestItem:
           tierMax: maximum experiment tier: if set, only return experiments with tier <= tierMax;
@@ -18,6 +32,7 @@ def __requestItem__expt(self,tierMax=None,esid=None):
 ### checking tierMax and treset. If tierMax is None, there is nothing to do.
 ### otherwise, return empty or full list (tierResetPass True) depending on relation between treset and tiermax.
 ###
+
     tierResetPass = False
     if 'treset' in self.__dict__ and tierMax != None:
       if tierMax <= self.treset:
@@ -162,35 +177,40 @@ def __timeSlice__compare(self,other):
 ## label dict allows look-up of objects by label ....
     ee = self._labelDict
 
+    map = {('RFMIP','RFMIP2'):('RFMIPunion', 'Taking union of slices'),
+            ('RFMIP', 'hist55'):('hist55plus', 'Taking ad-hoc union with extra ...'),
+            ('RFMIP2', 'hist55'):('hist55plus', 'Taking ad-hoc union with extra ...'),
+            ('DAMIP20','DAMIP40'):('DAMIP40', 'Taking larger containing slice') }
+##
 ## handle awkward cases
 ##
     if self.type != other.type or self.type == 'dayList':
+      if tuple( sl ) in map:
+        targ, msg = map[tuple(sl)]
+        return (1,ee[targ],msg)
+      else:
+        return (-1,None,'Multiple slice types: %s' % sorted(ee.keys()))
 ###
-      if sl in [['piControl030a','piControl200'],['piControl030', 'piControl200']]:
-        return (1,ee['piControl200'],'Taking preferred slice (possible alignment issues)')
+#     if sl in [['piControl030a','piControl200'],['piControl030', 'piControl200']]:
+#       return (1,ee['piControl200'],'Taking preferred slice (possible alignment issues)')
 ###
-      elif sl == ['piControl030', 'piControl030a']:
-        return (1,ee['piControl30'],'Taking preferred slice (possible alignment issues)')
+#     elif sl == ['piControl030', 'piControl030a']:
+#       return (1,ee['piControl30'],'Taking preferred slice (possible alignment issues)')
 ###
-      elif sl == ['RFMIP','RFMIP2']:
-       ## this = [i for i in self._sectionList if i.label == 'RFMIP-union'][0]
+#     elif sl == ['RFMIP','RFMIP2']:
 ##
+#       return (1,ee['RFMIPunion', 'Taking union of slices')
 ##
-## not coded yet .... create new slice on the fly ... or add union .....
-       ## return (1,this, 'Taking ad-hoc union')
-        return (-3,None,'slice type aggregation not supported')
-##
-      elif sl == ['RFMIP', 'hist55']:
+#     elif sl == ['RFMIP', 'hist55']:
 ###
-        return (1,ee['hist55plus'], 'Taking ad-hoc union with extra ...')
+#       return (1,ee['hist55plus'], 'Taking ad-hoc union with extra ...')
 ##
-      elif sl == ['RFMIP2', 'hist55']:
-        return (1,ee['hist55'], 'Taking larger containing slice')
+#     elif sl == ['RFMIP2', 'hist55']:
+#       return (1,ee['hist55'], 'Taking larger containing slice')
 ##
-      elif sl == ['DAMIP20','DAMIP40']:
-        return (1,ee['DAMIP40'], 'Taking larger containing slice')
+#     elif sl == ['DAMIP20','DAMIP40']:
+#       return (1,ee['DAMIP40'], 'Taking larger containing slice')
 ##
-      return (-1,None,'Multiple slice types: %s' % sorted(ee.keys()))
 
     if not ( self.type in ['simpleRange','relativeRange'] or (len(self.type) > 13 and self.type[:13] == 'branchedYears') ):
       return (-2,None,'slice type aggregation not supported')
@@ -205,9 +225,14 @@ def __timeSlice__compare(self,other):
         return (2,(self,other), 'Slices are disjoint')
     return (-3,None, 'Overlapping slices')
 
+
+def _append_to_item_list(self,idict):
+   self._sectionList.append( self.__class__( idict=idict, id='auto' ) )
+
 def  add(dq):
    """Add extensions to data request section classes."""
    dq.coll['mip'].items[0].__class__.__get__expt = __mip__expt
+   dq.coll['experiment'].items[0].__class__.__get__requestItem = __expt__requestItem
    dq.coll['requestItem'].items[0].__class__.__get__expt = __requestItem__expt
    dq.coll['requestLink'].items[0].__class__.__get__expt = __requestLink__expt
    dq.coll['requestLink'].items[0].__class__.__get__CMORvar = __requestLink__CMORvar
@@ -217,8 +242,9 @@ def  add(dq):
      if len( dq.coll[k].items ) > 0:
        dq.coll[k].items[0].__class__._sectionList = dq.coll[k].items
        dq.coll[k].items[0].__class__._sectionObj = dq.coll[k]
+       dq.coll[k].items[0].__class__._append = _append_to_item_list
 
-   for k in ['var','experiment','timeSlice','mip','spatialShape','structure']:
+   for k in ['var','experiment','timeSlice','mip','spatialShape','structure','grids']:
      dq.coll[k].items[0].__class__._labelDict = dict()
      for i in dq.coll[k].items:
        dq.coll[k].items[0].__class__._labelDict[i.label] = i
