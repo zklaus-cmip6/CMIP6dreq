@@ -8,10 +8,10 @@ import xml.dom
 import xml.dom.minidom
 import re, shelve, os, sys
 try:
-  from __init__ import DOC_DIR, version, PACKAGE_DIR
+  from __init__ import DOC_DIR, version, PACKAGE_DIR, VERSION_DIR
   import utilities
 except:
-  from dreqPy.__init__ import DOC_DIR, version, PACKAGE_DIR
+  from dreqPy.__init__ import DOC_DIR, version, PACKAGE_DIR, VERSION_DIR
   from dreqPy import utilities
 
 python2 = True
@@ -940,12 +940,20 @@ class loadDreq(object):
   lxml [False]: if true, use python lxml package for elementree module instead of the default xml package.
 """
 
-  def __init__(self,dreqXML=None, configdoc=None, useShelve=False, htmlStyles=None, strings=False, manifest=defaultManifestPath , configOnly=False,lxml=False):
-    if manifest == None:
+  def __init__(self, xmlVersion=None, dreqXML=None, configdoc=None, useShelve=False, htmlStyles=None, strings=False, manifest=defaultManifestPath , configOnly=False,lxml=False):
+    self._extensions_ = {}
+    if xmlVersion != None:
+      assert os.path.isdir( VERSION_DIR ),'Version diretory %s not found;\nCreate or change environment variable DRQ_VERSION_DIR' % VERSION_DIR 
+      assert os.path.isdir( '%s/%s' % (VERSION_DIR,xmlVersion) ), 'Version %s not in %s .. download from ..' % (xmlVersion,VERSION_DIR)
+      dreqXML='%s/%s/dreq.xml' % (VERSION_DIR,xmlVersion)
+      configdoc='%s/%s/dreq2Defn.xml' % (VERSION_DIR,xmlVersion)
+      manifest = None
+    elif manifest == None:
       if dreqXML == None:
        dreqXML=defaultDreqPath
       if configdoc==None:
        configdoc=defaultConfigPath
+    self._VERSION_DIR_ = VERSION_DIR
     self.c = config( thisdoc=dreqXML, configdoc=configdoc, useShelve=useShelve,strings=strings,manifest=manifest,configOnly=configOnly,lxml=lxml)
     self.coll = self.c.coll
     self.version = self.c.version
