@@ -17,9 +17,11 @@ except:
 if imm == 1:
   from utilities import cmvFilter, gridOptionSort
   import misc_utils
+  import scope_utils
   import fgrid
   import volsum
 else:
+  import dreqPy.scope_utils as scope_utils
   import dreqPy.volsum as volsum
   import dreqPy.fgrid as fgrid
   from dreqPy.utilities import cmvFilter, gridOptionSort 
@@ -247,8 +249,9 @@ class dreqQuery(object):
     self.exptFilterBlack = None
     self.uniqueRequest = False
 
-    self.mips = set( [x.label for x in self.dq.coll['mip'].items ] )
-    self.mips = ['CMIP','AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PAMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
+    ##self.mips = set( [x.label for x in self.dq.coll['mip'].items ] )
+    ##self.mips = ['CMIP','AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PAMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
+    self.mips = ['CMIP'] + scope_utils.mips
     self.mipsp = self.mips[:-4]
     self.cmvGridId, i4 = fgrid.fgrid( self.dq )
     assert len(i4) == 0
@@ -1061,7 +1064,6 @@ class dreqQuery(object):
          print ('Created directory %s for: %s' % (odir,msg) )
 
   def xlsByMipExpt(self,m,ex,pmax,odir='xls',xls=True,txt=False,txtOpts=None):
-    import scope_utils
     mxls = scope_utils.xlsTabs(self,tiermax=self.tierMax,pmax=pmax,xls=xls, txt=txt, txtOpts=txtOpts,odir=odir)
     mlab = misc_utils.setMlab( m )
     mxls.run( m, mlab=mlab )
@@ -1622,7 +1624,7 @@ class dreqUI(object):
       --allgrd :  When a variable is requested on multiple grids, archive all grids requested (default: only the finest resolution);
       --unique :  List only variables which are requested uniquely by this MIP, for at least one experiment;
       --esm :  include ESM experiments (default is to omit esm-hist etc from volume estimates);
-      --txt : Create text file with requested variables;
+      --txt : Create text (tab seperated variables) file with requested variables; the files are placed in the same directory as xls files;
       --mcfg : Model configuration: 7 integers, comma separated, 'nho','nlo','nha','nla','nlas','nls','nh1'
                  default: 259200,60,64800,40,20,5,100
       --txtOpts : options for content of text file: (v|c)[(+|-)att1[,att2[...]]]
@@ -1817,6 +1819,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     if doSf:
       self.adict['sf'] = True
     assert not ('legacy' in self.adict and 'sf' in self.adict), "Conflicting command line argument, 'legacy' and 'sf': use only one of these"
+
     if makeXls or makeTxt or doSf:
       xlsOdir = self.adict.get( 'xlsdir', 'xls' )
       self.sc.checkDir( xlsOdir, 'xls files' )
@@ -1893,10 +1896,22 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       for e in ['esm-hist','esm-hist-ext','esm-piControl','piControl-spinup','esm-piControl-spinup']:
         ss.add( self.sc.exptByLabel[ e ] )
       self.sc.exptFilterBlack = ss
-    makeXls = self.adict.get( 'xls', False )
 
+
+    makeTxt = self.adict.get( 'txt', False )
+    makeXls = self.adict.get( 'xls', False )
+    if 'txtOpts' in self.adict:
+        if self.adict['txtOpts'][0] == 'v':
+          txtOpts = NT_txtopts( 'var' )
+        else:
+          txtOpts = NT_txtopts( 'cmv' )
+    else:
+        txtOpts=None
+
+
+## NB this is the default##
     if 'sf' in self.adict:
-      vs = volsum.vsum( self.sc, odsz, npy, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm )
+      vs = volsum.vsum( self.sc, odsz, npy, odir=xlsOdir, tabByFreqRealm=tabByFreqRealm, txt=makeTxt,txtOpts=txtOpts )
       vs.run( self.adict['m'], '%s/requestVol_%s_%s_%s' % (xlsOdir,mlab,tierMax,pmax), pmax=pmax, doxlsx=makeXls ) 
       totalOnly = False
       if len( self.adict['m'] ) == 1 or totalOnly:
@@ -1935,17 +1950,9 @@ drq -m HighResMIP:Ocean.DiurnalCycle
     adsCount = self.adict.get( 'count', False )
 
     self.getVolByMip(pmax,eid,adsCount)
-    makeTxt = self.adict.get( 'txt', False )
+
     if makeXls or makeTxt:
       mips = self.adict['m']
-
-      if 'txtOpts' in self.adict:
-        if self.adict['txtOpts'][0] == 'v':
-          txtOpts = NT_txtopts( 'var' )
-        else:
-          txtOpts = NT_txtopts( 'cmv' )
-      else:
-        txtOpts=None
 
       self.sc.xlsByMipExpt(mips,eid,pmax,odir=xlsOdir,xls=makeXls,txt=makeTxt,txtOpts=txtOpts)
 
