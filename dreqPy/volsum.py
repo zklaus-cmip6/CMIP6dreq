@@ -67,8 +67,12 @@ class vsum(object):
       extCollect.add(sc.dq)
     self.sc = sc
     self.exptMipRql = collections.defaultdict( set )
+    if exptFilter != None:
+      assert type( exptFilter ) == type( set() ), 'FATAl.vsum.001: exptFilter argument must be type set: %s' % type( exptFilter )
     for i in self.sc.dq.coll['requestLink'].items:
       expts = requestLink__expt(i,rql=[i.uid,])
+      if exptFilter != None:
+        expts = exptFilter.intersection( expts )
       for e in expts:
         self.exptMipRql[ (i.mip,self.sc.dq.inx.uid[e].label) ].add( i.uid)
     self.odsz=odsz

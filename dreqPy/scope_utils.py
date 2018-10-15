@@ -27,7 +27,6 @@ class xlsTabs(object):
     self.mips = mips
     self.mipsp = ['DECK','CMIP6',] + self.mips[:-4]
 
-    print 'xlsTabs ',txt
     self.tabs = table_utils.tables( sc, xls=xls, txt=txt, txtOpts=txtOpts, odir=odir )
 
   def run(self,m,colCallback=None,verb=False,mlab=None,exid=None):
