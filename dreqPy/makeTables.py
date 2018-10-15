@@ -230,7 +230,11 @@ class styles(object):
     if t2._h.label == 'remarks':
       return '<li>%s: %s</li>' % ( targ.__href__(odir='../u/', label=targ.title), "Link to request link broken"  )
     else:
-      t3 = t2._inx.uid[t2.refid]
+      try:
+        t3 = t2._inx.uid[t2.refid]
+      except:
+        print t2.uid, t2.__dict__
+        raise
       if t3._h.label == 'remarks':
         return '<li>%s [%s]: %s</li>' % ( targ.__href__(odir='../u/', label=targ.title), t2.__href__(odir='../u/', label=t2.title),"Link to request group broken"  )
       else:
@@ -258,7 +262,7 @@ class styles(object):
     return '<li>%s {%s}: %s [%s: %s] (%s)</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.mipTable, targ.title, targ.frequency, t2.title, nrq )
 
   def objLink(self,targ,frm='',ann=''):
-    return '<li>%s: %s</li>' % (  targ.label, targ.__href__(odir='../u/', label=targ.title,title=targ.description) )
+    return '<li>%s [%s]: %s</li>' % (  targ.label, targ.mip, targ.__href__(odir='../u/', label=targ.title,title=targ.description) )
 
   def unitLink(self,targ,frm='',ann=''):
     return '<li>%s [%s]: %s</li>' % (  targ.text, targ.label, targ.__href__(odir='../u/', label=targ.title) )
@@ -287,14 +291,19 @@ class styles(object):
     return '<li>%s [%s]: %s {%s/%s}</li>' % (  targ.cell_methods,targ.label, targ.__href__(odir='../u/', label=targ.title),sz0,sz1 )
 
   def objLnkLink(self,targ,frm='',ann=''):
+    lab1 = targ.title
+    if lab1 == '':
+        lab1 = targ.label
+
     if frm == 'objective':
       t2 = targ._inx.uid[targ.rid]
       t3 = targ._inx.uid[t2.refid]
       thislab = '%s (%s)' % (t2.mip,t3.label)
-      return '<li>%s: %s</li>' % (  t2.title, t2.__href__(odir='../u/',label=thislab) )
+      ##return '<li>%s: %s</li>' % (  t2.title, t2.__href__(odir='../u/',label=thislab) )
+      return '<li>%s: %s</li>' % (  targ.__href__(odir='../u/',label=lab1), t2.__href__(odir='../u/',label=thislab, title=t2.title) )
     else:
       t2 = targ._inx.uid[targ.oid]
-      return '<li>%s: %s</li>' % (  t2.label, t2.__href__(odir='../u/',label=t2.title) )
+      return '<li>%s: %s</li>' % (  targ.__href__(odir='../u/',label=lab1), t2.__href__(odir='../u/',label=t2.label, title=t2.title) )
 
   def labTtl(self,targ,frm='',ann=''):
     return '<li>%s: %s</li>' % (  targ.__href__(odir='../u/', label=targ.label), targ.title )
