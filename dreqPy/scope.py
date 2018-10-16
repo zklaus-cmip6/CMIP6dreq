@@ -27,7 +27,7 @@ else:
   from dreqPy.utilities import cmvFilter, gridOptionSort 
   import dreqPy.misc_utils as misc_utils
 
-import collections, string, operator
+import collections, operator
 import sys, os
 
 def intdict():
@@ -1800,7 +1800,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       return
 
     if 'mcfg' in self.adict:
-      ll = string.split( self.adict['mcfg'], ',' )
+      ll = self.adict['mcfg'].split( ',' )
       assert len(ll) == 7, 'Length of model configuration argument must be 7 comma separated integers: %s' %  self.adict['mcfg']
       lli = [ int(x) for x in ll]
 

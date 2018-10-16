@@ -1,5 +1,4 @@
-
-import collections, string, os
+import collections, os
 import xlsxwriter
 
 try:

@@ -3,7 +3,7 @@ After ingesting the XML documents (configuration and request) the module generat
 1. A collection of records
 2. Index
 """
-import xml, string, collections
+import xml, collections
 import xml.dom
 import xml.dom.minidom
 import re, shelve, os, sys
