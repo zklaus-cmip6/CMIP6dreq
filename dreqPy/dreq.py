@@ -3,7 +3,7 @@ After ingesting the XML documents (configuration and request) the module generat
 1. A collection of records
 2. Index
 """
-import xml, string, collections
+import xml, collections
 import xml.dom
 import xml.dom.minidom
 import re, shelve, os, sys
@@ -37,6 +37,7 @@ jsh='''<link type="text/css" href="/css/jquery-ui-1.8.16.custom.css" rel="Styles
  <script src="/js/2013/jquery.min.js" type="text/javascript"></script>
  <script src="/js/2013/jquery-ui.min.js" type="text/javascript"></script>
  <script src="/js/2013/jquery.cookie.js" type="text/javascript"></script>
+<script src="/js/dreqMonitoring.js"></script>
 
 <link type="text/css" href="/css/dreq.css" rel="Stylesheet" />
 '''
@@ -980,6 +981,7 @@ class loadDreq(object):
       self.pageTmpl = """<html><head><title>%s</title>
 %s
 <link rel="stylesheet" type="text/css" href="%scss/dreq.css">
+<script src="/js/dreqMonitoring.js"></script>
 </head><body>
 
 <div id="top">

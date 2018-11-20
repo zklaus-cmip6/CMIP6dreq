@@ -1,4 +1,4 @@
-import collections, string
+import collections
 try:
   import table_utils
 except:

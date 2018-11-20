@@ -369,7 +369,16 @@ class makeTab(object):
                     print ('ERROR.priority.0101: %s, %s ' % (cmv.label,dest) )
                 else:
                   thisp = str(cmv.defaultPriority)
-                orec = [thisp,var.title, var.units, var.description, cmv.description, var.label, var.sn, strc.cell_methods, cmv.positive, cmv.type, dims, cmv.label, cmv.modeling_realm, cmv.frequency, strc.cell_measures, cmv.prov,cmv.provNote,str(cmv.rowIndex),cmv.uid,cmv.vid,cmv.stid,strc.title, valid_min, valid_max, ok_min_mean_abs, ok_max_mean_abs]
+#
+# avoid duplication of information (added in 01.00.29)
+##
+                if cmv.description != var.description:
+                  cmmt = cmv.description
+                else:
+                  cmmt = ''
+                orec = [thisp,var.title, var.units, var.description, cmmt, var.label, var.sn, strc.cell_methods, cmv.positive, cmv.type, dims, cmv.label, cmv.modeling_realm, cmv.frequency, strc.cell_measures, cmv.prov,cmv.provNote,str(cmv.rowIndex),cmv.uid,cmv.vid,cmv.stid,strc.title, valid_min, valid_max, ok_min_mean_abs, ok_max_mean_abs]
+
+##
               except:
                 print ('FAILED TO CONSTRUCT RECORD: %s [%s], %s [%s]' % (cmv.uid,cmv.label,var.uid,var.label) )
                 raise

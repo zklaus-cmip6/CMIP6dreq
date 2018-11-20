@@ -82,6 +82,7 @@ class vsum(object):
     self.accum = False
     self.odir = odir
     self.efnsfx = ''
+    self.accPdict = collections.defaultdict( set )
     if sc.gridPolicyForce == 'native':
       self.efnsfx = '_fn'
     elif sc.gridPolicyForce == '1deg':
@@ -124,7 +125,6 @@ class vsum(object):
 
       self.rres = {}
       self.rresu = {}
-      self.accPdict = collections.defaultdict( set )
     
       for m in theseMips:
         olab = m

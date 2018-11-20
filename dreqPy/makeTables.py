@@ -215,6 +215,12 @@ class styles(object):
     else:
       return '<li>%s [%s]: %s [%s]</li>' % ( targ._h.title, a, targ.__href__(label=targ.title), targ.label  )
 
+  def baseLink01(self,targ,frm='',ann=''):
+    if targ._h.label == 'remarks':
+      return '<li>Broken link [%s]</li>' % ( targ.__href__() )
+    else:
+      return '<li>%s: %s</li>' % ( targ.label, targ.__href__(odir='../u/',label=targ.title)  )
+
   def rqlLink02(self,targ,frm='',ann=''):
     t2 = targ._inx.uid[targ.refid]
     if t2._h.label == 'remarks':
@@ -385,6 +391,7 @@ def run():
   dq.itemStyles['structure'] = styls.strLink
   dq.itemStyles['cellMethods'] = styls.cmLink
   dq.itemStyles['remarks'] = styls.remarkLink
+  dq.itemStyles['exptgroup'] = styls.baseLink01
   dq.itemStyles['objectiveLink'] = styls.objLnkLink
   dq.itemStyles['requestVarGroup'] = styls.vgrpLink
   dq.itemStyles['miptable'] = styls.miptableLink
