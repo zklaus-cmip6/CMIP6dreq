@@ -1010,8 +1010,8 @@ class dreqQuery(object):
                l2.append( self.dq.inx.uid[u] )
 
     l20 = self.rqiByMip0( mip )
-    for i in l20:
-      assert i in l2
+    ##for i in l20:
+      ##assert i in l2
     return l2
     
     
@@ -1689,6 +1689,7 @@ drq -m HighResMIP:Ocean.DiurnalCycle
 
     if self.adict.get('mcat','none') != 'none':
       self.adict['esm'] = True
+
     if 'm' in self.adict:
       if self.adict['m'] == '_all_':
         pass
@@ -1911,6 +1912,12 @@ drq -m HighResMIP:Ocean.DiurnalCycle
       for e in ['esm-hist','esm-hist-ext','esm-piControl','piControl-spinup','esm-piControl-spinup']:
         ss.add( self.sc.exptByLabel[ e ] )
       self.sc.exptFilterBlack = ss
+
+    if self.sc.exptFilterBlack != None and self.sc.exptFilter != None:
+      ss = [x for x in self.sc.exptFilter if x not in self.sc.exptFilterBlack]
+      if len(ss) == 0:
+          print ( """WARNING: filter settings give no experiments: try using --esm flag: by default esm experiments are filtered out""" )
+          return
 
 
     makeTxt = self.adict.get( 'txt', False )

@@ -4,13 +4,16 @@ import xlsxwriter
 try:
   import dreq
   import scope_utils
+  import table_utils
 except:
   import dreqPy.dreq as dreq
   import dreqPy.scope_utils as scope_utils
+  import dreqPy.table_utils as table_utils
 
 jsh='''
 <link type="text/css" href="/css/dreq.css" rel="Stylesheet" />
-'''
+%s
+''' % dreq.dreqMonitoring
 
 def vfmt( x ):
             if x < 1.e9:
@@ -139,10 +142,10 @@ class r1(object):
     ##print ('INFO.mmhtml.00001: %s, %s' % (kc,len( self.cc[kc].a.keys() ) ) )
     if len( self.cc[kc].a.keys() ) == 0:
       return
-    if not os.path.isdir( 'tabs03' ):
+    if not os.path.isdir( 'html/tabs03' ):
       print ( 'WARNING.makeMMhtml: creating directory for html files: tabs03' )
-      os.mkdir( 'tabs03' )
-    oo = open( 'tabs03/%s' % fss, 'w' )
+      os.mkdir( 'html/tabs03' )
+    oo = open( 'html/tabs03/%s' % fss, 'w' )
     ttl = 'Data requested by %s from %s experiments (tier %s, priority %s)' % (m,m2,self.tiermax,self.pmax)
     jsh = ''
     pream = '<h1>%s</h1>\n' % ttl
@@ -301,5 +304,5 @@ if __name__ == "__main__":
     import dreqPy.scope as scope
     import dreqPy.makeTables as makeTables
   sc = scope.dreqQuery()
-  r = r1( sc, makeTables.tables, tiermax=1, pmax=1 )
-  r = r1( sc, makeTables.tables, tiermax=3, pmax=3 )
+  r = r1( sc, table_utils.tables, tiermax=1, pmax=1 )
+  r = r1( sc, table_utils.tables, tiermax=3, pmax=3 )
