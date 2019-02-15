@@ -191,7 +191,7 @@ class styles(object):
         try:
           nv = len( targ._inx.iref_by_sect[cmv.vid].a['CMORvar'] )
         except:
-          print 'FAILED: %s' % cmv.uid
+          print ( 'FAILED: %s' % cmv.uid )
           raise
         return '<li>%s.%s [%s]: %s {groups: %s, vars: %s}</li>' % ( cmv.label,cmv.mipTable, targ.__href__(odir='../u/',label=targ.priority) , cmv.__href__(odir='../u/',label=cmv.title), ng, nv  )
     else:
@@ -239,7 +239,7 @@ class styles(object):
       try:
         t3 = t2._inx.uid[t2.refid]
       except:
-        print t2.uid, t2.__dict__
+        print ( [t2.uid, t2.__dict__] )
         raise
       if t3._h.label == 'remarks':
         return '<li>%s [%s]: %s</li>' % ( targ.__href__(odir='../u/', label=targ.title), t2.__href__(odir='../u/', label=t2.title),"Link to request group broken"  )

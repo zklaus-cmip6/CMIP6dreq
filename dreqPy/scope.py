@@ -250,7 +250,7 @@ class dreqQuery(object):
     self.uniqueRequest = False
 
     ##self.mips = set( [x.label for x in self.dq.coll['mip'].items ] )
-    ##self.mips = ['CMIP','AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PAMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'SIMIP', 'VIACSAB']
+    ##self.mips = ['CMIP','AerChemMIP', 'C4MIP', 'CFMIP', 'DAMIP', 'DCPP', 'FAFMIP', 'GeoMIP', 'GMMIP', 'HighResMIP', 'ISMIP6', 'LS3MIP', 'LUMIP', 'OMIP', 'PAMIP', 'PMIP', 'RFMIP', 'ScenarioMIP', 'VolMIP', 'CORDEX', 'DynVar', 'DynVarMIP', 'SIMIP', 'VIACSAB']
     self.mips = ['CMIP'] + scope_utils.mips
     self.mipsp = self.mips[:-4]
     self.cmvGridId, i4 = fgrid.fgrid( self.dq )
@@ -705,7 +705,7 @@ class dreqQuery(object):
 ##
     if not self.retainRedundantRank:
       len1 = len(vars.keys())
-      cmv = self.cmvFilter.filterByChoiceRank(cmv=vars.keys())
+      cmv = self.cmvFilter.filterByChoiceRank(cmv=set(vars.keys()))
       vars = cmv
     
     self.vars = vars
@@ -936,7 +936,10 @@ class dreqQuery(object):
           mlg.prnt ( 'ERROR: %s, %s, %s ' % ( u,i._h.label, i.label, i.title ) )
       dat2 = {}
       for i in e:
-        dat2[i.uid] = (i.ntot, i.yps, i.ensz, i.tier, i.nstart, filter1(i.yps,rqi.nymax), filter2(i.ensz,rqi.nenmax,i.tier,self.tierMax) )
+        ## verified that this change (i.ntot --> None) has zero impact on tab01_3_3.texfrag ... i.e. data volumes are not affected.
+        ## just as well, since values in data request are not correct.
+        ##dat2[i.uid] = (i.ntot, i.yps, i.ensz, i.tier, i.nstart, filter1(i.yps,rqi.nymax), filter2(i.ensz,rqi.nenmax,i.tier,self.tierMax) )
+        dat2[i.uid] = (None, i.yps, i.ensz, i.tier, i.nstart, filter1(i.yps,rqi.nymax), filter2(i.ensz,rqi.nenmax,i.tier,self.tierMax) )
 
       nytot = sum( [dat2[x][-2]*dat2[x][-3] for x in dat2 ] )
       netot = sum( [dat2[x][-1] for x in dat2 ] )
