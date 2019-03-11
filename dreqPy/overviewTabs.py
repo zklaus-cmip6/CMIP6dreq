@@ -268,11 +268,11 @@ class r1(object):
               if self.msgLevel > 1:
                 print ( 'INFO.overviewTabs.01001: %s, %s' % (m,cct) )
               s1 = '<b><span title="%s">%s</span></b>' % (sm,s)
-              s = '{\\bf %s}' % s
+              ll.append( '<b>%s</b>' % s )
             else:
-               for k in self.cc[kc].a.keys():
+              for k in self.cc[kc].a.keys():
                 cct[k] += self.cc[kc].a[k]
-            ll.append( s )
+              ll.append( s )
             sm = '; '.join( ['%s: %s' % (k,vfmt(self.cc[kc].a[k]*2.)) for k in sorted( self.cc[kc].a.keys() ) ] )
 
             if sss:
@@ -289,8 +289,9 @@ class r1(object):
       if m == 'VIACSAB':
         oo.write( ' & \cellcolor{llgray} '.join(ll ) + '\\\\ \n\\hline\n' )
       else:
-        ll[2] = '\cellcolor{llgray} ' + ll[2]
-        oo.write( ' & '.join(ll ) + '\\\\ \n\\hline\n' )
+        this = ll[:]
+        this[2] = '\cellcolor{llgray} ' + this[2]
+        oo.write( ' & '.join(this) + '\\\\ \n\\hline\n' )
 
       llh.append( '<a href="data/tabs02/requestVol_%s_%s_%s.xlsx">Workings</a>' % (m,self.tiermax, self.pmax) )
       mmh.append( '<tr>' + ''.join(['<td>%s</td>' % x for x in llh] ) + '</tr>\n' )
