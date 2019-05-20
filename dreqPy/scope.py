@@ -1107,6 +1107,10 @@ class dreqQuery(object):
           for x in self.dq.inx.iref_by_sect[i.uid].a['requestVar']:
             i1 = self.dq.inx.uid[x]
 
+##
+## BALAJI .... need to override here ... to specified list of CMOR variables ... 
+##     .... or just go through requestVar list and chane every priority ... easieir
+##
             thisp = i1.priority
             if pr != -1:
               thisp = pr
@@ -1896,18 +1900,23 @@ drq -m HighResMIP:Ocean.DiurnalCycle
         eid = self.sc.exptByLabel[ self.adict['e'] ]
         self.sc.exptFilter = set( [eid,] )
       else:
-        ns = 0
-        md =  misc_utils.mdiff()
-        ttm = md.diff( self.adict['e'],self.sc.mipsp )
-        tte = md.diff( self.adict['e'],self.sc.exptByLabel.keys() )
-        if ttm[1] > 0 and tte[1] == 0 or (ttm[2][0][0] > 0.6*tte[2][0][0]):
-          oo =  md.prntprep( self.adict['e'], ttm )
-          for l in oo:
-            mlg.prnt( l )
-        if tte[1] > 0 and ttm[1] == 0 or (tte[2][0][0] > 0.6*ttm[2][0][0]):
-          oo =  md.prntprep( self.adict['e'], tte )
-          for l in oo:
-            mlg.prnt( l )
+        try:
+          ns = 0
+          md =  misc_utils.mdiff()
+          ttm = md.diff( self.adict['e'],self.sc.mipsp )
+          tte = md.diff( self.adict['e'],self.sc.exptByLabel.keys() )
+          if ttm[1] > 0 and (tte[1] == 0 or (ttm[2][0][0] > 0.6*tte[2][0][0])):
+            oo =  md.prntprep( self.adict['e'], ttm )
+            for l in oo:
+              mlg.prnt( l )
+          if tte[1] > 0 and (ttm[1] == 0 or (tte[2][0][0] > 0.6*ttm[2][0][0])):
+            oo =  md.prntprep( self.adict['e'], tte )
+            for l in oo:
+              mlg.prnt( l )
+        except:
+          print ( 'Experiment not found %s' % self.adict['e'] )
+          print ( 'Error encountered trying to find close match' )
+          raise
         assert False, 'Experiment/MIP %s not found' % self.adict['e']
 
     if not self.adict.get( 'esm', False ):
