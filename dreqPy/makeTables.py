@@ -361,6 +361,7 @@ htmlStyle['structure']    = {'getIrefs':['__all__']}
 htmlStyle['cellMethods']  = {'getIrefs':['__all__']}
 htmlStyle['standardname'] = {'getIrefs':['__all__']}
 htmlStyle['varRelations'] = {'getIrefs':['__all__']}
+htmlStyle['modelConfig'] = {'getIrefs':['__all__']}
 htmlStyle['varRelLnk']    = {'getIrefs':['__all__']}
 htmlStyle['units']        = {'getIrefs':['__all__']}
 htmlStyle['timeSlice']    = {'getIrefs':['__all__']}

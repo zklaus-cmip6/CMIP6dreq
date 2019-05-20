@@ -42,6 +42,7 @@ class c2(object):
     self.a = collections.defaultdict( list )
 
 hmap0 = {'CMIP6':'Historical', 'ScenarioMIP':'\cellcolor{llgray} ScenarioMIP'}
+hmaph0 = {'CMIP6':'Historical', 'ScenarioMIP':'ScenarioMIP'}
 class r1(object):
   infoLog = collections.defaultdict( list )
   def __init__(self,sc,mt_tables,tiermax=1,pmax=1,only=False,vols=None,fnm='new',msgLevel=0):
@@ -203,7 +204,7 @@ class r1(object):
     oo = open( 'tab01_%s_%s.texfrag' % (self.tiermax,self.pmax), 'w' )
     mmh = []
     mhdr = [ '\\rot{80}{%s}' % hmap0.get(m,m) for m in self.mipsp + ['TOTAL','Unique']]
-    mhdrh = [ '<th><div><span>%s</span></div></th>' % hmap0.get(m,m) for m in self.mipsp + ['TOTAL','Unique','CALC']]
+    mhdrh = [ '<th><div><span>%s</span></div></th>' % hmaph0.get(m,m) for m in self.mipsp + ['TOTAL','Unique','CALC']]
     oo.write( ' & '.join(['',] + mhdr ) + '\\\\ \n\\hline\n' )
     mmh.append( '<table>\n<tr class="rotate">' + ''.join(['<th></th>',] + mhdrh ) + '</tr>\n' )
     htmltmpl_head = '<html><body>\n' 

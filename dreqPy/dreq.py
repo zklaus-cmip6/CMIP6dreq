@@ -514,6 +514,7 @@ class config(object):
     self.docl = []
 
     self._desc = {}
+    self.__desc__ = self._desc
     self.tt0 = {}
     self.tt1 = {}
     self.ttl2 = []
