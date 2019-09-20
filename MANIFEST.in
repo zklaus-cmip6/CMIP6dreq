@@ -2,6 +2,8 @@
 
 recursive-include docs *
 include LICENSE
+include dreqPy/utilP2/__init__.py
+include dreqPy/utilP2/util.py
 include dreqPy/docs/BlockSchema.csv
 include dreqPy/docs/CMIP6_MIP_tables.xlsx
 include dreqPy/docs/dc1.xsd
