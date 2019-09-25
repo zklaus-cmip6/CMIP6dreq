@@ -138,7 +138,10 @@ if sys.version_info[0] == 3:
     from dreqPy.utilP3 import mlog3
   mlg = mlog3()
 else:
-  from utilP2 import util
+  try:
+    from utilP2 import util
+  except:
+    from dreqPy.utilP2 import util
   mlg = util.mlog()
 
 class c1(object):
