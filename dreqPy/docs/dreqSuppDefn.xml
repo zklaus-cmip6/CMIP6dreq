@@ -28,7 +28,7 @@ xsi:schemaLocation="http://w3id.org/cmip6dr/ns vocabFrameworkSchema_v01beta.xsd"
   <rowAttribute label="uid" type="aa:st__uid" title="Identifier" useClass="" techNote="" description="" uid="ATTRIBUTE::places.uid" superclass="" required="true"/>
   <rowAttribute label="label" type="xs:string" title="Label" useClass="" techNote="" description="" uid="ATTRIBUTE::places.label" superclass="" required="true"/>
   <rowAttribute label="title" type="xs:string" title="Title" useClass="" techNote="" description="" uid="ATTRIBUTE::places.title" superclass="" required="true"/>
-  <rowAttribute label="matter" type="xs:string" title="Substance " useClass="internalLink" techNote="" description="" uid="ATTRIBUTE::places.matter" superclass="" required="true"/>
+  <!-- <rowAttribute label="matter" type="xs:string" title="Substance " useClass="internalLink" techNote="" description="" uid="ATTRIBUTE::places.matter" superclass="" required="true"/> -->
   <rowAttribute label="mip" type="xs:string" title="Model Intercomparison Project (MIP)" useClass="internalLink" techNote="mip" description="" uid="ATTRIBUTE::places.mip" superclass="" required="true"/>
   <rowAttribute label="vid" type="xs:string" title="Variable Identifier" useClass="internalLink" techNote="CMORvar" description="" uid="ATTRIBUTE::places.vid" superclass="" required="false"/>
   <rowAttribute label="pid" type="xs:string" title="Parent Entity" useClass="internalLink" techNote="places" description="A place, state or reservoir containing this one." uid="ATTRIBUTE::places.pid" superclass="" required="false"/>
